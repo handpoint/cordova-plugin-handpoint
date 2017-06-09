@@ -1,4 +1,5 @@
 # Cordova Handpoint SDK Plugin
+# Still Work In Progress. Not ready for live use
 
 Cross-platform Handpoint SDK for Cordova / PhoneGap.
 
