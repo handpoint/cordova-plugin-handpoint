@@ -12,6 +12,7 @@ npm-debug.log*
 .sass-cache/
 .tmp/
 .versions/
+.vscode/
 
 .DS_Store
 Thumbs.db

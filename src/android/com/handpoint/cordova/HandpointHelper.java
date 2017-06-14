@@ -8,67 +8,279 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 import java.math.BigInteger;
 
-public class HandpointHelper implements Events.Required {
+import com.google.gson.*;
+
+public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults {
+
+  private static final String TAG = HandpointHelper.class.getSimpleName();
 
   Hapi api;
   Device device;
   CallbackContext callbackContext;
+  Context context;
 
   public HandpointHelper(Context context) {
-    initApi(context);
+    this.context = context;
   }
 
   //An Android Context is required to be able to handle bluetooth
-  public void initApi(Context context) {
-    String sharedSecret = "0102030405060708091011121314151617181920212223242526272829303132";
-    this.api = HapiFactory.getAsyncInterface(this, context).defaultSharedSecret(sharedSecret);
-    // The api is now initialized. Yay! we've even set a default shared secret!
-    // The shared secret is a unique string shared between the card reader and your mobile application.
-    // It prevents other people to connect to your card reader.
-    // You have to replace this default shared secret by the one sent by our support team.
-    // List devices
+  public void init(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    String sharedSecret = params.getString("sharedSecret");
+    this.api = HapiFactory.getAsyncInterface(this, this.context).defaultSharedSecret(sharedSecret);
+    this.setEventsHandler();
+    callbackContext.success("ok");
   }
 
-  public void sale(CallbackContext callbackContext, String amount) {
-    this.callbackContext = callbackContext;
-    // User Device SureSwipe3708 68:AA:D2:02:89:B6 
-    this.device = new Device("SureSwipe3708", "68:AA:D2:02:89:B6", "1", ConnectionMethod.BLUETOOTH);
-    this.api.useDevice(this.device);
-    // Initiate a sale for 10.00 in Great British Pound
-    this.api.sale(new BigInteger(amount), Currency.GBP);
-  }
-
-  @Override
-  public void deviceDiscoveryFinished(List<Device> devices) {
-    // here you get a list of Bluetooth devices paired with your android device
-    for (Device device : devices) {
-      // TODO
+  public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send sale operation to device");
     }
   }
 
-  @Override
-  public void signatureRequired(SignatureRequest signatureRequest, Device device) {
-    // You'll be notified here if a sale process needs a signature verification
-    // A signature verification is needed if the cardholder uses an MSR card or a chip & signature card
-    // This method will not be invoked if a transaction is made with a Chip & PIN card
-    // At this step, you should display the merchant receipt to the cardholder on the android device
-    // The cardholder must have the possibility to accept or decline the transaction
-    // If the cardholder clicks on decline, the transaction is VOID
-    // If the cardholder clicks on accept he is then asked to sign electronically the receipt
-    this.api.signatureResult(true);
-    // This line means that the cardholder ALWAYS accepts to sign the receipt
-    // For this sample app we are not going to implement the whole signature process
+  public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.saleReversal(new BigInteger(params.getString("amount")),
+        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send saleReversal operation to device");
+    }
+  }
+
+  public void refund(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send refund operation to device");
+    }
+  }
+
+  public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.refundReversal(new BigInteger(params.getString("amount")),
+        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send refundReversal operation to device");
+    }
+  }
+
+  public void cancelRequest(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.cancelRequest()) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send cancelRequest operation to device");
+    }
+  }
+
+  public void tipAdjustment(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    // TODO
+  }
+
+  public void signatureResult(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.signatureResult(params.getBoolean("accepted"))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send signatureResult operation to device");
+    }
+  }
+
+  public void connect(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    JSONObject device = params.getJSONObject("device");
+    this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
+        ConnectionMethod.values()[device.getInt("connectionMethod")]);
+    this.api = this.api.useDevice(this.device);
+    // TODO i don't know if this is needed
+    this.setEventsHandler();
+    callbackContext.success("ok");
+  }
+
+  public void disconnect(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.disconnect()) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't disconnect from device");
+    }
+  }
+
+  public void setSharedSecret(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    this.api.setSharedSecret(params.getString("sharedSecret"));
+    callbackContext.success("ok");
+  }
+
+  public void setParameter(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    // TODO
+    /*if (this.api.setParameter(DeviceParameter.fromString(params.getString("param")), params.getString("value"))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send setParameter operation to device");
+    }*/
+  }
+
+  public void setLogLevel(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.setLogLevel(LogLevel.None.getLogLevel(params.getInt("level")))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send setLogLevel operation to device");
+    }
+  }
+
+  public void getDeviceLogs(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.getDeviceLogs()) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send getDeviceLogs operation to device");
+    }
+  }
+
+  public void getPendingTransaction(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.getPendingTransaction()) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send getPendingTransaction operation to device");
+    }
+  }
+
+  public void update(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.update()) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send update operation to device");
+    }
+  }
+
+  public void listDevices(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    this.api.listDevices(ConnectionMethod.values()[params.getInt("connectionMethod")]);
+    callbackContext.success("ok");
+  }
+
+  public void startMonitoringConnections(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    this.api.startMonitoringConnections();
+    callbackContext.success("ok");
+  }
+
+  public void stopMonitoringConnections(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    this.api.stopMonitoringConnections();
+    callbackContext.success("ok");
+  }
+
+  /**
+   * Register event handler 
+   */
+  public void eventHandler(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    this.callbackContext = callbackContext;
+
+    PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
   }
 
   @Override
   public void endOfTransaction(TransactionResult transactionResult, Device device) {
-    // The object TransactionResult holds the different receipts
-    // Other information can be accessed through this object like the transaction ID, the amount...
-    this.callbackContext.success(transactionResult.getStatusMessage());
+    SDKEvent event = new SDKEvent("endOfTransaction");
+    event.put("transactionResult", transactionResult);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
   }
 
+  @Override
+  public void deviceDiscoveryFinished(List<Device> devices) {
+    SDKEvent event = new SDKEvent("deviceDiscoveryFinished");
+    event.put("devices", devices);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void signatureRequired(SignatureRequest signatureRequest, Device device) {
+    SDKEvent event = new SDKEvent("signatureRequired");
+    event.put("signatureRequest", signatureRequest);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  /** Status Events */
+  @Override
+  public void connectionStatusChanged(ConnectionStatus status, Device device) {
+    SDKEvent event = new SDKEvent("connectionStatusChanged");
+    event.put("status", status);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void currentTransactionStatus(StatusInfo info, Device device) {
+    SDKEvent event = new SDKEvent("currentTransactionStatus");
+    event.put("info", info);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void deviceLogsReady(String logs, Device device) {
+    SDKEvent event = new SDKEvent("deviceLogsReady");
+    event.put("logs", logs);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void onMessageLogged(LogLevel level, String message) {
+    SDKEvent event = new SDKEvent("onMessageLogged");
+    event.put("level", level);
+    event.put("message", message);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void pendingTransactionResult(Device device) {
+    SDKEvent event = new SDKEvent("pendingTransactionResult");
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void transactionResultReady(TransactionResult transactionResult, Device device) {
+    SDKEvent event = new SDKEvent("transactionResultReady");
+    event.put("transactionResult", transactionResult);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  protected void finalize() {
+    this.api.removeRequiredEventHandler(this);
+    this.api.removeStatusNotificationEventHandler(this);
+    this.api.removeLogEventHandler(this);
+    this.api.removePendingResultsEventHandler(this);
+  }
+
+  private void setEventsHandler() {
+    // Register class as listener for all events
+    this.api.addRequiredEventHandler(this);
+    this.api.addStatusNotificationEventHandler(this);
+    this.api.addLogEventHandler(this);
+    this.api.addPendingResultsEventHandler(this);
+  }
 }
