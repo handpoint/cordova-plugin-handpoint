@@ -114,12 +114,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void setParameter(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    // TODO
-    /*if (this.api.setParameter(DeviceParameter.fromString(params.getString("param")), params.getString("value"))) {
+    if (this.api.setParameter(DeviceParameter.valueOf(params.getString("param")), params.getString("value"))) {
       callbackContext.success("ok");
     } else {
       callbackContext.error("Can't send setParameter operation to device");
-    }*/
+    }
   }
 
   public void setLogLevel(CallbackContext callbackContext, JSONObject params) throws Throwable {

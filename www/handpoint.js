@@ -187,11 +187,11 @@ function Handpoint() {
     };
 
     this.DeviceParameter = {
-        "BluetoothName": "name",
-        "BluetoothPass": "pass",
-        "SystemTimeout": "value",
-        "ScreenTimeout": "value",
-        "SignatureTimeout": "value"
+        "BluetoothName": "BluetoothName",
+        "BluetoothPass": "BluetoothPass",
+        "SystemTimeout": "SystemTimeout",
+        "ScreenTimeout": "ScreenTimeout",
+        "SignatureTimeout": "SignatureTimeout"
     };
 
     this.LogLevel = {
