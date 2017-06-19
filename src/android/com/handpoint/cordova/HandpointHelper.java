@@ -184,7 +184,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("endOfTransaction");
     event.put("transactionResult", transactionResult);
     event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -193,7 +193,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void deviceDiscoveryFinished(List<Device> devices) {
     SDKEvent event = new SDKEvent("deviceDiscoveryFinished");
     event.put("devices", devices);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -203,7 +203,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("signatureRequired");
     event.put("signatureRequest", signatureRequest);
     event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -214,7 +214,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("connectionStatusChanged");
     event.put("status", status);
     event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -224,7 +224,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("currentTransactionStatus");
     event.put("info", info);
     event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -234,7 +234,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("deviceLogsReady");
     event.put("logs", logs);
     event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -244,7 +244,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("onMessageLogged");
     event.put("level", level);
     event.put("message", message);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -253,7 +253,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void pendingTransactionResult(Device device) {
     SDKEvent event = new SDKEvent("pendingTransactionResult");
     event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }
@@ -263,7 +263,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("transactionResultReady");
     event.put("transactionResult", transactionResult);
     event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
   }

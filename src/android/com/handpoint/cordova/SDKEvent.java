@@ -28,31 +28,28 @@ public class SDKEvent {
    * Add event data. Each entry in event data is a key/value pair
    */
   public void put(String key, Object value) {
-    this.data.put(key, value);
+    Gson gson = new Gson();
+
+    try {
+      JSONObject valueObject = new JSONObject(gson.toJson(value));
+      this.data.put(key, valueObject);
+    } catch (JSONException jse) {
+      Log.e(TAG, "Error serializing SDKEvent value: " + jse.toString());
+    }
   }
 
-  @Override
-  public String toString() {
+  public JSONObject toJSONObject() {
     try {
-      Gson gson = new Gson();
       JSONObject eventObject = new JSONObject();
       // Add event name
       eventObject.put("event", this.name);
       // Add data map
-      if (this.data.size() > 0) {
-        JSONObject eventDataObject = new JSONObject();
-        final Set<Map.Entry<String, Object>> entries = this.data.entrySet();
-        for (Map.Entry<String, Object> entry : entries) {
-          eventDataObject.put(entry.getKey(), gson.toJson(entry.getValue()));
-        }
-        eventObject.put("data", eventDataObject);
-      }
-      return eventObject.toString();
+      eventObject.put("data", new JSONObject(this.data));
+      return eventObject;
     } catch (JSONException jse) {
       Log.e(TAG, "Error serializing SDKEvent: " + jse.toString());
-      return "";
+      return null;
     }
-
   }
 
 }

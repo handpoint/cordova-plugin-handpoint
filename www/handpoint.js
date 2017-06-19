@@ -484,14 +484,7 @@ Handpoint.prototype.stopMonitoringConnections = function (successCallback, error
  * @param {Function} errorCallback This function will be called if an error happened
  */
 Handpoint.prototype.eventHandler = function (successCallback, errorCallback) {
-    this.exec('eventHandler', {}, function (event) {
-        try {
-            event.data = JSON.parse(event.data);
-        } catch (ex) {
-            // Nothing to do... 
-        }
-        successCallback && successCallback(event);
-    }, errorCallback);
+    this.exec('eventHandler', {}, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
