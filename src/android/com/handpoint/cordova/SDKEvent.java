@@ -10,6 +10,7 @@ import com.google.gson.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import android.util.Log;
 
@@ -40,7 +41,7 @@ public class SDKEvent {
     try {
       // Is value Object iterable? Then iterate 
       if (value instanceof AbstractCollection) {
-        iterator = value.iterator();
+        iterator = ((AbstractCollection) value).iterator();
         while (iterator.hasNext()) {
           Object element = iterator.next();
           valueObject = new JSONObject(gson.toJson(element));
