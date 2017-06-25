@@ -3,6 +3,9 @@ package com.handpoint.cordova;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.AbstractCollection;
 import com.google.gson.*;
 
 import org.json.JSONException;
@@ -29,10 +32,26 @@ public class SDKEvent {
    */
   public void put(String key, Object value) {
     Gson gson = new Gson();
+    ArrayList list = new ArrayList();
+    Iterator iterator = null;
+    JSONObject valueObject = null;
+    JSONArray valueObjectList = null;
 
     try {
-      JSONObject valueObject = new JSONObject(gson.toJson(value));
-      this.data.put(key, valueObject);
+      // Is value Object iterable? Then iterate 
+      if (value instanceof AbstractCollection) {
+        iterator = value.iterator();
+        while (iterator.hasNext()) {
+          Object element = iterator.next();
+          valueObject = new JSONObject(gson.toJson(element));
+          list.add(valueObject);
+        }
+        valueObjectList = new JSONArray(list);
+        data.put(key, valueObjectList);
+      } else {
+        valueObject = new JSONObject(gson.toJson(value));
+        this.data.put(key, valueObject);
+      }
     } catch (JSONException jse) {
       Log.e(TAG, "Error serializing SDKEvent value: " + jse.toString());
     }
