@@ -18,7 +18,11 @@ function XurlEngine() {
         this.protocolFromString = function (version) {
             if (version == this.versions.v1) {
                 return V1Engine();
+<<<<<<< HEAD
             }
+=======
+            }   
+>>>>>>> aa564d5c1dfa9e9c09018ebc32ee22adaeaa0ffd
             else if (version == this.versions.v2) {
                 return V2Engine();
             }
