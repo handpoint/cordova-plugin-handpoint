@@ -4,3 +4,9 @@
 Cross-platform Handpoint SDK for Cordova / PhoneGap.
 
 Follows the [Cordova Plugin specification](https://cordova.apache.org/docs/en/latest/guide/hybrid/plugins/index.html).
+
+# State of ios:
+Just a prototype, what is missing:
+* implementatio!
+* linker settings
+* plist settings (probably)
