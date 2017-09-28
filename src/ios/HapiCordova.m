@@ -16,10 +16,11 @@
 {
     CDVPluginResult* pluginResult = nil;
     NSString* command = [command.arguments objectAtIndex:0];
+    NSString* method_name = command.methodName;
 
-    if (echo != nil && [echo length] > 0) {
+    if (method_name != nil && [method_name length] > 0) {
 
-
+        // we must translate the names, since the methods do not have the same names as in Android/.Net
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
     } else {
