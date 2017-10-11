@@ -9,6 +9,7 @@
 {
     HeftManager* manager = [HeftManager sharedManager];
     manager.delegate = self;
+    //TODO do we need this?
     [manager resetDevices];
 }
 
@@ -35,7 +36,7 @@ NSDictionary *MethodDictionary = @{
             // call the given method, with the parameters it needs
             if (translated_method_name == 'saleWithAmount')
             {
-                NSInteger amount =
+                NSInteger amount = 
 - (BOOL)saleWithAmount:(NSInteger)amount currency:(NSString*)currency cardholder:(BOOL)present
 
             }
@@ -108,24 +109,24 @@ NSDictionary *MethodDictionary = @{
 - (void)responseFinanceStatus:(id<FinanceResponseInfo>)info;
 {
     NSMutableSet *saleSet = [NSMutableSet setWithObjects:@"APPROVED", @"AUTHORISED", @"DECLINED", @"CANCELLED", @"CARD BLOCKED", nil];
-
+    
     NSLog(@"hpHeftService responseFinanceStatus");
     NSLog(@"%@", info.status);
     NSLog(@"%@", info.xml.description);
     NSString* financialStatus = [info.xml objectForKey:@"FinancialStatus"];
-    if ([saleSet containsObject:financialStatus])
+    if ([saleSet containsObject:financialStatus]) 
     {
         receipt = [self generateReceipt:info];
-
+        
         if ([[info customerReceipt] length] > 0 || [[info merchantReceipt] length] > 0) {
             [receiptDelegate addItem:receipt];
         }
-
+        
         webReceipt = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 595, 0)];
         [webReceipt setDelegate:self];
         [webReceipt loadHTMLString:receipt.merchantReceipt baseURL:nil];
         NSLog(@"Webview is loading...");
-    }
+    }    
 
     // and then return some data to javascripot
     [self.commandDelegate sendPluginResult:X callbackId:command.callbackId];
