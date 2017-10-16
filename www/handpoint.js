@@ -349,7 +349,9 @@ Handpoint.prototype.disconnect = function (config, successCallback, errorCallbac
  * @param {Function} errorCallback This function will be called if an error happened
  */
 Handpoint.prototype.setSharedSecret = function (config, successCallback, errorCallback) {
-    this.exec('setSharedSecret', config, successCallback, errorCallback);
+    this.exec('setSharedSecret', config, successCallback);
+    // exec Success callback just after setting SS
+    successCallback();
 };
 
 /**
