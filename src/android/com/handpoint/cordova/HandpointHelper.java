@@ -119,8 +119,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void setSharedSecret(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    this.api.setSharedSecret(params.getString("sharedSecret"));
-    callbackContext.success("ok");
+    if (this.api.setSharedSecret(params.getString("sharedSecret"))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't set Shared Secret");
+    }
   }
 
   public void setParameter(CallbackContext callbackContext, JSONObject params) throws Throwable {
