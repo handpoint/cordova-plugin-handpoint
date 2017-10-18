@@ -9,6 +9,10 @@
 {
     HeftManager* manager = [HeftManager sharedManager];
     manager.delegate = self;
+<<<<<<< HEAD
+    //TODO do we need this?
+=======
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
     [manager resetDevices];
 }
 

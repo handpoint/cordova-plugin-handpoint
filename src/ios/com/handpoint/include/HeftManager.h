@@ -18,7 +18,11 @@
 @protocol HeftStatusReportDelegate;
 @class HeftRemoteDevice;
 
+<<<<<<< HEAD
+/**
+=======
 /** 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  @brief HeftDiscoveryDelegate protocol methods
  */
 @protocol HeftDiscoveryDelegate
@@ -64,7 +68,11 @@
 
 @end
 
+<<<<<<< HEAD
+/**
+=======
 /** 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  @brief HeftDiscovery protocol methods
  */
 @protocol HeftDiscovery
@@ -73,12 +81,21 @@
  @{
  */
 
+<<<<<<< HEAD
+/**
+ @brief Stored array which contains all found devices.
+ */
+@property(nonatomic, readonly) NSMutableArray* devicesCopy;
+/**
+ Delegate object. Will handle notifications which contain in HeftDiscoveryDelegate protocol.
+=======
 /** 
  @brief Stored array which contains all found devices.
  */
 @property(nonatomic, readonly) NSMutableArray* devicesCopy;
 /** 
  Delegate object. Will handle notifications which contain in HeftDiscoveryDelegate protocol. 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  */
 @property(nonatomic, weak) NSObject<HeftDiscoveryDelegate>* delegate;
 /**
@@ -95,16 +112,28 @@
 
 @end
 
+<<<<<<< HEAD
+/** @brief HeftManager class methods*/
+@interface HeftManager : NSObject<HeftDiscovery>
+/**
+=======
 /** @brief HeftManager class methods*/ 
 @interface HeftManager : NSObject<HeftDiscovery>
 /** 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  Returns heft manager instance.
  */
 + (HeftManager*)sharedManager;
 
+<<<<<<< HEAD
+/**
+ DEPRECATED: use -(NSString*)getSDKVersion;
+ @brief Current HeftManager version.
+=======
 /** 
  DEPRECATED: use -(NSString*)getSDKVersion;
  @brief Current HeftManager version. 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  */
 @property(nonatomic, readonly) NSString* version;
 
