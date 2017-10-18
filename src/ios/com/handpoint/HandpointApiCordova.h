@@ -7,7 +7,7 @@
 #import "HeftStatusReportPublic.h"
 
 
-@interface HapiCordova : CDVPlugin <HeftDiscoveryDelegate, HeftStatusReportDelegate>
+@interface HandpointApiCordova : CDVPlugin <HeftDiscoveryDelegate, HeftStatusReportDelegate>
 {
     id<HeftClient> heftClient;
     HeftRemoteDevice *selectedDevice;

@@ -1,7 +1,7 @@
-#import "HapiCordova.h"
+#import "HandpointApiCordova.h"
 #import <Cordova/CDVPlugin.h>
 
-@implementation HapiCordova
+@implementation HandpointApiCordova
 
 @synthesize heftClient;
 

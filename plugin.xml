@@ -32,7 +32,7 @@
     <platform name="ios">
         <config-file parent="res/xml/config.xml" target="/*">
 			<feature name="HandpointApiCordova">
-				<param name="ios-package" value="HapiCordova"/>
+				<param name="ios-package" value="HandpointApiCordova"/>
 			</feature>
 		</config-file>
 
