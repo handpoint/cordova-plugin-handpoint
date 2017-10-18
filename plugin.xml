@@ -30,7 +30,7 @@
         <lib-file src="src/android/gson-2.8.1.jar"/>
     </platform>
     <platform name="ios">
-        <config-file parent="res/xml/config.xml" target="/*">
+        <config-file parent="config.xml" target="/*">
 			<feature name="HandpointApiCordova">
 				<param name="ios-package" value="HandpointApiCordova"/>
 			</feature>
