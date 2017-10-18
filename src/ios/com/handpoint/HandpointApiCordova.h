@@ -7,14 +7,7 @@
 #import "HeftStatusReportPublic.h"
 
 
-@interface HandpointApiCordova : CDVPlugin <HeftDiscoveryDelegate, HeftStatusReportDelegate>
-{
-    id<HeftClient> heftClient;
-    HeftRemoteDevice *selectedDevice;
-}
-
-
-@property(nonatomic, strong) id<HeftClient> heftClient;
+@interface HandpointApiCordova : CDVPlugin //<HeftDiscoveryDelegate, HeftStatusReportDelegate>
 
 + (HandpointApiCordova *)instance;
 

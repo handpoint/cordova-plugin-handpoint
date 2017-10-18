@@ -4,6 +4,8 @@
 @interface HandpointApiCordova ()
 
 @property (nonatomic) HeftManager* manager;
+@property(nonatomic, strong) id<HeftClient> heftClient;
+@property (nonatomic) HeftRemoteDevice *selectedDevice;
 
 @end
 
