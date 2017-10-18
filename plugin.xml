@@ -12,7 +12,6 @@
     <js-module src="www/handpoint.js" name="Handpoint">
         <clobbers target="cordova.plugins.Handpoint"/>
     </js-module>
-
     <platform name="android">
         <source-file src="src/android/com/handpoint/cordova/HandpointApiCordova.java" target-dir="src/com/handpoint/cordova"/>
         <source-file src="src/android/com/handpoint/cordova/HandpointHelper.java" target-dir="src/com/handpoint/cordova"/>
@@ -30,15 +29,11 @@
         <lib-file src="src/android/hapi-android-3.2.5.jar"/>
         <lib-file src="src/android/gson-2.8.1.jar"/>
     </platform>
-
-    <platform name="iso">
+    <platform name="ios">
         <source-file src="src/ios/HapiCordova.m" target-dir="src/ios/cordova"/>
-        
         <framework src="ExternalAccessory.framework" />
         <framework src="Security.framework" />
-
         <plugins-plist key="Supported external accessory protocols" string="com.datecs.pinpad" />
-
         <lib-file src="src/ios/libheft.a"/>
     </platform>
 </plugin>
