@@ -113,11 +113,7 @@
 #define EFT_PACKET_LOG_GETINFO			"L020"
 #define EFT_PACKET_LOG_GETINFO_RESP		"L021"
 
-<<<<<<< HEAD
 //MPED status messages
-=======
-//MPED status messages 
->>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
 #define EFT_PP_STATUS_SUCCESS                   0x0001
 #define EFT_PP_STATUS_INVALID_DATA              0x0002
 #define EFT_PP_STATUS_PROCESSING_ERROR          0x0003
