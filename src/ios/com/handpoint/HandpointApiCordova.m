@@ -1,17 +1,29 @@
 #import "HandpointApiCordova.h"
 #import <Cordova/CDVPlugin.h>
 
+@interface HandpointApiCordova ()
+
+@property (nonatomic) HeftManager* manager;
+
+@end
+
 @implementation HandpointApiCordova
 
 @synthesize heftClient;
 
-- (void)pluginInitialize
+- (instancetype)init
 {
-    HeftManager* manager = [HeftManager sharedManager];
-    manager.delegate = self;
-    //TODO do we need this?
-    [manager resetDevices];
+    self = [super init];
+    if (self)
+    {
+        self.manager = [HeftManager sharedManager];
+        self.manager.delegate = self;
+        //TODO do we need this?
+        [self.manager resetDevices];
+    }
+    return self;
 }
+/*
 
 // map method names - but this could even be a map from string to function pointer, instead of function name
 NSDictionary *MethodDictionary = @{
@@ -23,8 +35,8 @@ NSDictionary *MethodDictionary = @{
 
 - (void)execute:(CDVInvokedUrlCommand*)command
 {
-    CDVPluginResult* pluginResult = nil;
-    // NSString* command = [command.arguments objectAtIndex:0];
+    commands.arguments
+    CDVPluginResult* pluginResult = CDVCommandStatus_ERROR; //CDVCommandStatus_OK
     NSString* method_name = command.methodName;
 
     if (method_name != nil && [method_name length] > 0) {
@@ -134,6 +146,6 @@ NSDictionary *MethodDictionary = @{
 }
 
 
-
+*/
 
 @end

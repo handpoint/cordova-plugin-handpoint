@@ -16,6 +16,9 @@
 
 @property(nonatomic, strong) id<HeftClient> heftClient;
 
++ (HandpointApiCordova *)instance;
+
+
 - (void):initialize
 - (void):(CDVInvokedUrlCommand*)command;
 
