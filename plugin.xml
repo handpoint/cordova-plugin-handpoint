@@ -30,11 +30,26 @@
         <lib-file src="src/android/gson-2.8.1.jar"/>
     </platform>
     <platform name="ios">
-        <source-file src="src/ios/HapiCordova.m" target-dir="src/ios/cordova"/>
-        <source-file src="src/ios/HandpointApiCordova.m" target-dir="src/ios/com/handpoint/cordova"/>
+        <config-file parent="res/xml/config.xml" target="/*">
+			<feature name="HandpointApiCordova">
+				<param name="ios-package" value="HapiCordova"/>
+			</feature>
+		</config-file>
+
+		<source-file src="src/ios/com/handpoint/HandpointApiCordova.m"/>
+		<header-file src="src/ios/com/handpoint/HandpointApiCordova.h"/>
+
+        <!-- SDK header files -->
+		<header-file src="src/ios/com/handpoint/CmdIds.h"/>
+		<header-file src="src/ios/com/handpoint/HeftClient.h"/>
+		<header-file src="src/ios/com/handpoint/HeftManager.h"/>
+		<header-file src="src/ios/com/handpoint/HeftRemoteDevice.h"/>
+		<header-file src="src/ios/com/handpoint/HeftStatusReportPublic.h"/>
+
         <framework src="ExternalAccessory.framework" />
         <framework src="Security.framework" />
         <plugins-plist key="Supported external accessory protocols" string="com.datecs.pinpad" />
-        <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
+        <source-file src="src/ios/com/handpoint/lib/libheft.a" framework="true" />
+        <!-- <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>-->
     </platform>
 </plugin>
