@@ -18,4 +18,7 @@ N.b. the names of the methods are not the same in iOS and Android/.Net so names 
 
 Handle system events (when the app is closed/paused, put in background etc.)
 Add the current_reader variable to handle disconnect/reconnect when app goes got background, comes to foreground.
+<<<<<<< HEAD
+=======
 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
