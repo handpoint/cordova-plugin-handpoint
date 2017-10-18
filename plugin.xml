@@ -32,13 +32,21 @@
     </platform>
 
     <platform name="iso">
+<<<<<<< HEAD
         <source-file src="src/ios/HandpointApiCordova.m" target-dir="src/ios/com/handpoint/cordova"/>
+=======
+        <source-file src="src/ios/HapiCordova.m" target-dir="src/ios/cordova"/>
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
         
         <framework src="ExternalAccessory.framework" />
         <framework src="Security.framework" />
 
         <plugins-plist key="Supported external accessory protocols" string="com.datecs.pinpad" />
 
+<<<<<<< HEAD
         <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
+=======
+        <lib-file src="src/ios/libheft.a"/>
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
     </platform>
 </plugin>

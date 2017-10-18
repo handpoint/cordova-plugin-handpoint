@@ -18,17 +18,29 @@
  @brief Base information for any feedback. Includes status code, status text and detailed xml.
  */
 @protocol ResponseInfo
+<<<<<<< HEAD
 /**
+=======
+/** 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  @defgroup RI_PROTOCOL ResponseInfo Protocol
  Base information for any feedback. Includes status code, status text and detailed xml.
  @{
  */
 
+<<<<<<< HEAD
 /**
  Code of the MPED status message.
  */
 @property(nonatomic) int statusCode;
 /**
+=======
+/** 
+ Code of the MPED status message.
+ */
+@property(nonatomic) int statusCode;
+/** 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  Financial transaction status message.
  */
 @property(nonatomic,strong) NSString* status;
@@ -45,7 +57,11 @@
  @brief Feedback for any financial requests.
  */
 @protocol FinanceResponseInfo<ResponseInfo>
+<<<<<<< HEAD
 /**
+=======
+/** 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  @defgroup FRI_PROTOCOL FinanceResponseInfo Protocol
  Feedback for any financial requests.
  @{
@@ -201,7 +217,11 @@ DEPRECATED_ATTRIBUTE
 - (void)responseLogInfo:(id<LogInfo>)info;
 
 /**
+<<<<<<< HEAD
  Notifies when cardholder's signature verification is needed.<br/>
+=======
+ Notifies when cardholder's signature verification is needed.<br/> 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
 	It should be typically used to print the merchant receipt and accept the customer signature. Handler has to call acceptSignature:(BOOL)flag with YES if the signature is valid and NO otherwise. If the handler doesn't process the message in a timely manner (as dictated by the card reader) then the transaction will be declined and cancelSignature called (note: the typical configured time period on the card reader is 90s).
  @param receipt				The merchant receipt of the transaction in html format.
  */
@@ -236,7 +256,11 @@ DEPRECATED_ATTRIBUTE
 
 /**
  DEPRECATED: use -(void)responseScannerDisabled:(id<ScannerDisabledResponseInfo>)info;
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> ea376fba59c2fffe9d9176efc804cd4caa25426d
  Notifies that the scanner mode has been disabled.
  @param info    Includes status code, status text and detailed xml.
  */
