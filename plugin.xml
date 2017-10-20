@@ -47,6 +47,7 @@
 		<header-file src="src/ios/com/handpoint/HeftRemoteDevice+SendableDevice.h"/>
 		<source-file src="src/ios/com/handpoint/CDVPlugin+Callback.m"/>
 		<header-file src="src/ios/com/handpoint/CDVPlugin+Callback.h"/>
+		<header-file src="src/ios/com/handpoint/ConnectionStatus.h"/>
 
         <!-- SDK header files -->
 		<header-file src="src/ios/com/handpoint/include/CmdIds.h"/>

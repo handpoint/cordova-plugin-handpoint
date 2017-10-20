@@ -4,7 +4,6 @@
 
 #import <Cordova/CDVPlugin.h>
 #import "HandpointHelper.h"
-#import "CallbackDelegate.h"
 #import "Currency.h"
 #import "HeftClient.h"
 #import "HeftRemoteDevice.h"
