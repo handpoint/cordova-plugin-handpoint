@@ -48,13 +48,12 @@
 		<source-file src="src/ios/com/handpoint/CDVPlugin+Callback.m"/>
 		<header-file src="src/ios/com/handpoint/CDVPlugin+Callback.h"/>
 
-        <header-file src="src/ios/com/handpoint/include/"/>
-        <!-- SDK header files 
+        <!-- SDK header files -->
 		<header-file src="src/ios/com/handpoint/include/CmdIds.h"/>
 		<header-file src="src/ios/com/handpoint/include/HeftClient.h"/>
 		<header-file src="src/ios/com/handpoint/include/HeftManager.h"/>
 		<header-file src="src/ios/com/handpoint/include/HeftRemoteDevice.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftStatusReportPublic.h"/>-->
+		<header-file src="src/ios/com/handpoint/include/HeftStatusReportPublic.h"/>
 
         <framework src="ExternalAccessory.framework" />
         <framework src="Security.framework" />
