@@ -3,6 +3,7 @@
 //
 
 #import "CDVPlugin+Callback.h"
+#import "CDVCommandDelegate.h"
 
 
 @implementation CDVPlugin (Callback)
