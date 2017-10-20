@@ -5,7 +5,7 @@
 @interface HandpointApiCordova ()
 
 @property (nonatomic) HeftManager* manager;
-@property(nonatomic, strong) id<HeftClient> heftClient;
+@property (nonatomic, strong) id<HeftClient> heftClient;
 @property (nonatomic) HeftRemoteDevice *selectedDevice;
 @property (nonatomic) HandpointHelper *handpointHelper;
 
@@ -18,9 +18,7 @@
     self = [super init];
     if (self)
     {
-
-        self.handpointHelper = [HandpointHelper alloc];
-
+        self.handpointHelper = [[HandpointHelper alloc] initWithDelegate:self];
     }
     return self;
 }

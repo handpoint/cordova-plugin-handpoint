@@ -8,6 +8,7 @@
 
 @interface HandpointHelper : NSObject <HeftDiscoveryDelegate, HeftStatusReportDelegate>
 
+- (instancetype)initWithDelegate:(CDVPlugin *)delegate;
 - (void)processCommand:(CDVInvokedUrlCommand *)command delegate:(CDVPlugin *)delegate;
 
 @end

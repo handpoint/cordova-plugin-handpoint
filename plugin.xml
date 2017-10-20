@@ -32,7 +32,8 @@
     <platform name="ios">
         <config-file parent="config.xml" target="/*">
 			<feature name="HandpointApiCordova">
-				<param name="ios-package" value="HandpointApiCordova"/>
+				<param name="ios-package" value="com.handpoint.HandpointApiCordova"/>
+                <param name="onload" value="true" />
 			</feature>
 		</config-file>
 		<source-file src="src/ios/com/handpoint/HandpointApiCordova.m"/>

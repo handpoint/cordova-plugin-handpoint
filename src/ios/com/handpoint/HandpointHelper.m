@@ -45,7 +45,8 @@
 + (NSDictionary *)getMethodPointers
 {
     return @{
-            @"sale": [NSValue valueWithPointer:@selector(sale:params:)],
+             @"init": [NSValue valueWithPointer:@selector(setup:params:)],
+             @"sale": [NSValue valueWithPointer:@selector(sale:params:)],
             @"saleReversal": [NSValue valueWithPointer:@selector(saleReversal:params:)],
             @"refund": [NSValue valueWithPointer:@selector(refund:params:)],
             @"refundReversal": [NSValue valueWithPointer:@selector(refundReversal:params:)],
