@@ -35,9 +35,19 @@
 				<param name="ios-package" value="HandpointApiCordova"/>
 			</feature>
 		</config-file>
-
 		<source-file src="src/ios/com/handpoint/HandpointApiCordova.m"/>
 		<header-file src="src/ios/com/handpoint/HandpointApiCordova.h"/>
+		<source-file src="src/ios/com/handpoint/HandpointHelper.m"/>
+		<header-file src="src/ios/com/handpoint/HandpointHelper.h"/>
+		<source-file src="src/ios/com/handpoint/SDKEvent.m"/>
+		<header-file src="src/ios/com/handpoint/SDKEvent.h"/>
+		<source-file src="src/ios/com/handpoint/Currency.m"/>
+		<header-file src="src/ios/com/handpoint/Currency.h"/>
+		<source-file src="src/ios/com/handpoint/HeftRemoteDevice+SendableDevice.m"/>
+		<header-file src="src/ios/com/handpoint/HeftRemoteDevice+SendableDevice.h"/>
+		<source-file src="src/ios/com/handpoint/CDVPlugin+Callback.m"/>
+		<header-file src="src/ios/com/handpoint/CDVPlugin+Callback.h"/>
+		<header-file src="src/ios/com/handpoint/ConnectionStatus.h"/>
 
         <!-- SDK header files -->
 		<header-file src="src/ios/com/handpoint/include/CmdIds.h"/>
