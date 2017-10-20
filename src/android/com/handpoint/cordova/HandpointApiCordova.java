@@ -37,51 +37,57 @@ public class HandpointApiCordova extends CordovaPlugin {
   }
 
   @Override
-  public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    Method method = null;
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
+  public boolean execute(String ac, JSONArray arguments, CallbackContext cbc) throws JSONException {
 
-    // Get method to invoke by name
-    try {
-      if (this.handpointHelper != null) {
-        method = this.handpointHelper.getClass().getMethod(action, CallbackContext.class, JSONObject.class);
-      } else {
-        callbackContext.error("Error initializing Handpoint SDK " + this.error);
+    final String action = ac;
+    final JSONArray args = arguments;
+    final CallbackContext callbackContext = cbc;
+
+    cordova.getThreadPool().execute(new Runnable() {
+      public void run() {
+
+        Method method = null;
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        // Get method to invoke by name
+        try {
+          if (handpointHelper != null) {
+            method = handpointHelper.getClass().getMethod(action, CallbackContext.class, JSONObject.class);
+          } else {
+            callbackContext.error("Error initializing Handpoint SDK " + error);
+          }
+        } catch (SecurityException e) {
+          callbackContext.error("Handpoint SDK method not defined: " + action);
+          return;
+        } catch (NoSuchMethodException e) {
+          callbackContext.error("Handpoint SDK method not defined: " + action);
+          return;
+        } catch (Throwable thr) {
+          callbackContext.error("Handpoint SDK error: " + thr.toString());
+          return;
+        }
+
+        // invoke SDK method
+
+        try {
+          method.invoke(handpointHelper, callbackContext, args.getJSONObject(0));
+        } catch (IllegalArgumentException e) {
+          e.printStackTrace(pw);
+          callbackContext.error("Handpoint SDK method illegal argument error: " + pw.toString());
+        } catch (IllegalAccessException e) {
+          e.printStackTrace(pw);
+          callbackContext.error("Handpoint SDK method illegal access error: " + pw.toString());
+        } catch (InvocationTargetException e) {
+          e.getTargetException().printStackTrace(pw);
+          callbackContext
+              .error("Handpoint SDK method " + action + " invocation error: " + e.getTargetException().toString());
+        } catch (Throwable thr) {
+          thr.printStackTrace(pw);
+          callbackContext.error("Handpoint SDK method error: " + pw.toString());
+        }
       }
-    } catch (SecurityException e) {
-      callbackContext.error("Handpoint SDK method not defined: " + action);
-      return false;
-    } catch (NoSuchMethodException e) {
-      callbackContext.error("Handpoint SDK method not defined: " + action);
-      return false;
-    } catch (Throwable thr) {
-      callbackContext.error("Handpoint SDK error: " + thr.toString());
-      return false;
-    }
-
-    // invoke SDK method
-    try {
-      method.invoke(this.handpointHelper, callbackContext, args.getJSONObject(0));
-    } catch (IllegalArgumentException e) {
-      e.printStackTrace(pw);
-      callbackContext.error("Handpoint SDK method illegal argument error: " + pw.toString());
-      return false;
-    } catch (IllegalAccessException e) {
-      e.printStackTrace(pw);
-      callbackContext.error("Handpoint SDK method illegal access error: " + pw.toString());
-      return false;
-    } catch (InvocationTargetException e) {
-      e.getTargetException().printStackTrace(pw);
-      callbackContext
-          .error("Handpoint SDK method " + action + " invocation error: " + e.getTargetException().toString());
-      return false;
-    } catch (Throwable thr) {
-      thr.printStackTrace(pw);
-      callbackContext.error("Handpoint SDK method error: " + pw.toString());
-      return false;
-    }
-
+    });
     return true;
   }
 
