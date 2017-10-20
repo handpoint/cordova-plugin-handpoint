@@ -60,6 +60,7 @@
         <framework src="Security.framework" />
         <plugins-plist key="Supported external accessory protocols" string="com.datecs.pinpad" />
         <source-file src="src/ios/com/handpoint/lib/libheft.a" framework="true" />
+        <framework src="libc++.dylib" />
         <!-- <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>-->
     </platform>
 </plugin>

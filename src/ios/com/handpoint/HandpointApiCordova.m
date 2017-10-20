@@ -29,8 +29,6 @@
 {
     [self.handpointHelper processCommand:command
                                 delegate:self];
-
-
 }
 
 @end

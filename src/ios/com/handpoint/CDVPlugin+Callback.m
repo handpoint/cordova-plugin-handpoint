@@ -3,30 +3,28 @@
 //
 
 #import "CDVPlugin+Callback.h"
-#import "CDVCommandDelegate.h"
-
 
 @implementation CDVPlugin (Callback)
 
-- (void)success
+- (void)successWithCallbackId:(NSString *)callbackId
 {
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
 
-    [self sendPluginResult:pluginResult];
+    [self sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)errorWithMessage:(NSString *)message
+- (void)errorWithMessage:(NSString *)message callbackId:(NSString *)callbackId
 {
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                                       messageAsString:message];
-    [self sendPluginResult:pluginResult];
+    [self sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)sendPluginResult:(CDVPluginResult *)result
+- (void)sendPluginResult:(CDVPluginResult *)result callbackId:(NSString *)callbackId
 {
     [result setKeepCallbackAsBool:YES];
 
-    [self.commandDelegate sendPluginResult:result];
+    [self.commandDelegate sendPluginResult:result callbackId:callbackId];
 }
 
 @end

@@ -7,8 +7,9 @@
 
 @interface CDVPlugin (Callback)
 
-- (void)success;
-- (void)errorWithMessage:(NSString *)message;
-- (void)sendPluginResult:(CDVPluginResult *)result;
+- (void)successWithCallbackId:(NSString *)callbackId;
+
+- (void)errorWithMessage:(NSString *)message callbackId:(NSString *)callbackId;
+- (void)sendPluginResult:(CDVPluginResult *)result callbackId:(NSString *)callbackId;
 
 @end

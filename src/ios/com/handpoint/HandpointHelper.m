@@ -24,6 +24,7 @@
 @property (nonatomic) CDVPlugin *delegate;
 //@property (nonatomic) id<CDVCommandDelegate> commandDelegate;
 
+@property (nonatomic, copy) NSString *callbackId;
 @end
 
 @implementation HandpointHelper
@@ -68,7 +69,7 @@
         self.manager.delegate = self;
         //TODO do we need this?
         [self.manager resetDevices];
-        [delegate success];
+        [self sendSuccess];
     }
     //TODO Else error
 }
@@ -76,6 +77,7 @@
 - (void)processCommand:(CDVInvokedUrlCommand*)command delegate:(CDVPlugin *)delegate
 {
     NSDictionary* arguments = ([command.arguments count] > 0) ? [command argumentAtIndex:0] : [NSDictionary new];
+    self.callbackId = command.callbackId;
 
     if (arguments.count == 0)
     {
@@ -107,12 +109,23 @@
                         currency:currency.sendableCurrencyCode
                       cardholder:YES])
     {
-        [delegate success];
+        [self sendSuccess];
     }
     else
     {
-        [delegate errorWithMessage:@"Can't send sale operation to device"];
+        [self sendErrorWithMessage:@"Can't send sale operation to device"];
     }
+}
+
+- (void)sendErrorWithMessage:(NSString *)string
+{
+    [self.delegate errorWithMessage:string
+                         callbackId:self.callbackId];
+}
+
+- (void)sendSuccess
+{
+    [self.delegate successWithCallbackId:self.callbackId];
 }
 
 - (void)saleReversal:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
@@ -126,9 +139,9 @@
                           cardholder:YES
                          transaction:originalTransactionID])
     {
-        [delegate success];
+        [self sendSuccess];
     } else {
-        [delegate errorWithMessage:@"Can't send saleReversal operation to device"];
+        [self sendErrorWithMessage:@"Can't send saleReversal operation to device"];
     }
 }
 
@@ -141,9 +154,9 @@
                           currency:currency.sendableCurrencyCode
                         cardholder:YES])
     {
-        [delegate success];
+        [self sendSuccess];
     } else {
-        [delegate errorWithMessage:@"Can't send refund operation to device"];
+        [self sendErrorWithMessage:@"Can't send refund operation to device"];
     }
 }
 
@@ -158,16 +171,16 @@
                             cardholder:YES
                            transaction:originalTransactionID])
     {
-        [delegate success];
+        [self sendSuccess];
     } else {
-        [delegate errorWithMessage:@"Can't send refundReversal operation to device"];
+        [self sendErrorWithMessage:@"Can't send refundReversal operation to device"];
     }
 }
 
 - (void)signatureResult:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
 {
     [self.api acceptSignature:YES];
-    [delegate success];
+    [self sendSuccess];
 }
 
 #pragma mark - Device Management
@@ -189,34 +202,34 @@
                    sharedSecretString:self.sharedSecret
                              delegate:self];
 
-        [delegate success];
+        [self sendSuccess];
 
         [self connectionStatusChanged:ConnectionStatusConnecting];
         //TODO do dispatch and block here until we have a client
     }
     else
     {
-        [delegate errorWithMessage:@"Can't connect. No device available"];
+        [self sendErrorWithMessage:@"Can't connect. No device available"];
     }
 }
 
 - (void)disconnect:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
 {
-    [delegate errorWithMessage:@"Can't disconnect from device. Not supported."];
+    [self sendErrorWithMessage:@"Can't disconnect from device. Not supported."];
 }
 
 - (void)setSharedSecret:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params {
     self.sharedSecret = params[@"sharedSecret"];
-    [delegate success];
+    [self sendSuccess];
 }
 
 - (void)getPendingTransaction:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
 {
     //TODO
    /* if (self.api.getPendingTransaction()) {
-        [delegate success];
+        [self sendSuccess];
     } else {
-        [delegate errorWithMessage:@"Can't send getPendingTransaction operation to device"];
+        [self sendErrorWithMessage:@"Can't send getPendingTransaction operation to device"];
     }*/
 }
 
@@ -224,7 +237,7 @@
 {
     [self.manager resetDevices];
     [self.manager startDiscovery:YES];
-    [self.delegate success];
+    [self sendSuccess];
 }
 
 - (void)didFindAccessoryDevice:(HeftRemoteDevice *)newDevice
@@ -260,7 +273,8 @@
                                          data:@{@"devices": sendableDevices}];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:event.JSON];
-    [self.delegate sendPluginResult:pluginResult];
+    [self.delegate sendPluginResult:pluginResult
+                         callbackId:self.callbackId];
 }
 
 - (void)didConnect:(id <HeftClient>)client
@@ -281,13 +295,15 @@
                                              data:data];
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsString:event.JSON];
-        [self.delegate sendPluginResult:pluginResult];
+        [self.delegate sendPluginResult:pluginResult
+                             callbackId:self.callbackId];
     }
     else
     {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                                           messageAsString:@"No preferred device found"];
-        [self.delegate sendPluginResult:pluginResult];
+        [self.delegate sendPluginResult:pluginResult
+                             callbackId:self.callbackId];
     }
 }
 
