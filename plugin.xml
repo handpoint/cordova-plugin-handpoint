@@ -30,38 +30,12 @@
         <lib-file src="src/android/gson-2.8.1.jar"/>
     </platform>
     <platform name="ios">
-        <config-file parent="config.xml" target="/*">
-			<feature name="HandpointApiCordova">
-				<param name="ios-package" value="com.handpoint.HandpointApiCordova"/>
-                <param name="onload" value="true" />
-			</feature>
-		</config-file>
-		<source-file src="src/ios/com/handpoint/HandpointApiCordova.m"/>
-		<header-file src="src/ios/com/handpoint/HandpointApiCordova.h"/>
-		<source-file src="src/ios/com/handpoint/HandpointHelper.m"/>
-		<header-file src="src/ios/com/handpoint/HandpointHelper.h"/>
-		<source-file src="src/ios/com/handpoint/SDKEvent.m"/>
-		<header-file src="src/ios/com/handpoint/SDKEvent.h"/>
-		<source-file src="src/ios/com/handpoint/Currency.m"/>
-		<header-file src="src/ios/com/handpoint/Currency.h"/>
-		<source-file src="src/ios/com/handpoint/HeftRemoteDevice+SendableDevice.m"/>
-		<header-file src="src/ios/com/handpoint/HeftRemoteDevice+SendableDevice.h"/>
-		<source-file src="src/ios/com/handpoint/CDVPlugin+Callback.m"/>
-		<header-file src="src/ios/com/handpoint/CDVPlugin+Callback.h"/>
-		<header-file src="src/ios/com/handpoint/ConnectionStatus.h"/>
-
-        <!-- SDK header files -->
-		<header-file src="src/ios/com/handpoint/include/CmdIds.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftClient.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftManager.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftRemoteDevice.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftStatusReportPublic.h"/>
-
-        <framework src="ExternalAccessory.framework" />
-        <framework src="Security.framework" />
-        <plugins-plist key="Supported external accessory protocols" string="com.datecs.pinpad" />
-        <source-file src="src/ios/com/handpoint/lib/libheft.a" framework="true" />
-        <framework src="libc++.dylib" />
-        <!-- <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>-->
+        <config-file target="config.xml" parent="/widget">
+            <feature name="HandpointApiCordova">
+                <param name="ios-package" value="HandpointApiCordova" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/HandpointApiCordova.h" target-dir="HandpointApiCordovaPlugin"/>
+        <source-file src="src/ios/HandpointApiCordova.m" target-dir="HandpointApiCordovaPlugin"/>
     </platform>
 </plugin>

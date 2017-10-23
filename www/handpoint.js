@@ -362,8 +362,8 @@ Handpoint.prototype.setSharedSecret = function (config, successCallback, errorCa
  * However, if you're developing with a starter kit, the test shared secret is specified 
  * in the example 
  */
-Handpoint.prototype.init = function (config, successCallback, errorCallback) {
-    this.exec('init', config, successCallback, errorCallback);
+Handpoint.prototype.setup = function (config, successCallback, errorCallback) {
+    this.exec('setup', config, successCallback, errorCallback);
 };
 
 /**

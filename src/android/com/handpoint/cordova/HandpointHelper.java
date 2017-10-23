@@ -29,7 +29,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   //An Android Context is required to be able to handle bluetooth
-  public void init(CallbackContext callbackContext, JSONObject params) throws Throwable {
+  public void setup(CallbackContext callbackContext, JSONObject params) throws Throwable {
     String sharedSecret = null;
 
     this.api = HapiFactory.getAsyncInterface(this, this.context);
