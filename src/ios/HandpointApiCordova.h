@@ -3,14 +3,14 @@
 #import <Cordova/CDV.h>
 #import <Cordova/CDVPlugin.h>
 
-#import "HeftClient.h"
+/*#import "HeftClient.h"
 #import "HeftManager.h"
-#import "HeftStatusReportPublic.h"
+#import "HeftStatusReportPublic.h"*/
 
 
-@interface HandpointApiCordova : CDVPlugin <HeftDiscoveryDelegate, HeftStatusReportDelegate>
+@interface HandpointApiCordova : CDVPlugin //<HeftDiscoveryDelegate, HeftStatusReportDelegate>
 
-- (void) sale:(CDVInvokedUrlCommand*)command;
+/*- (void) sale:(CDVInvokedUrlCommand*)command;
 - (void) saleReversal:(CDVInvokedUrlCommand*)command;
 - (void) refund:(CDVInvokedUrlCommand*)command;
 - (void) refundReversal:(CDVInvokedUrlCommand*)command;
@@ -28,7 +28,7 @@
 - (void) update:(CDVInvokedUrlCommand*)command;
 - (void) listDevices:(CDVInvokedUrlCommand*)command;
 - (void) startMonitoringConnections:(CDVInvokedUrlCommand*)command;
-- (void) stopMonitoringConnections:(CDVInvokedUrlCommand*)command;
+- (void) stopMonitoringConnections:(CDVInvokedUrlCommand*)command;*/
 - (void) eventHandler:(CDVInvokedUrlCommand*)command;
 
 @end

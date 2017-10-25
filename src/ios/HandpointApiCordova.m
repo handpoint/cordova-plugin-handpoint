@@ -1,24 +1,24 @@
 #import "HandpointApiCordova.h"
-#import "ConnectionStatus.h"
+/*#import "ConnectionStatus.h"
 #import "Currency.h"
-#import "SDKEvent.h"
+#import "SDKEvent.h"*/
 #import <Cordova/CDV.h>
 #import <Cordova/CDVPlugin.h>
-#import "HeftRemoteDevice.h"
+/*#import "HeftRemoteDevice.h"
 #import "CDVInvokedUrlCommand+Arguments.h"
 #import "HeftRemoteDevice+SendableDevice.h"
-#import "CDVPlugin+Callback.h"
+#import "CDVPlugin+Callback.h"*/
 
 @interface HandpointApiCordova ()
 
-@property (nonatomic) HeftManager* manager;
+/*@property (nonatomic) HeftManager* manager;
 @property (nonatomic) HeftRemoteDevice* preferredDevice;
 @property (nonatomic, strong) id<HeftClient> api;
 @property (nonatomic) NSString *ssk;
 @property (atomic) NSMutableDictionary *devices;
 @property (atomic) NSDictionary *methodPointers;
-
-@property (nonatomic, copy) NSString *callbackId;
+*/
+@property (nonatomic) NSString *callbackId;
 @end
 
 @implementation HandpointApiCordova
@@ -26,10 +26,10 @@
 - (void)pluginInitialize
 {
     [super pluginInitialize];
-    self.manager = [HeftManager sharedManager];
+    //self.manager = [HeftManager sharedManager];
     self.devices = [@{} mutableCopy];
 }
-
+/*
 - (void)sale:(CDVInvokedUrlCommand*)command
 {
     Currency *currency = command.params[@"currency"];
@@ -185,11 +185,11 @@
 - (void)getPendingTransaction:(CDVInvokedUrlCommand*)command
 {
     //TODO
-   /* if (self.api.getPendingTransaction()) {
-        [self sendSuccess];
-    } else {
-        [self sendErrorWithMessage:@"Can't send getPendingTransaction operation to device"];
-    }*/
+   // if (self.api.getPendingTransaction()) {
+     //   [self sendSuccess];
+    //} else {
+     //   [self sendErrorWithMessage:@"Can't send getPendingTransaction operation to device"];
+    //}
 }
 
 - (void) update:(CDVInvokedUrlCommand*)command
@@ -213,17 +213,14 @@
 {
     
 }
-
+*/
 - (void) eventHandler:(CDVInvokedUrlCommand*)command
 {
     self.callbackId = command.callbackId;
-    /**this.callbackContext = callbackContext;
-
-    PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-    result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);*/
-}
     
+    //[self sendSuccess];
+}
+  /*  
 - (void)didFindAccessoryDevice:(HeftRemoteDevice *)newDevice
 {
     self.devices[newDevice.name] = newDevice;
@@ -362,7 +359,7 @@
 }
 
 
-*/
+
 }
 
 - (void)responseLogInfo:(id <LogInfo>)info
@@ -393,6 +390,6 @@
 - (void)sendPluginResult:(CDVPluginResult *)result
 {
     [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
-}
+}*/
 
 @end

@@ -38,7 +38,7 @@
         </config-file>
         <source-file src="src/ios/HandpointApiCordova.m"/>
         <header-file src="src/ios/HandpointApiCordova.h"/>
-        <source-file src="src/ios/SDKEvent.m"/>
+        <!--<source-file src="src/ios/SDKEvent.m"/>
         <header-file src="src/ios/SDKEvent.h"/>
         <source-file src="src/ios/Currency.m"/>
         <header-file src="src/ios/Currency.h"/>
@@ -48,9 +48,9 @@
         <header-file src="src/ios/CDVPlugin+Callback.h"/>
         <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
         <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
-        <header-file src="src/ios/ConnectionStatus.h"/>
+        <header-file src="src/ios/ConnectionStatus.h"/> -->
         <!-- SDK header files -->
-        <header-file src="src/ios/include/CmdIds.h"/>
+        <!-- <header-file src="src/ios/include/CmdIds.h"/>
         <header-file src="src/ios/include/HeftClient.h"/>
         <header-file src="src/ios/include/HeftManager.h"/>
         <header-file src="src/ios/include/HeftRemoteDevice.h"/>
@@ -59,7 +59,7 @@
         <framework src="Security.framework" />
         <plugins-plist key="Supported external accessory protocols" string="com.datecs.pinpad" />
         <source-file src="src/ios/lib/libheft.a" framework="true" />
-        <framework src="libc++.dylib" />
-        <!-- <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>-->
+        <framework src="libc++.dylib" />-->
+        <!-- <lib-file src="src/ios/com/handpoint/lib/libheft.a"/> -->
     </platform>
 </plugin>
