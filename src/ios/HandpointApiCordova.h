@@ -8,7 +8,7 @@
 #import "HeftStatusReportPublic.h"
 
 
-@interface HandpointApiCordova : CDVPlugin
+@interface HandpointApiCordova : CDVPlugin <HeftDiscoveryDelegate, HeftStatusReportDelegate>
 
 - (void) sale:(CDVInvokedUrlCommand*)command;
 - (void) saleReversal:(CDVInvokedUrlCommand*)command;

@@ -4,7 +4,6 @@
 
 #import "HeftRemoteDevice+SendableDevice.h"
 
-
 @implementation HeftRemoteDevice (SendableDevice)
 
 - (NSDictionary *)sendableDevice

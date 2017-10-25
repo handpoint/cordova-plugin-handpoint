@@ -1,13 +1,20 @@
 #import "HandpointApiCordova.h"
-#import "CDVPlugin+Callback.h"
+#import "ConnectionStatus.h"
+#import "Currency.h"
+#import "SDKEvent.h"
+#import <Cordova/CDV.h>
 #import <Cordova/CDVPlugin.h>
+#import "HeftRemoteDevice.h"
+#import "CDVInvokedUrlCommand+Arguments.h"
+#import "HeftRemoteDevice+SendableDevice.h"
+#import "CDVPlugin+Callback.h"
 
 @interface HandpointApiCordova ()
 
 @property (nonatomic) HeftManager* manager;
 @property (nonatomic) HeftRemoteDevice* preferredDevice;
 @property (nonatomic, strong) id<HeftClient> api;
-@property (nonatomic) NSString *sharedSecret;
+@property (nonatomic) NSString *ssk;
 @property (atomic) NSMutableDictionary *devices;
 @property (atomic) NSDictionary *methodPointers;
 
@@ -118,10 +125,10 @@
     {
         self.preferredDevice = remoteDevice;
 
-        self.sharedSecret = command.params[@"sharedSecret"] ?: self.sharedSecret;
+        self.ssk = command.params[@"sharedSecret"] ?: self.ssk;
 
         [self.manager clientForDevice:remoteDevice
-                   sharedSecretString:self.sharedSecret
+                   sharedSecretString:self.ssk
                              delegate:self];
 
         [self sendSuccess];
@@ -141,15 +148,15 @@
 }
 
 - (void)setSharedSecret:(CDVInvokedUrlCommand*)command {
-    self.sharedSecret = command.params[@"sharedSecret"];
+    self.ssk = command.params[@"sharedSecret"];
     [self sendSuccess];
 }
 
 - (void)setup:(CDVInvokedUrlCommand*)command
 {
-    self.sharedSecret = command.params[@"sharedSecret"];
+    self.ssk = command.params[@"sharedSecret"];
 
-    if(self.sharedSecret)
+    if(self.ssk)
     {
 
         self.manager.delegate = self;

@@ -5,11 +5,11 @@
 
 #import "CDVInvokedUrlCommand+Arguments.h"
 
-@implementation CDVPlugin (Callback)
+@implementation CDVInvokedUrlCommand (Arguments)
 
 - (NSDictionary *)params
 {
-  [self.arguments count] ? [command argumentAtIndex:0] : @{};
+  return [self.arguments count] ? [self argumentAtIndex:0] : @{};
 }
 
 @end
