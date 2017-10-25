@@ -30,12 +30,13 @@
         <lib-file src="src/android/gson-2.8.1.jar"/>
     </platform>
     <platform name="ios">
-        <config-file target="config.xml" parent="/widget">
+        <config-file target="config.xml" parent="/*">
             <feature name="HandpointApiCordova">
                 <param name="ios-package" value="HandpointApiCordova" />
+                <param name="onload" value="false" />
             </feature>
         </config-file>
-        <header-file src="src/ios/HandpointApiCordova.h" target-dir="HandpointApiCordovaPlugin"/>
-        <source-file src="src/ios/HandpointApiCordova.m" target-dir="HandpointApiCordovaPlugin"/>
+        <header-file src="src/ios/HandpointApiCordova.h"/>
+        <source-file src="src/ios/HandpointApiCordova.m"/>
     </platform>
 </plugin>
