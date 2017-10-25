@@ -30,37 +30,35 @@
         <lib-file src="src/android/gson-2.8.1.jar"/>
     </platform>
     <platform name="ios">
-        <config-file parent="config.xml" target="/*">
-			<feature name="HandpointApiCordova">
-				<param name="ios-package" value="com.handpoint.HandpointApiCordova"/>
-                <param name="onload" value="true" />
-			</feature>
-		</config-file>
-		<source-file src="src/ios/com/handpoint/HandpointApiCordova.m"/>
-		<header-file src="src/ios/com/handpoint/HandpointApiCordova.h"/>
-		<source-file src="src/ios/com/handpoint/HandpointHelper.m"/>
-		<header-file src="src/ios/com/handpoint/HandpointHelper.h"/>
-		<source-file src="src/ios/com/handpoint/SDKEvent.m"/>
-		<header-file src="src/ios/com/handpoint/SDKEvent.h"/>
-		<source-file src="src/ios/com/handpoint/Currency.m"/>
-		<header-file src="src/ios/com/handpoint/Currency.h"/>
-		<source-file src="src/ios/com/handpoint/HeftRemoteDevice+SendableDevice.m"/>
-		<header-file src="src/ios/com/handpoint/HeftRemoteDevice+SendableDevice.h"/>
-		<source-file src="src/ios/com/handpoint/CDVPlugin+Callback.m"/>
-		<header-file src="src/ios/com/handpoint/CDVPlugin+Callback.h"/>
-		<header-file src="src/ios/com/handpoint/ConnectionStatus.h"/>
-
+        <config-file parent="config.xml" parent="/*">
+            <feature name="HandpointApiCordova">
+                <param name="ios-package" value="HandpointApiCordova" />
+                <param name="onload" value="false" />
+            </feature>
+        </config-file>
+        <source-file src="src/ios/HandpointApiCordova.m"/>
+        <header-file src="src/ios/HandpointApiCordova.h"/>
+        <source-file src="src/ios/SDKEvent.m"/>
+        <header-file src="src/ios/SDKEvent.h"/>
+        <source-file src="src/ios/Currency.m"/>
+        <header-file src="src/ios/Currency.h"/>
+        <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
+        <header-file src="src/ios/HeftRemoteDevice+SendableDevice.h"/>
+        <source-file src="src/ios/CDVPlugin+Callback.m"/>
+        <header-file src="src/ios/CDVPlugin+Callback.h"/>
+        <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
+        <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
+        <header-file src="src/ios/ConnectionStatus.h"/>
         <!-- SDK header files -->
-		<header-file src="src/ios/com/handpoint/include/CmdIds.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftClient.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftManager.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftRemoteDevice.h"/>
-		<header-file src="src/ios/com/handpoint/include/HeftStatusReportPublic.h"/>
-
+        <header-file src="src/ios/include/CmdIds.h"/>
+        <header-file src="src/ios/include/HeftClient.h"/>
+        <header-file src="src/ios/include/HeftManager.h"/>
+        <header-file src="src/ios/include/HeftRemoteDevice.h"/>
+        <header-file src="src/ios/include/HeftStatusReportPublic.h"/>
         <framework src="ExternalAccessory.framework" />
         <framework src="Security.framework" />
         <plugins-plist key="Supported external accessory protocols" string="com.datecs.pinpad" />
-        <source-file src="src/ios/com/handpoint/lib/libheft.a" framework="true" />
+        <source-file src="src/ios/lib/libheft.a" framework="true" />
         <framework src="libc++.dylib" />
         <!-- <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>-->
     </platform>

@@ -1,19 +1,8 @@
-//
-// Created by Juan Nuñez on 19/10/2017.
-//
-
-#import <Cordova/CDVPlugin.h>
-#import "HandpointHelper.h"
-#import "Currency.h"
-#import "HeftClient.h"
-#import "HeftRemoteDevice.h"
-#import "SDKEvent.h"
-#import "HeftRemoteDevice+SendableDevice.h"
-#import "ConnectionStatus.h"
+#import "HandpointApiCordova.h"
 #import "CDVPlugin+Callback.h"
+#import <Cordova/CDVPlugin.h>
 
-
-@interface HandpointHelper ()
+@interface HandpointApiCordova ()
 
 @property (nonatomic) HeftManager* manager;
 @property (nonatomic) HeftRemoteDevice* preferredDevice;
@@ -21,90 +10,23 @@
 @property (nonatomic) NSString *sharedSecret;
 @property (atomic) NSMutableDictionary *devices;
 @property (atomic) NSDictionary *methodPointers;
-@property (nonatomic) CDVPlugin *delegate;
-//@property (nonatomic) id<CDVCommandDelegate> commandDelegate;
 
 @property (nonatomic, copy) NSString *callbackId;
 @end
 
-@implementation HandpointHelper
+@implementation HandpointApiCordova
 
-- (instancetype)initWithDelegate:(CDVPlugin *)delegate
+- (void)pluginInitialize
 {
-    self = [super init];
-    if (self)
-    {
-        self.delegate = delegate;
-        self.manager = [HeftManager sharedManager];
-        self.devices = [@{} mutableCopy];
-        self.methodPointers = [HandpointHelper getMethodPointers];
-    }
-    return self;
+    [super pluginInitialize];
+    self.manager = [HeftManager sharedManager];
+    self.devices = [@{} mutableCopy];
 }
 
-+ (NSDictionary *)getMethodPointers
+- (void)sale:(CDVInvokedUrlCommand*)command
 {
-    return @{
-             @"init": [NSValue valueWithPointer:@selector(setup:params:)],
-             @"sale": [NSValue valueWithPointer:@selector(sale:params:)],
-            @"saleReversal": [NSValue valueWithPointer:@selector(saleReversal:params:)],
-            @"refund": [NSValue valueWithPointer:@selector(refund:params:)],
-            @"refundReversal": [NSValue valueWithPointer:@selector(refundReversal:params:)],
-            @"signatureResult": [NSValue valueWithPointer:@selector(signatureResult:params:)],
-            @"connect": [NSValue valueWithPointer:@selector(connect:params:)],
-            @"disconnect": [NSValue valueWithPointer:@selector(disconnect:params:)],
-            @"setSharedSecret": [NSValue valueWithPointer:@selector(setSharedSecret:params:)],
-            @"getPendingTransaction": [NSValue valueWithPointer:@selector(getPendingTransaction:params:)],
-            @"listDevices": [NSValue valueWithPointer:@selector(listDevices:params:)],
-            @"eventHandler": [NSValue valueWithPointer:@selector(eventHandler:params:)]
-    };
-}
-
-- (void)setup:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
-{
-    self.sharedSecret = params[@"sharedSecret"];
-
-    if(self.sharedSecret)
-    {
-
-        self.manager.delegate = self;
-        //TODO do we need this?
-        [self.manager resetDevices];
-        [self sendSuccess];
-    }
-    //TODO Else error
-}
-
-- (void)processCommand:(CDVInvokedUrlCommand*)command delegate:(CDVPlugin *)delegate
-{
-    NSDictionary* arguments = ([command.arguments count] > 0) ? [command argumentAtIndex:0] : [NSDictionary new];
-    self.callbackId = command.callbackId;
-
-    if (arguments.count == 0)
-    {
-        //MAYHEM, FAIL
-        //CDVPluginResult* pluginResult = [[CDVPluginResult alloc] init];
-        //pluginResult.status = CDVCommandStatus_ERROR;
-        //[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-
-    }
-    else
-    {
-        NSString *methodName = arguments[@"callback"];
-        NSString *requestIdStr = arguments[@"requestId"];
-
-        SEL selector = [self.methodPointers[methodName] pointerValue];
-
-        [self performSelector:selector withObject:delegate withObject:arguments];
-    }
-}
-
-#pragma mark - Transactions
-
-- (void)sale:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
-{
-    Currency *currency = params[@"currency"];
-    NSInteger amount = [params[@"amount"] integerValue];
+    Currency *currency = command.params[@"currency"];
+    NSInteger amount = [command.params[@"amount"] integerValue];
 
     if ([self.api saleWithAmount:amount
                         currency:currency.sendableCurrencyCode
@@ -118,22 +40,11 @@
     }
 }
 
-- (void)sendErrorWithMessage:(NSString *)string
+- (void)saleReversal:(CDVInvokedUrlCommand*)command
 {
-    [self.delegate errorWithMessage:string
-                         callbackId:self.callbackId];
-}
-
-- (void)sendSuccess
-{
-    [self.delegate successWithCallbackId:self.callbackId];
-}
-
-- (void)saleReversal:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
-{
-    Currency *currency = params[@"currency"];
-    NSInteger amount = [params[@"amount"] integerValue];
-    NSString *originalTransactionID = params[@"originalTransactionID"];
+    Currency *currency = command.params[@"currency"];
+    NSInteger amount = [command.params[@"amount"] integerValue];
+    NSString *originalTransactionID = command.params[@"originalTransactionID"];
 
     if ([self.api saleVoidWithAmount:amount
                             currency:currency.sendableCurrencyCode
@@ -146,10 +57,10 @@
     }
 }
 
-- (void)refund:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
+- (void)refund:(CDVInvokedUrlCommand*)command
 {
-    Currency *currency = params[@"currency"];
-    NSInteger amount = [params[@"amount"] integerValue];
+    Currency *currency = command.params[@"currency"];
+    NSInteger amount = [command.params[@"amount"] integerValue];
 
     if ([self.api refundWithAmount:amount
                           currency:currency.sendableCurrencyCode
@@ -161,11 +72,11 @@
     }
 }
 
-- (void)refundReversal:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
+- (void)refundReversal:(CDVInvokedUrlCommand*)command
 {
-    Currency *currency = params[@"currency"];
-    NSInteger amount = [params[@"amount"] integerValue];
-    NSString *originalTransactionID = params[@"originalTransactionID"];
+    Currency *currency = command.params[@"currency"];
+    NSInteger amount = [command.params[@"amount"] integerValue];
+    NSString *originalTransactionID = command.params[@"originalTransactionID"];
 
     if ([self.api refundVoidWithAmount:amount
                               currency:currency.sendableCurrencyCode
@@ -178,7 +89,17 @@
     }
 }
 
-- (void)signatureResult:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
+- (void) cancelRequest:(CDVInvokedUrlCommand*)command
+{
+
+}
+
+- (void) tipAdjustment:(CDVInvokedUrlCommand*)command
+{
+    
+}
+
+- (void) signatureResult:(CDVInvokedUrlCommand*)command
 {
     [self.api acceptSignature:YES];
     [self sendSuccess];
@@ -186,9 +107,9 @@
 
 #pragma mark - Device Management
 
-- (void)connect:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
+- (void)connect:(CDVInvokedUrlCommand*)command
 {
-    NSDictionary *device = params[@"device"];
+    NSDictionary *device = command.params[@"device"];
 
     HeftRemoteDevice *remoteDevice = self.devices[device[@"name"]];
 
@@ -197,7 +118,7 @@
     {
         self.preferredDevice = remoteDevice;
 
-        self.sharedSecret = params[@"sharedSecret"] ?: self.sharedSecret;
+        self.sharedSecret = command.params[@"sharedSecret"] ?: self.sharedSecret;
 
         [self.manager clientForDevice:remoteDevice
                    sharedSecretString:self.sharedSecret
@@ -214,17 +135,47 @@
     }
 }
 
-- (void)disconnect:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
+- (void)disconnect:(CDVInvokedUrlCommand*)command
 {
     [self sendErrorWithMessage:@"Can't disconnect from device. Not supported."];
 }
 
-- (void)setSharedSecret:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params {
-    self.sharedSecret = params[@"sharedSecret"];
+- (void)setSharedSecret:(CDVInvokedUrlCommand*)command {
+    self.sharedSecret = command.params[@"sharedSecret"];
     [self sendSuccess];
 }
 
-- (void)getPendingTransaction:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
+- (void)setup:(CDVInvokedUrlCommand*)command
+{
+    self.sharedSecret = command.params[@"sharedSecret"];
+
+    if(self.sharedSecret)
+    {
+
+        self.manager.delegate = self;
+        //TODO do we need this?
+        [self.manager resetDevices];
+        [self sendSuccess];
+    }
+    //TODO Else error
+}
+
+- (void) setParameter:(CDVInvokedUrlCommand*)command
+{
+    
+}
+
+- (void) setLogLevel:(CDVInvokedUrlCommand*)command
+{
+    
+}
+
+- (void) getDeviceLogs:(CDVInvokedUrlCommand*)command
+{
+    
+}
+
+- (void)getPendingTransaction:(CDVInvokedUrlCommand*)command
 {
     //TODO
    /* if (self.api.getPendingTransaction()) {
@@ -234,13 +185,38 @@
     }*/
 }
 
-- (void)listDevices:(id<CDVCommandDelegate>)delegate params:(NSDictionary *)params
+- (void) update:(CDVInvokedUrlCommand*)command
+{
+    
+}
+
+- (void)listDevices:(CDVInvokedUrlCommand*)command
 {
     [self.manager resetDevices];
     [self.manager startDiscovery:YES];
     [self sendSuccess];
 }
 
+- (void) startMonitoringConnections:(CDVInvokedUrlCommand*)command
+{
+    
+}
+
+- (void) stopMonitoringConnections:(CDVInvokedUrlCommand*)command
+{
+    
+}
+
+- (void) eventHandler:(CDVInvokedUrlCommand*)command
+{
+    self.callbackId = command.callbackId;
+    /**this.callbackContext = callbackContext;
+
+    PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);*/
+}
+    
 - (void)didFindAccessoryDevice:(HeftRemoteDevice *)newDevice
 {
     self.devices[newDevice.name] = newDevice;
@@ -274,8 +250,7 @@
                                          data:@{@"devices": sendableDevices}];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                       messageAsString:event.JSON];
-    [self.delegate sendPluginResult:pluginResult
-                         callbackId:self.callbackId];
+    [self sendPluginResult:pluginResult];
 }
 
 - (void)didConnect:(id <HeftClient>)client
@@ -296,15 +271,13 @@
                                              data:data];
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                           messageAsString:event.JSON];
-        [self.delegate sendPluginResult:pluginResult
-                             callbackId:self.callbackId];
+        [self sendPluginResult:pluginResult];
     }
     else
     {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
                                                           messageAsString:@"No preferred device found"];
-        [self.delegate sendPluginResult:pluginResult
-                             callbackId:self.callbackId];
+        [self sendPluginResult:pluginResult];
     }
 }
 
@@ -400,5 +373,19 @@
 
 }
 
+- (void)sendErrorWithMessage:(NSString *)string
+{
+    [self errorWithMessage:string callbackId:self.callbackId];
+}
+
+- (void)sendSuccess
+{
+    [self successWithCallbackId:self.callbackId];
+}
+
+- (void)sendPluginResult:(CDVPluginResult *)result
+{
+    [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
+}
 
 @end
