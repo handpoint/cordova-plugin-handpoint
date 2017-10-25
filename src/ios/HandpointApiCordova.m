@@ -18,6 +18,7 @@
 @property (atomic) NSMutableDictionary *devices;
 @property (atomic) NSDictionary *methodPointers;
 */
+
 @property (nonatomic) NSString *callbackId;
 @end
 
@@ -27,7 +28,7 @@
 {
     [super pluginInitialize];
     //self.manager = [HeftManager sharedManager];
-    self.devices = [@{} mutableCopy];
+    //self.devices = [@{} mutableCopy];
 }
 /*
 - (void)sale:(CDVInvokedUrlCommand*)command
