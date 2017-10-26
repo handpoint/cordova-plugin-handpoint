@@ -489,6 +489,15 @@ Handpoint.prototype.eventHandler = function (successCallback, errorCallback) {
     this.exec('eventHandler', {}, successCallback, errorCallback);
 };
 
+/**
+ * Used to notify SDK about app go to background event
+ * @param {Function} successCallback This function will be called every time device dispatches an event
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.applicationDidGoBackground = function (successCallback, errorCallback) {
+    this.exec('applicationDidGoBackground', {}, successCallback, errorCallback);
+};
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
     if (typeof (config) === 'object') {

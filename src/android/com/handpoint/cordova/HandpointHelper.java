@@ -178,6 +178,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     callbackContext.success("ok");
   }
 
+  public void applicationDidGoBackground(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    callbackContext.success("ok");
+  }
+
   /**
    * Register event handler 
    */
