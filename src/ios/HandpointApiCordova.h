@@ -1,7 +1,11 @@
 #import <Cordova/CDV.h>
 #import <Cordova/CDVPlugin.h>
 
-@interface HandpointApiCordova : CDVPlugin
+#import "HeftClient.h"
+#import "HeftManager.h"
+#import "HeftStatusReportPublic.h"
+
+@interface HandpointApiCordova : CDVPlugin <HeftDiscoveryDelegate, HeftStatusReportDelegate>
 
 - (void) sale:(CDVInvokedUrlCommand*)command;
 - (void) saleReversal:(CDVInvokedUrlCommand*)command;
