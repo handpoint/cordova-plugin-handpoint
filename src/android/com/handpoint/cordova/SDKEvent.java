@@ -49,6 +49,8 @@ public class SDKEvent {
         }
         valueObjectList = new JSONArray(list);
         data.put(key, valueObjectList);
+      } else if (value instanceof Enum) {
+        this.data.put(key, value.toString());
       } else {
         valueObject = new JSONObject(gson.toJson(value));
         this.data.put(key, valueObject);
