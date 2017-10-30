@@ -211,7 +211,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   @Override
   public void signatureRequired(SignatureRequest signatureRequest, Device device) {
     SDKEvent event = new SDKEvent("signatureRequired");
-    event.put("signatureRequest", signatureRequest);
+    event.put("merchantReceipt", signatureRequest.getMerchantReceipt());
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);

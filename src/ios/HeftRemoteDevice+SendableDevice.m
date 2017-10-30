@@ -8,12 +8,10 @@
 
 - (NSDictionary *)sendableDevice
 {
-    {
-        return @{
-                @"name": self.name,
-                @"address": self.address
-        };
-    }
+    return @{
+            @"name": self.name,
+            @"address": self.address ?: @"00:00:00:00:00"
+    };
 }
 
 @end

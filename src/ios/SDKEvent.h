@@ -11,6 +11,6 @@
 
 - (instancetype)initWithName:(NSString *)name data:(NSDictionary *)data;
 
-- (NSString *)JSON;
+- (NSDictionary *)JSON;
 
 @end

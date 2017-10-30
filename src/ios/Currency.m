@@ -876,10 +876,10 @@
     return [NSString stringWithFormat:@"%04ld", (long) self.code];
 }
 
-+ (Currency *)currencyFromSendableCode:(NSString *)code
++ (Currency *)currencyFromCode:(NSNumber *)code
 {
     
-    if (code == nil || [code isEqualToString:@""])
+    if (code == nil || code == 0)
     {
         return Currency.UNKNOWN;
     }
@@ -887,7 +887,7 @@
     {
         for(Currency *currency in [Currency AllCurrencies])
         {
-            if ([code isEqualToString:[currency sendableCurrencyCode]])
+            if ([code integerValue] == currency.code)
             {
                 return currency;
             }

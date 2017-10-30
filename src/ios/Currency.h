@@ -335,6 +335,6 @@
 
 + (Currency *)currencyFromAlpha:(NSString *)alpha;
 
-+ (Currency *)currencyFromSendableCode:(NSString *)code;
++ (Currency *)currencyFromCode:(NSNumber *)code;
 
 @end

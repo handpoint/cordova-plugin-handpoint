@@ -6,7 +6,7 @@
 
 @interface SDKEvent ()
 
-@property (atomic) NSDictionary *data;
+@property (atomic) NSDictionary *event;
 
 @end
 
@@ -15,7 +15,8 @@
 + (instancetype)eventWithName:(NSString *)name
                          data:(NSDictionary *)data
 {
-    return [[self class] initWithName:name data:data];
+    return [[SDKEvent alloc] initWithName:name
+                                     data:data];
 }
 
 - (instancetype)initWithName:(NSString *)name
@@ -25,18 +26,21 @@
 
     if (self)
     {
-        self.data = data;
+        self.event = @{
+                       @"event": name,
+                       @"data": data
+                       };
     }
 
     return self;
 }
 
-- (NSString *)JSON
+- (NSDictionary *)JSON
 {
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.data options:kNilOptions error:nil];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.event options:(NSJSONWritingOptions)(NSJSONWritingPrettyPrinted) error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-    return jsonString;
+    return self.event;
 }
 
 
