@@ -26,7 +26,7 @@
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
             <uses-permission android:name="android.permission.INTERNET"/>
         </config-file>
-        <lib-file src="src/android/hapi-android-3.3.0.jar"/>
+        <lib-file src="src/android/hapi-android-3.2.5.jar"/>
         <lib-file src="src/android/gson-2.8.1.jar"/>
     </platform>
     <platform name="ios">
@@ -52,6 +52,17 @@
         <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
         <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
         <header-file src="src/ios/ConnectionStatus.h"/>
+        <source-file src="src/ios/DeviceStatus.m"/>
+        <header-file src="src/ios/DeviceStatus.h"/>
+        <source-file src="src/ios/StatusInfo.m"/>
+        <header-file src="src/ios/StatusInfo.h"/>
+        <source-file src="src/ios/TransactionResult.m"/>
+        <header-file src="src/ios/TransactionResult.h"/>
+        <header-file src="src/ios/TransactionStatus.h"/>
+        <source-file src="src/ios/XMLTags.m"/>
+        <header-file src="src/ios/XMLTags.h"/>
+        <source-file src="src/ios/BaseModel.m"/>
+        <header-file src="src/ios/BaseModel.h"/>
         <!-- SDK header files -->
         <header-file src="src/ios/include/CmdIds.h"/>
         <header-file src="src/ios/include/HeftClient.h"/>

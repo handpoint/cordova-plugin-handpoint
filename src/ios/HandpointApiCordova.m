@@ -5,6 +5,8 @@
 #import "ConnectionStatus.h"
 #import "Currency.h"
 #import "CDVInvokedUrlCommand+Arguments.h"
+#import "StatusInfo.h"
+#import "TransactionResult.h"
 
 NSString* CONNECTION_CALLBACK_ID = @"CONNECTION_CALLBACK_ID";
 NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
@@ -119,12 +121,15 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)cancelRequest:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\tcancelRequest");
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tcancelRequest");
+        [self.api cancel];
+    }];
 }
 
 - (void)tipAdjustment:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\ttipAdjustment");
+    NSLog(@"\n\ttipAdjustment: %@", command.params);
 }
 
 - (void)signatureResult:(CDVInvokedUrlCommand*)command
@@ -170,15 +175,21 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         }
     }];
 }
-
+    
 - (void)disconnect:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\tdisconnect");
-    /**
-    [self sendErrorWithMessage:@"Can't disconnect from device. Not supported."];
-    */
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tdisconnect");
+        
+        if (self.preferredDevice)
+        {
+            [self didLostAccessoryDevice:self.preferredDevice];
+            [self sendSuccessWithCallbackId:command.callbackId];
+        }
+        
+    }];
 }
-
+    
 - (void)setSharedSecret:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
@@ -188,60 +199,73 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         [self sendSuccessWithCallbackId:command.callbackId];
     }];
 }
-
+    
 - (void)setup:(CDVInvokedUrlCommand*)command
 {
-
-    NSLog(@"\n\tsetup: %@", command.params);
-    /**
-    self.ssk = command.params[@"sharedSecret"];
-    if(self.ssk)
-    {
-        self.manager.delegate = self;
-        //TODO do we need this?
-        [self.manager resetDevices];
-    }
-    //TODO Else error
-    */
-    
-    [self sendSuccessWithCallbackId:command.callbackId];
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tsetup: %@", command.params);
+        
+        [self sendSuccessWithCallbackId:command.callbackId];
+    }];
 }
-
+    
 - (void)setParameter:(CDVInvokedUrlCommand*)command
 {
-
-    NSLog(@"\n\tsetParameter");
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tsetParameter: %@", command.params);
+        
+        [self sendErrorWithMessage:@"Operation not supported." callbackId:command.callbackId];
+    }];
 }
-
+    
 - (void)setLogLevel:(CDVInvokedUrlCommand*)command
 {
-
-    NSLog(@"\n\tsetLogLevel");
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tsetLogLevel %@", command.params);
+        
+        eLogLevel logLevel = (int)[command.params[@"logLevel"] integerValue];
+        
+        [self.api logSetLevel:logLevel];
+    }];
 }
 
 - (void)getDeviceLogs:(CDVInvokedUrlCommand*)command
 {
-
-    NSLog(@"\n\tgetDeviceLogs");
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tgetDeviceLogs");
+        [self.api logGetInfo];
+    }];
 }
 
 - (void)getPendingTransaction:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\tgetPendingTransaction");
-    /**
-    // TODO
-    if (self.api.getPendingTransaction()) {
-       [self sendSuccessWithCallbackId:command.callbackId];
-    } else {
-       [self sendErrorWithMessage:@"Can't send getPendingTransaction operation to device"];
-    }
-    */
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tgetPendingTransaction");
+        
+        BOOL success = NO;
+        
+        if ([self.api isTransactionResultPending])
+        {
+            success = [self.api retrievePendingTransaction];
+        }
+        
+        if (success)
+        {
+            [self sendSuccessWithCallbackId:command.callbackId];
+        }
+        else
+        {
+            [self sendErrorWithMessage:@"Can't send getPendingTransaction operation to device" callbackId:command.callbackId];
+        }
+    }];
 }
 
 - (void)update:(CDVInvokedUrlCommand*)command
 {
-
-    NSLog(@"\n\tupdate");
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tupdate");
+        [self.api financeInit];
+    }];
 }
 
 - (void)listDevices:(CDVInvokedUrlCommand*)command
@@ -252,14 +276,16 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     
     if(devices.count)
     {
-        for(HeftRemoteDevice* device in devices)
-        {
-            [self didFindAccessoryDevice:device];
-        }
-        
-        [self sendSuccessWithCallbackId:command.callbackId];
-        
-        [self didDiscoverFinished];
+        [self.commandDelegate runInBackground:^{
+            for(HeftRemoteDevice* device in devices)
+            {
+                [self didFindAccessoryDevice:device];
+            }
+            
+            [self sendSuccessWithCallbackId:command.callbackId];
+            
+            [self didDiscoverFinished];
+        }];
     }
     else
     {
@@ -271,22 +297,29 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)startMonitoringConnections:(CDVInvokedUrlCommand*)command
 {
-
-    NSLog(@"\n\tstartMonitoringConnections");
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tstartMonitoringConnections");
+        
+        [self sendErrorWithMessage:@"Operation not supported" callbackId:command.callbackId];
+    }];
 }
 
 - (void)stopMonitoringConnections:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\tstopMonitoringConnections");
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tstopMonitoringConnections");
+        
+        [self sendErrorWithMessage:@"Operation not supported" callbackId:command.callbackId];
+    }];
 }
 
 - (void)eventHandler:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\teventHandler: %@", command.callbackId);
-    
-    self.eventHandlerCallbackId = command.callbackId;
-   
     [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\teventHandler: %@", command.callbackId);
+    
+        self.eventHandlerCallbackId = command.callbackId;
+   
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
         [self sendPluginResult:pluginResult callbackId:command.callbackId setKeepCallback:YES];
     }];
@@ -294,8 +327,8 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 -(void)applicationDidGoBackground:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\tapplicationDidGoBackground");
     [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tapplicationDidGoBackground");
         
         if(self.preferredDevice)
         {
@@ -416,52 +449,53 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)responseStatus:(id <ResponseInfo>)info
 {
-
     NSLog(@"\n\tresponseStatus: %@ %@", @(info.statusCode), info.status);
+    
+   
+    StatusInfo *statusInfo = [[StatusInfo alloc] initWithDictionary:info.xml
+                                                         statusCode:info.statusCode];
+    
+    DeviceStatus *deviceStatus = statusInfo.deviceStatus;
+    
+    NSDictionary *data = @{
+                           @"cancelAllowed": @(statusInfo.cancelAllowed),
+                           @"deviceStatus": deviceStatus.toDictionary,
+                           @"message": statusInfo.message,
+                           @"status": statusInfo.statusString
+                           };
+    
+    NSLog(@"%@", data);
+    
+    SDKEvent *event = [SDKEvent eventWithName:@"currentTransactionStatus"
+                                         data: @{
+                                                 @"info": data,
+                                                 @"device": self.preferredDevice.sendableDevice
+                                                 }];
+    
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                  messageAsDictionary:event.JSON];
+    
+    [self sendPluginResult:pluginResult];
 }
 
 - (void)responseError:(id <ResponseInfo>)info
 {
-
     NSLog(@"\n\tresponseError: %@ %@", @(info.statusCode), info.status);
 }
 
 - (void)responseFinanceStatus:(id <FinanceResponseInfo>)info
 {
+    TransactionResult *result = [[TransactionResult alloc] initWithDictionary:info.xml];
     
-    NSLog(@"\n\tresponseError: %@", info.status);
+    NSLog(@"\n\tresponseFinanceStatus: %@", result.toDictionary);
     
-    /*SDKEvent event = new SDKEvent("endOfTransaction");
-    event.put("transactionResult", transactionResult);
-    event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
     SDKEvent *event = [SDKEvent eventWithName:@"endOfTransaction"
-                                         data:@{@"devices": self.devices}];
+                                         data: @{@"transactionResult":result.toDictionary}];
+    
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                      messageAsString:event.JSON];
+                                                  messageAsDictionary:event.JSON];
+    
     [self sendPluginResult:pluginResult];
-
-    NSMutableSet *saleSet = [NSMutableSet setWithObjects:@"APPROVED", @"AUTHORISED", @"DECLINED", @"CANCELLED", @"CARD BLOCKED", nil];
-    NSLog(@"\n\thpHeftService responseFinanceStatus");
-    NSLog(@"\n\t%@", info.status);
-    NSLog(@"\n\t%@", info.xml.description);
-    NSString* financialStatus = [info.xml objectForKey:@"FinancialStatus"];
-    if ([saleSet containsObject:financialStatus])
-    {
-        receipt = [self generateReceipt:info];
-        if ([[info customerReceipt] length] > 0 || [[info merchantReceipt] length] > 0) {
-            [receiptDelegate addItem:receipt];
-        }
-        webReceipt = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 595, 0)];
-        [webReceipt setDelegate:self];
-        [webReceipt loadHTMLString:receipt.merchantReceipt baseURL:nil];
-        NSLog(@"\n\tWebview is loading...");
-    }
-    // and then return some data to javascripot
-    [self.commandDelegate sendPluginResult:X callbackId:command.callbackId];*/
-
 }
 
 - (void)responseLogInfo:(id <LogInfo>)info
@@ -489,8 +523,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)cancelSignature
 {
-
-    NSLog(@"\n\trequestSignature:");
+    NSLog(@"\n\tcancelSignature");
 }
     
 - (void)sendErrorMessage:(NSString *)message

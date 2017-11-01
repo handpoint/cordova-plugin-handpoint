@@ -37,9 +37,6 @@
 
 - (NSDictionary *)JSON
 {
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.event options:(NSJSONWritingOptions)(NSJSONWritingPrettyPrinted) error:nil];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
     return self.event;
 }
 
