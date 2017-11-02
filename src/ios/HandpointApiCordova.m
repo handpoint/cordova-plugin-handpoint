@@ -396,8 +396,11 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 {
     NSLog(@"\n\tdidConnect: %@", client.mpedInfo);
     
-    self.api = client;
-    [self connectionStatusChanged:ConnectionStatusConnected];
+    if(client)
+    {
+        self.api = client;
+        [self connectionStatusChanged:ConnectionStatusConnected];
+    }
 }
 
 - (void)connectionStatusChanged:(ConnectionStatus)status
