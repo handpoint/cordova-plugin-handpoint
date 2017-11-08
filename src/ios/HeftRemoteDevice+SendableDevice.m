@@ -4,14 +4,23 @@
 
 #import "HeftRemoteDevice+SendableDevice.h"
 
+@interface EAAccessory ()
+    @property (nonatomic, readonly) NSString * macAddress;
+@end
+
 @implementation HeftRemoteDevice (SendableDevice)
 
 - (NSDictionary *)sendableDevice
 {
     return @{
             @"name": self.name,
-            @"address": self.address ?: @"00:00:00:00:00"
+            @"address": self.accessory.macAddress
     };
+}
+
+- (NSString *)macAddress
+{
+    return self.accessory.macAddress;
 }
 
 @end

@@ -22,6 +22,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 @end
 
+
 @implementation HandpointApiCordova
 
 - (void)pluginInitialize
@@ -33,7 +34,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     self.manager.delegate = self;
     self.devices = [@{} mutableCopy];
     
-    [self initDevices];
+    [self fillDevicesFromDevicesCopy];
     
     self.ssk = @"";
 }
@@ -153,7 +154,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         NSLog(@"\n\tconnect: %@", command.params);
   
         NSDictionary *device = command.params[@"device"];
-        HeftRemoteDevice *remoteDevice = self.devices[device[@"name"]];
+        HeftRemoteDevice *remoteDevice = self.devices[device[@"address"]];
         
         if(remoteDevice)
         {
@@ -279,7 +280,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         [self.commandDelegate runInBackground:^{
             for(HeftRemoteDevice* device in devices)
             {
-                [self didFindAccessoryDevice:device];
+                [self addDevice:device];
             }
             
             [self sendSuccessWithCallbackId:command.callbackId];
@@ -325,7 +326,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     }];
 }
 
--(void)applicationDidGoBackground:(CDVInvokedUrlCommand*)command
+- (void)applicationDidGoBackground:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
         NSLog(@"\n\tapplicationDidGoBackground");
@@ -346,17 +347,16 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 {
     NSLog(@"\n\tdidFindAccessoryDevice: %@", newDevice.name);
     
-    self.devices[newDevice.name] = newDevice;
+    [self addDevice:newDevice];
+    
+    [self didDiscoverFinished];
 }
 
 - (void)didLostAccessoryDevice:(HeftRemoteDevice *)oldDevice
 {
     NSLog(@"\n\tdidLostAccessoryDevice: %@", oldDevice.name);
     
-    if (self.devices[oldDevice.name])
-    {
-        [self.devices removeObjectForKey:oldDevice.name];
-    }
+    [self removeDevice:oldDevice];
     
     if(self.preferredDevice && self.preferredDevice.name == oldDevice.name)
     {
@@ -379,7 +379,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         [sendableDevices addObject:[device sendableDevice]];
     }
     
-    [self initDevices];
+    [self fillDevicesFromDevicesCopy];
     
     SDKEvent *event = [SDKEvent eventWithName:@"deviceDiscoveryFinished"
                                          data:@{@"devices": sendableDevices}];
@@ -528,7 +528,20 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 {
     NSLog(@"\n\tcancelSignature");
 }
-    
+
+- (void)addDevice:(HeftRemoteDevice *)device
+{
+    self.devices[device.macAddress] = device;
+}
+
+- (void)removeDevice:(HeftRemoteDevice *)device
+{
+    if (self.devices[device.macAddress])
+    {
+        [self.devices removeObjectForKey:device.macAddress];
+    }
+}
+
 - (void)sendErrorMessage:(NSString *)message
 {
     [self sendErrorWithMessage:message
@@ -579,11 +592,11 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     [self.commandDelegate sendPluginResult:result callbackId:callbackId];
 }
 
-- (void)initDevices
+- (void)fillDevicesFromDevicesCopy
 {
     for (HeftRemoteDevice *device in [self.manager devicesCopy])
     {
-        [self didFindAccessoryDevice:device];
+        [self addDevice:device];
     }
 }
     
