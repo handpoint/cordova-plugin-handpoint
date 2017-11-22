@@ -75,4 +75,15 @@
         <framework src="libc++.dylib" />
         <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
     </platform>
+    <platform name="wp8">
+        <config-file target="config.xml" parent="/*">
+            <feature name="HandpointApiCordova">
+                <param name="wp-package" value="HandpointApiCordova"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/wp/HandpointApiCordova.cs" />
+        <framework src="src/windows/HandpointSDK.dll" custom="true"/>
+
+    </platform>
 </plugin>
