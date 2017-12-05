@@ -15,7 +15,7 @@ import java.math.BigInteger;
 
 import com.google.gson.*;
 
-public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults {
+public class HandpointHelper implements Events.Required, Events.Status, Events.Log {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -105,6 +105,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
         ConnectionMethod.values()[device.getInt("connectionMethod")]);
     this.api = this.api.useDevice(this.device);
+
     // TODO i don't know if this is needed
     this.setEventsHandler();
     callbackContext.success("ok");
@@ -165,16 +166,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void listDevices(CallbackContext callbackContext, JSONObject params) throws Throwable {
     this.api.listDevices(ConnectionMethod.values()[params.getInt("connectionMethod")]);
-    callbackContext.success("ok");
-  }
-
-  public void startMonitoringConnections(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    this.api.startMonitoringConnections();
-    callbackContext.success("ok");
-  }
-
-  public void stopMonitoringConnections(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    this.api.stopMonitoringConnections();
     callbackContext.success("ok");
   }
 
@@ -263,30 +254,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     this.callbackContext.sendPluginResult(result);
   }
 
-  @Override
-  public void pendingTransactionResult(Device device) {
-    SDKEvent event = new SDKEvent("pendingTransactionResult");
-    event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
-  }
-
-  @Override
-  public void transactionResultReady(TransactionResult transactionResult, Device device) {
-    SDKEvent event = new SDKEvent("transactionResultReady");
-    event.put("transactionResult", transactionResult);
-    event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
-  }
-
   protected void finalize() {
     this.api.removeRequiredEventHandler(this);
     this.api.removeStatusNotificationEventHandler(this);
     this.api.removeLogEventHandler(this);
-    this.api.removePendingResultsEventHandler(this);
   }
 
   private void setEventsHandler() {
@@ -294,6 +265,5 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     this.api.addRequiredEventHandler(this);
     this.api.addStatusNotificationEventHandler(this);
     this.api.addLogEventHandler(this);
-    this.api.addPendingResultsEventHandler(this);
   }
 }
