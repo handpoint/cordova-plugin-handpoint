@@ -1,9 +1,7 @@
 #import <Cordova/CDV.h>
 #import <Cordova/CDVPlugin.h>
 
-#import "HeftClient.h"
-#import "HeftManager.h"
-#import "HeftStatusReportPublic.h"
+#import "HandpointAll.h"
 
 FOUNDATION_EXPORT NSString* CONNECTION_CALLBACK_ID;
 FOUNDATION_EXPORT NSString* LIST_DEVICES_CALLBACK_ID;
