@@ -42,6 +42,11 @@
                 <string>com.datecs.pinpad</string>
             </array>
         </config-file>
+        <config-file target="*-Info.plist" parent="UIBackgroundModes">
+            <array>
+                <string>external-accessory</string>
+            </array>
+        </config-file>
         <header-file src="src/ios/HandpointApiCordova.h"/>
         <source-file src="src/ios/HandpointApiCordova.m"/>
         <source-file src="src/ios/SDKEvent.m"/>
@@ -66,10 +71,19 @@
         <header-file src="src/ios/BaseModel.h"/>
         <!-- SDK header files -->
         <header-file src="src/ios/include/CmdIds.h"/>
+        <header-file src="src/ios/include/FinanceResponseInfo.h"/>
+        <header-file src="src/ios/include/HandpointAll.h"/>
+        <header-file src="src/ios/include/HapiRemoteService.h"/>
         <header-file src="src/ios/include/HeftClient.h"/>
+        <header-file src="src/ios/include/HeftDiscovery.h"/>
+        <header-file src="src/ios/include/HeftDiscoveryDelegate.h"/>
         <header-file src="src/ios/include/HeftManager.h"/>
         <header-file src="src/ios/include/HeftRemoteDevice.h"/>
-        <header-file src="src/ios/include/HeftStatusReportPublic.h"/>
+        <header-file src="src/ios/include/HeftStatusReportDelegate.h"/>
+        <header-file src="src/ios/include/LogInfo.h"/>
+        <header-file src="src/ios/include/ResponseInfo.h"/>
+        <header-file src="src/ios/include/ScannerDisabledResponseInfo.h"/>
+        <header-file src="src/ios/include/ScannerEventResponseInfo.h"/>
         <framework src="ExternalAccessory.framework" />
         <framework src="Security.framework" />
         <source-file src="src/ios/lib/libheft.a" framework="true" />

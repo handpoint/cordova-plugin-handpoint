@@ -1,7 +1,6 @@
 #import "HandpointApiCordova.h"
 #import "HeftRemoteDevice+SendableDevice.h"
 #import "SDKEvent.h"
-#import "HeftClient.h"
 #import "ConnectionStatus.h"
 #import "Currency.h"
 #import "CDVInvokedUrlCommand+Arguments.h"
@@ -21,7 +20,6 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 @property (nonatomic) NSString *eventHandlerCallbackId;
 
 @end
-
 
 @implementation HandpointApiCordova
 
@@ -159,10 +157,21 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         if(remoteDevice)
         {
             self.preferredDevice = remoteDevice;
+            
             self.ssk = command.params[@"sharedSecret"] ?: self.ssk;
-            [self.manager clientForDevice:remoteDevice
-                       sharedSecretString:self.ssk
-                                 delegate:self];
+            
+            // If we are already connected, update shared secret
+            if (self.api)
+            {
+                // May the Force be with me
+                self.api.sharedSecret = self.ssk;
+            }
+            else
+            {
+                [self.manager clientForDevice:remoteDevice
+                                 sharedSecret:self.ssk
+                                     delegate:self];
+            }
             
             [self sendSuccessWithCallbackId:command.callbackId];
             
@@ -290,7 +299,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     }
     else
     {
-        [self.manager startDiscovery:YES];
+        [self.manager startDiscovery];
         
         [self sendSuccessWithCallbackId:command.callbackId];
     }
@@ -330,13 +339,6 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 {
     [self.commandDelegate runInBackground:^{
         NSLog(@"\n\tapplicationDidGoBackground");
-        
-        if(self.preferredDevice)
-        {
-            //TODO change this to a disconnect and clean
-            [self didLostAccessoryDevice:self.preferredDevice];
-        }
-        
         [self sendSuccessWithCallbackId:command.callbackId];
     }];
 }
@@ -399,6 +401,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     if(client)
     {
         self.api = client;
+        
         [self connectionStatusChanged:ConnectionStatusConnected];
     }
 }

@@ -16,14 +16,15 @@
 /**
  @brief param values for HeftClient -(BOOL)logSetLevel:(eLogLevel)level.
  */
-typedef enum{
-	eLogNone
-	, eLogInfo
-	, eLogFull
-	, eLogDebug
-} eLogLevel;
+typedef NS_ENUM(NSUInteger, eLogLevel){
+	eLogNone, // 0
+	eLogError,// 1
+	eLogInfo, // 2
+	eLogFull, // 3
+	eLogDebug,// 4
+};
 
-/**
+/** 
 @brief HeftClient protocol methods.
  */
 @protocol HeftClient<NSObject>
@@ -32,15 +33,17 @@ typedef enum{
  @{
  */
 
+@property (readwrite, nonatomic) NSString *sharedSecret;
+
 //- (void)setDelegate:(NSObject<HeftClientDelegate>*)aDelegate;
 
 /**
  Cancels current operation if it's possible.
- That is financial transaction or scanner mode.
+ That is financial transaction or scanner mode. 
  */
 - (void)cancel;
 
-/**
+/** 
  Performs SALE transaction.
  @param amount - The amount - in the smallest unit for the given CurrencyCode -
  for the transaction. ISO 4217 defines number of digits in
@@ -54,14 +57,14 @@ typedef enum{
  which can be set instead of numeric values.
  @param present	Indicates whether the cardholder is present or not during the transaction.
  @param reference An optional reference id (max 25 characters) that can be associated with the authorization. Example value: 45678135.
- @param months Budget facility indicator. Decides how many months a payment can be divided into. Is required for budget transactions. Accepted values are:  03, 06, 12, 18, 24, 30, 36, 42, 48, 54, 60
+ @param months Budget facility indicator. Decides how many months a payment can be divided into. Is required for budget transactions. Accepted values are:  03, 06, 12, 18, 24, 30, 36, 42, 48, 54, 60 
  @return YES if request is sent and NO if there is active transaction already.
  */
 - (BOOL)saleWithAmount:(NSInteger)amount currency:(NSString*)currency cardholder:(BOOL)present;
 - (BOOL)saleWithAmount:(NSInteger)amount currency:(NSString*)currency cardholder:(BOOL)present reference:(NSString*)reference;
 - (BOOL)saleWithAmount:(NSInteger)amount currency:(NSString*)currency cardholder:(BOOL)present reference:(NSString*)reference divideBy:(NSString*)months;
 
-/**
+/** 
  Performs REFUND transaction.
  @param amount - The amount - in the smallest unit for the given CurrencyCode -
  for the transaction. ISO 4217 defines number of digits in
@@ -136,7 +139,7 @@ typedef enum{
  *                      false - The scanner will be turned on immediately and kept on for the duration of the scan mode.
  @param timeoutSeconds         0 - [default] The card reader will determine when scanning should time out.
  *                      x - The scanner will time out if x seconds of inactivity occur.
- @return YES if request is sent and No if there is already an active operation running.
+ @return YES if request is sent and No if there is already an active operation running. 
  */
 -(BOOL)enableScanner;
 -(BOOL)enableScanner:(BOOL)multiScan DEPRECATED_ATTRIBUTE;
@@ -226,34 +229,34 @@ typedef enum{
  Serial Number.
  */
 extern const NSString* kSerialNumberInfoKey;
-/**
+/** 
  Public Key Version.
  */
 extern const NSString* kPublicKeyVersionInfoKey;
-/**
+/** 
  EMV Parameter Version.
  */
 extern const NSString* kEMVParamVersionInfoKey;
-/**
+/** 
  General Parameter.
  */
 extern const NSString* kGeneralParamInfoKey;
-/**
+/** 
  Manufacturer Code.
  */
 extern const NSString* kManufacturerCodeInfoKey;
-/**
+/** 
  Model Code.*/
 extern const NSString* kModelCodeInfoKey;
-/**
+/** 
  Application Name.
  */
 extern const NSString* kAppNameInfoKey;
-/**
+/** 
  Application Version.
  */
 extern const NSString* kAppVersionInfoKey;
-/**
+/** 
  XML Details as text.
  */
 extern const NSString* kXMLDetailsInfoKey DEPRECATED_ATTRIBUTE;
