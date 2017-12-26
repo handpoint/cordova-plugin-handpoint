@@ -172,8 +172,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
             if (self.api)
             {
                 // May the Force be with me
-                NSData *sharedSecretData = [[HeftManager sharedManager] SharedSecretDataFromString:self.ssk];
-                self.api.sharedSecret = sharedSecretData;
+                self.api.sharedSecret = self.ssk;
             }
             else
             {
