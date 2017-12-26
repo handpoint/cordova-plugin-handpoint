@@ -10,13 +10,6 @@
 NSString* CONNECTION_CALLBACK_ID = @"CONNECTION_CALLBACK_ID";
 NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
-@interface HeftManager ()
-
-- (NSData *)SharedSecretDataFromString:(NSString *)sharedSecretString;
-
-@end
-
-
 @interface HandpointApiCordova ()
 
 @property (nonatomic) HeftManager* manager;
@@ -27,7 +20,6 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 @property (nonatomic) NSString *eventHandlerCallbackId;
 
 @end
-
 
 @implementation HandpointApiCordova
 
