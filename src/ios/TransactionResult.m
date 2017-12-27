@@ -4,7 +4,25 @@
 #import "XMLTags.h"
 #import "DeviceStatus.h"
 
+@interface TransactionResult ()
+
+@property (nonatomic) NSString *customerReceipt;
+@property (nonatomic) NSString *merchantReceipt;
+
+@end
+
 @implementation TransactionResult
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary financeResponseInfo:(id <FinanceResponseInfo>)info
+{
+    self = [super initWithDictionary:dictionary];
+    if (self)
+    {
+        self.customerReceipt = info.customerReceipt;
+        self.merchantReceipt = info.merchantReceipt;
+    }
+    return self;
+}
 
 - (NSString *)statusMessage
 {
@@ -110,16 +128,6 @@
 - (NSString *)cardTypeId
 {
     return self.dictionary[XMLTags.CardTypeId] ?: @"";
-}
-
-- (NSString *)merchantReceipt
-{
-    return self.dictionary[@"MerchantReceipt"] ?: @"";
-}
-
-- (NSString *)customerReceipt
-{
-    return self.dictionary[@"CustomerReceipt"] ?: @"";
 }
 
 - (DeviceStatus *)deviceStatus
