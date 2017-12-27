@@ -156,12 +156,11 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         
         if(remoteDevice)
         {
-            self.preferredDevice = remoteDevice;
-            
             self.ssk = command.params[@"sharedSecret"] ?: self.ssk;
             
-            // If we are already connected, update shared secret
-            if (self.api)
+            // If we are already connected to this device, update shared secret
+            if (self.api && self.preferredDevice &&
+                [self.preferredDevice.address isEqualToString:remoteDevice.address])
             {
                 // May the Force be with me
                 self.api.sharedSecret = self.ssk;
@@ -171,6 +170,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
                 [self.manager clientForDevice:remoteDevice
                                  sharedSecret:self.ssk
                                      delegate:self];
+                self.preferredDevice = remoteDevice;
             }
             
             [self sendSuccessWithCallbackId:command.callbackId];
@@ -188,6 +188,9 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     
 - (void)disconnect:(CDVInvokedUrlCommand*)command
 {
+    NSLog(@"\n\tdisconnect");
+    
+    /*
     [self.commandDelegate runInBackground:^{
         NSLog(@"\n\tdisconnect");
         
@@ -198,6 +201,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         }
         
     }];
+     */
 }
     
 - (void)setSharedSecret:(CDVInvokedUrlCommand*)command
@@ -533,14 +537,14 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)addDevice:(HeftRemoteDevice *)device
 {
-    self.devices[device.macAddress] = device;
+    self.devices[device.address] = device;
 }
 
 - (void)removeDevice:(HeftRemoteDevice *)device
 {
-    if (self.devices[device.macAddress])
+    if (self.devices[device.address])
     {
-        [self.devices removeObjectForKey:device.macAddress];
+        [self.devices removeObjectForKey:device.address];
     }
 }
 
