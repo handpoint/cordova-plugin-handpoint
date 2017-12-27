@@ -1,5 +1,6 @@
 #import "BaseModel.h"
 #import "DeviceStatus.h"
+#import "FinanceResponseInfo.h"
 
 @interface TransactionResult : BaseModel
 
@@ -30,6 +31,8 @@
 @property (readonly, nonatomic) NSString *chipTransactionReport;
 @property (readonly, nonatomic) NSString *dueAmount;
 @property (readonly, nonatomic) NSString *balance;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary financeResponseInfo:(id <FinanceResponseInfo>)info;
 
 - (NSDictionary *)toDictionary;
     

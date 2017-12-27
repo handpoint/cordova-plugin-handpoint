@@ -491,7 +491,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)responseFinanceStatus:(id <FinanceResponseInfo>)info
 {
-    TransactionResult *result = [[TransactionResult alloc] initWithDictionary:info.xml];
+    TransactionResult *result = [[TransactionResult alloc] initWithDictionary:info.xml financeResponseInfo:info];
     
     NSLog(@"\n\tresponseFinanceStatus: %@", result.toDictionary);
     
@@ -514,7 +514,6 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 {
     NSLog(@"\n\trequestSignature");
 
-    
     SDKEvent *event = [SDKEvent eventWithName:@"signatureRequired"
                                          data:@{
                                                 @"device": self.preferredDevice.sendableDevice,
