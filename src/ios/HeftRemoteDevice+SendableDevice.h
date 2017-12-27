@@ -8,6 +8,5 @@
 @interface HeftRemoteDevice (SendableDevice)
 
 - (NSDictionary *)sendableDevice;
-- (NSString *)macAddress;
 
 @end
