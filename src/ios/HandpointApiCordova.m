@@ -10,7 +10,7 @@
 NSString* CONNECTION_CALLBACK_ID = @"CONNECTION_CALLBACK_ID";
 NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
-@interface HandpointApiCordova ()
+@interface HandpointApiCordova () <HeftDiscoveryDelegate, HeftStatusReportDelegate>
 
 @property (nonatomic) HeftManager* manager;
 @property (nonatomic, strong) id<HeftClient> api;
@@ -31,8 +31,8 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     self.manager = [HeftManager sharedManager];
     self.manager.delegate = self;
     self.devices = [@{} mutableCopy];
-    
-    [self fillDevicesFromDevicesCopy];
+
+    [self fillDevicesFromconnectedCardReaders];
     
     self.ssk = @"";
 }
@@ -62,19 +62,24 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)saleReversal:(CDVInvokedUrlCommand*)command
 {
-    [self.commandDelegate runInBackground:^{
+    [self.commandDelegate runInBackground:^
+    {
         NSLog(@"\n\tsaleReversal");
-        
+
         Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
         NSInteger amount = [command.params[@"amount"] integerValue];
         NSString *originalTransactionID = command.params[@"originalTransactionID"];
-        if ([self.api saleVoidWithAmount:amount
-                                currency:currency.sendableCurrencyCode
-                              cardholder:YES
-                             transaction:originalTransactionID])
+        BOOL result = [self.api saleVoidWithAmount:amount
+                                          currency:currency.sendableCurrencyCode
+                                        cardholder:YES
+                                       transaction:originalTransactionID];
+
+        if (result)
         {
             [self sendSuccessWithCallbackId:command.callbackId];
-        } else {
+        }
+        else
+        {
             [self sendErrorWithMessage:@"Can't send saleReversal operation to device" callbackId:command.callbackId];
         }
     }];
@@ -82,17 +87,22 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)refund:(CDVInvokedUrlCommand*)command
 {
-    [self.commandDelegate runInBackground:^{
+    [self.commandDelegate runInBackground:^
+    {
         NSLog(@"\n\trefund");
-        
+
         Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
         NSInteger amount = [command.params[@"amount"] integerValue];
-        if ([self.api refundWithAmount:amount
-                              currency:currency.sendableCurrencyCode
-                            cardholder:YES])
+        BOOL result = [self.api refundWithAmount:amount
+                                        currency:currency.sendableCurrencyCode
+                                      cardholder:YES];
+
+        if (result)
         {
             [self sendSuccessWithCallbackId:command.callbackId];
-        } else {
+        }
+        else
+        {
             [self sendErrorWithMessage:@"Can't send refund operation to device" callbackId:command.callbackId];
         }
     }];
@@ -100,19 +110,24 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)refundReversal:(CDVInvokedUrlCommand*)command
 {
-    [self.commandDelegate runInBackground:^{
+    [self.commandDelegate runInBackground:^
+    {
         NSLog(@"\n\trefundReversal");
-        
+
         Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
         NSInteger amount = [command.params[@"amount"] integerValue];
         NSString *originalTransactionID = command.params[@"originalTransactionID"];
-        if ([self.api refundVoidWithAmount:amount
-                                  currency:currency.sendableCurrencyCode
-                                cardholder:YES
-                               transaction:originalTransactionID])
+        BOOL result = [self.api refundVoidWithAmount:amount
+                                            currency:currency.sendableCurrencyCode
+                                          cardholder:YES
+                                         transaction:originalTransactionID];
+
+        if (result)
         {
             [self sendSuccessWithCallbackId:command.callbackId];
-        } else {
+        }
+        else
+        {
             [self sendErrorWithMessage:@"Can't send refundReversal operation to device" callbackId:command.callbackId];
         }
     }];
@@ -158,19 +173,22 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         {
             self.ssk = command.params[@"sharedSecret"] ?: self.ssk;
             
+            BOOL isRemoteDeviceSameAsPreferred = self.preferredDevice &&
+            [self.preferredDevice.address isEqualToString:remoteDevice.address];
+            
             // If we are already connected to this device, update shared secret
-            if (self.api && self.preferredDevice &&
-                [self.preferredDevice.address isEqualToString:remoteDevice.address])
+            if (self.api && isRemoteDeviceSameAsPreferred)
             {
                 // May the Force be with me
                 self.api.sharedSecret = self.ssk;
             }
             else
             {
+                self.preferredDevice = remoteDevice;
+                
                 [self.manager clientForDevice:remoteDevice
                                  sharedSecret:self.ssk
                                      delegate:self];
-                self.preferredDevice = remoteDevice;
             }
             
             [self sendSuccessWithCallbackId:command.callbackId];
@@ -188,20 +206,9 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     
 - (void)disconnect:(CDVInvokedUrlCommand*)command
 {
-    NSLog(@"\n\tdisconnect");
-    
-    /*
     [self.commandDelegate runInBackground:^{
         NSLog(@"\n\tdisconnect");
-        
-        if (self.preferredDevice)
-        {
-            [self didLostAccessoryDevice:self.preferredDevice];
-            [self sendSuccessWithCallbackId:command.callbackId];
-        }
-        
     }];
-     */
 }
     
 - (void)setSharedSecret:(CDVInvokedUrlCommand*)command
@@ -284,7 +291,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)listDevices:(CDVInvokedUrlCommand*)command
 {
-    NSArray* devices = [self.manager devicesCopy];
+    NSArray* devices = [self.manager connectedCardReaders];
     
     NSLog(@"\n\tlistdevices callback: %@ current: %@", command.callbackId, devices);
     
@@ -354,8 +361,6 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSLog(@"\n\tdidFindAccessoryDevice: %@", newDevice.name);
     
     [self addDevice:newDevice];
-    
-    [self didDiscoverFinished];
 }
 
 - (void)didLostAccessoryDevice:(HeftRemoteDevice *)oldDevice
@@ -364,7 +369,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     
     [self removeDevice:oldDevice];
     
-    if(self.preferredDevice && self.preferredDevice.name == oldDevice.name)
+    if(self.preferredDevice && self.preferredDevice.address == oldDevice.address)
     {
         [self connectionStatusChanged:ConnectionStatusDisconnected];
         
@@ -374,8 +379,10 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)didDiscoverFinished
 {
-    NSLog(@"\n\tdidDiscoverFinished: %@", [self.manager devicesCopy]);
-    
+    NSLog(@"\n\tdidDiscoverFinished: %@", [self.manager connectedCardReaders]);
+
+    [self fillDevicesFromconnectedCardReaders];
+
     NSMutableArray *sendableDevices = [@[] mutableCopy];
     
     for (NSString *key in [self.devices allKeys])
@@ -384,9 +391,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         
         [sendableDevices addObject:[device sendableDevice]];
     }
-    
-    [self fillDevicesFromDevicesCopy];
-    
+
     SDKEvent *event = [SDKEvent eventWithName:@"deviceDiscoveryFinished"
                                          data:@{@"devices": sendableDevices}];
     
@@ -470,8 +475,8 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSDictionary *data = @{
                            @"cancelAllowed": @(statusInfo.cancelAllowed),
                            @"deviceStatus": deviceStatus.toDictionary,
-                           @"message": statusInfo.message,
-                           @"status": statusInfo.statusString
+                           @"message": statusInfo.message ?: @"",
+                           @"status": statusInfo.statusString ?: @""
                            };
     
     NSLog(@"%@", data);
@@ -521,7 +526,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     SDKEvent *event = [SDKEvent eventWithName:@"signatureRequired"
                                          data:@{
                                                 @"device": self.preferredDevice.sendableDevice,
-                                                @"merchantReceipt" : receipt
+                                                @"merchantReceipt" : receipt ?: @""
                                                 }];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
@@ -598,9 +603,9 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     [self.commandDelegate sendPluginResult:result callbackId:callbackId];
 }
 
-- (void)fillDevicesFromDevicesCopy
+- (void)fillDevicesFromconnectedCardReaders
 {
-    for (HeftRemoteDevice *device in [self.manager devicesCopy])
+    for (HeftRemoteDevice *device in [self.manager connectedCardReaders])
     {
         [self addDevice:device];
     }

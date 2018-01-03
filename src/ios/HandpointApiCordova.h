@@ -6,7 +6,7 @@
 FOUNDATION_EXPORT NSString* CONNECTION_CALLBACK_ID;
 FOUNDATION_EXPORT NSString* LIST_DEVICES_CALLBACK_ID;
 
-@interface HandpointApiCordova : CDVPlugin <HeftDiscoveryDelegate, HeftStatusReportDelegate>
+@interface HandpointApiCordova : CDVPlugin
     
 - (void)sale:(CDVInvokedUrlCommand*)command;
 - (void)saleReversal:(CDVInvokedUrlCommand*)command;
