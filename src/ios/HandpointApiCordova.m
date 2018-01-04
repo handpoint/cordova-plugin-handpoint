@@ -207,7 +207,14 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 - (void)disconnect:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        NSLog(@"\n\tdisconnect");
+        NSLog(@"\n\tdisconnect: %@", command.params);
+
+        [self connectionStatusChanged:ConnectionStatusDisconnected];
+        
+        self.api = nil;
+        self.preferredDevice = nil;
+        
+        [self sendSuccessWithCallbackId:command.callbackId];
     }];
 }
     
@@ -369,11 +376,12 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     
     [self removeDevice:oldDevice];
     
-    if(self.preferredDevice && self.preferredDevice.address == oldDevice.address)
+    if(self.preferredDevice && [self.preferredDevice.address isEqualToString:oldDevice.address])
     {
         [self connectionStatusChanged:ConnectionStatusDisconnected];
         
         self.preferredDevice = nil;
+        self.api = nil;
     }
 }
 
