@@ -81,12 +81,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  @Deprecated  // This operation should be removed
   public void cancelRequest(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.cancelRequest()) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send cancelRequest operation to device");
-    }
+    callbackContext.error("Can't send cancelRequest operation to device");
   }
 
   public void tipAdjustment(CallbackContext callbackContext, JSONObject params) throws Throwable {
