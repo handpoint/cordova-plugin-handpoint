@@ -18,8 +18,8 @@
     self = [super initWithDictionary:dictionary];
     if (self)
     {
-        self.customerReceipt = info.customerReceipt;
-        self.merchantReceipt = info.merchantReceipt;
+        self.customerReceipt = info.customerReceipt ?: @"";
+        self.merchantReceipt = info.merchantReceipt ?: @"";
     }
     return self;
 }
