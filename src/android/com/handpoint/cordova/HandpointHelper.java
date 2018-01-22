@@ -32,6 +32,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void setup(CallbackContext callbackContext, JSONObject params) throws Throwable {
     String sharedSecret = null;
 
+    // Automatic Reconnections are disabled since reconnection is handled in app
+    HapiManager.Settings.AutomaticReconnection = false;
+
     this.api = HapiFactory.getAsyncInterface(this, this.context);
     try {
       sharedSecret = params.getString("sharedSecret");
