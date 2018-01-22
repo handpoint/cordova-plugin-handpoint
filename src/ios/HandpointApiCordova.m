@@ -171,7 +171,8 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         
         if(remoteDevice)
         {
-            self.ssk = command.params[@"sharedSecret"] ?: self.ssk;
+            NSString *newSSK = command.params[@"sharedSecret"];
+            self.ssk = (newSSK && ![newSSK isEqualToString:@""]) ? newSSK : self.ssk;
             
             BOOL isRemoteDeviceSameAsPreferred = self.preferredDevice &&
             [self.preferredDevice.address isEqualToString:remoteDevice.address];

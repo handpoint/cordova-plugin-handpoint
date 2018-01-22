@@ -30,7 +30,25 @@
 {
     switch (self.status)
     {
+        case TransactionStatusSuccess: return @"Success";
+        case TransactionStatusInvalidData: return @"InvalidData";
+        case TransactionStatusProcessingError: return @"ProcessingError";
+        case TransactionStatusCommandNotAllowed: return @"CommandNotAllowed";
+        case TransactionStatusNotInitialised: return @"NotInitialised";
+        case TransactionStatusConnectTimeout: return @"ConnectTimeout";
+        case TransactionStatusConnectError: return @"ConnectError";
+        case TransactionStatusSendingError: return @"SendingError";
+        case TransactionStatusReceivingError: return @"ReceivingError";
+        case TransactionStatusNoDataAvailable: return @"NoDataAvailable";
+        case TransactionStatusTransactionNotAllowed: return @"TransactionNotAllowed";
+        case TransactionStatusUnsupportedCurrency: return @"UnsupportedCurrency";
+        case TransactionStatusNoHostAvailable: return @"NoHostAvailable";
+        case TransactionStatusCardReaderError: return @"CardReaderError";
+        case TransactionStatusCardReadingFailed: return @"CardReadingFailed";
+        case TransactionStatusInvalidCard: return @"InvalidCard";
+        case TransactionStatusInputTimeout: return @"InputTimeout";
         case TransactionStatusUserCancelled: return @"UserCancelled";
+        case TransactionStatusInvalidSignature: return @"InvalidSignature";
         case TransactionStatusWaitingForCard: return @"WaitingForCard";
         case TransactionStatusCardInserted: return @"CardInserted";
         case TransactionStatusApplicationSelection: return @"ApplicationSelection";
@@ -40,13 +58,37 @@
         case TransactionStatusManualCardInput: return @"ManualCardInput";
         case TransactionStatusWaitingForCardRemoval: return @"WaitingForCardRemoval";
         case TransactionStatusTipInput: return @"TipInput";
-        case TransactionStatusAuthenticatingPos: return @"AuthenticatingPos";
-        case TransactionStatusWaitingForSignature: return @"WaitingForSignature";
-        case TransactionStatusConnectingToHost: return @"ConnectingToHost";
-        case TransactionStatusSendingToHost: return @"SendingToHost";
-        case TransactionStatusReceivingFromHost: return @"ReceivingFromHost";
-        case TransactionStatusDisconnectingFromHost: return @"DisconnectingFromHost";
-        case TransactionStatusPinInputComplete: return @"PinInputComplete";
+        case TransactionStatusSharedSecretInvalid: return @"SharedSecretInvalid";
+        case TransactionStatusSharedSecretAuth: return @"SharedSecretAuth";
+        case TransactionStatusWaitingSignature: return @"WaitingSignature";
+        case TransactionStatusWaitingHostConnect: return @"WaitingHostConnect";
+        case TransactionStatusWaitingHostSend: return @"WaitingHostSend";
+        case TransactionStatusWaitingHostReceive: return @"WaitingHostReceive";
+        case TransactionStatusWaitingHostDisconnect: return @"WaitingHostDisconnect";
+        case TransactionStatusPinInputCompleted: return @"PinInputCompleted";
+        case TransactionStatusPosCancelled: return @"PosCancelled";
+        case TransactionStatusRequestInvalid: return @"RequestInvalid";
+        case TransactionStatusCardCancelled: return @"CardCancelled";
+        case TransactionStatusCardBlocked: return @"CardBlocked";
+        case TransactionStatusRequestAuthTimeout: return @"RequestAuthTimeout";
+        case TransactionStatusRequestPaymentTimeout: return @"RequestPaymentTimeout";
+        case TransactionStatusResponseAuthTimeout: return @"ResponseAuthTimeout";
+        case TransactionStatusResponsePaymentTimeout: return @"ResponsePaymentTimeout";
+        case TransactionStatusIccCardSwiped: return @"IccCardSwiped";
+        case TransactionStatusRemoveCard: return @"RemoveCard";
+        case TransactionStatusScannerIsNotSupported: return @"ScannerIsNotSupported";
+        case TransactionStatusScannerEvent: return @"ScannerEvent";
+        case TransactionStatusBatteryTooLow: return @"BatteryTooLow";
+        case TransactionStatusAccountTypeSelection: return @"AccountTypeSelection";
+        case TransactionStatusBtIsNotSupported: return @"BtIsNotSupported";
+        case TransactionStatusPaymentCodeSelection: return @"PaymentCodeSelection";
+        case TransactionStatusPartialApproval: return @"PartialApproval";
+        case TransactionStatusAmountDueValidation: return @"AmountDueValidation";
+        case TransactionStatusInvalidUrl: return @"InvalidUrl";
+        case TransactionStatusWaitingCustomerReceipt: return @"WaitingCustomerReceipt";
+        case TransactionStatusPrintingMerchantReceipt: return @"PrintingMerchantReceipt";
+        case TransactionStatusPrintingCustomerReceipt: return @"PrintingCustomerReceipt";
+        case TransactionStatusInitialisationComplete: return @"InitialisationComplete";
         case TransactionStatusUndefined:
         default:
         return @"Undefined";
