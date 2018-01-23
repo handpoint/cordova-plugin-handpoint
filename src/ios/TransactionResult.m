@@ -26,17 +26,17 @@
 
 - (NSString *)statusMessage
 {
-    return self.dictionary[XMLTags.StatusMessage] ?: @"Undefined";
+    return self.dictionary[XMLTags.StatusMessage] ?: @"";
 }
 
 - (NSString *)type
 {
-    return self.dictionary[XMLTags.TransactionType] ?: @"Undefined";
+    return self.dictionary[XMLTags.TransactionType] ?: @"";
 }
 
 - (NSString *)finStatus
 {
-    return self.dictionary[XMLTags.FinancialStatus] ?: @"Undefined";
+    return self.dictionary[XMLTags.FinancialStatus] ?: @"";
 }
 
 - (NSString *)requestedAmount
