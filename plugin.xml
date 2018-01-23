@@ -64,7 +64,6 @@
         <header-file src="src/ios/StatusInfo.h"/>
         <source-file src="src/ios/TransactionResult.m"/>
         <header-file src="src/ios/TransactionResult.h"/>
-        <header-file src="src/ios/TransactionStatus.h"/>
         <source-file src="src/ios/XMLTags.m"/>
         <header-file src="src/ios/XMLTags.h"/>
         <source-file src="src/ios/BaseModel.m"/>
