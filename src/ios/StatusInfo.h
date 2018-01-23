@@ -1,5 +1,4 @@
 
-#import "TransactionStatus.h"
 #import "BaseModel.h"
 
 @class DeviceStatus;
