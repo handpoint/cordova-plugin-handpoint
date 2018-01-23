@@ -89,6 +89,8 @@
         case EFT_PP_STATUS_WAITING_CUSTOMER_RECEIPT: return @"WaitingCustomerReceipt";
         case EFT_PP_STATUS_PRINTING_MERCHANT_RECEIPT: return @"PrintingMerchantReceipt";
         case EFT_PP_STATUS_PRINTING_CUSTOMER_RECEIPT: return @"PrintingCustomerReceipt";
+        case EFT_PP_STATUS_WAITING_HOST_MSG_TO_HOST: return @"WaitingHostMessageRequest";
+        case EFT_PP_STATUS_WAITING_HOST_MSG_RESP: return @"WaitingHostMessageResponse";
         case EFT_PP_STATUS_INITIALISATION_COMPLETE: return @"InitialisationComplete";
         default:
         return [NSString stringWithFormat:@"Status: %@", @(self.status)];
