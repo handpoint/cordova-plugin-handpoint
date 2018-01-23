@@ -2,6 +2,7 @@
 #import "StatusInfo.h"
 #import "DeviceStatus.h"
 #import "XMLTags.h"
+#import "HandpointAll.h"
 
 //TODO add method calls for the XML methods
 @implementation StatusInfo
@@ -23,7 +24,7 @@
 - (int)status
 {
     NSString *transactionStatus = [self dictionary][XMLTags.StatusCode];
-    return (transactionStatus) ? (TransactionStatus) [transactionStatus intValue] : TransactionStatusUndefined;
+    return [transactionStatus intValue];
 }
     
 - (NSString *)statusString
@@ -61,10 +62,10 @@
         case EFT_PP_STATUS_SHARED_SECRET_INVALID: return @"SharedSecretInvalid";
         case EFT_PP_STATUS_SHARED_SECRET_AUTH: return @"SharedSecretAuth";
         case EFT_PP_STATUS_WAITING_SIGNATURE: return @"WaitingSignature";
-        case EFT_PP_STATUS_WAITING_HOST_CONNECT: return @"WaitingHostConnect";
-        case EFT_PP_STATUS_WAITING_HOST_SEND: return @"WaitingHostSend";
-        case EFT_PP_STATUS_WAITING_HOST_RECEIVE: return @"WaitingHostReceive";
-        case EFT_PP_STATUS_WAITING_HOST_DISCONNECT: return @"WaitingHostDisconnect";
+        case EFT_PP_STATUS_CONNECTING: return @"WaitingHostConnect";
+        case EFT_PP_STATUS_SENDING: return @"WaitingHostSend";
+        case EFT_PP_STATUS_RECEIVEING: return @"WaitingHostReceive";
+        case EFT_PP_STATUS_DISCONNECTING: return @"WaitingHostDisconnect";
         case EFT_PP_STATUS_PIN_INPUT_COMPLETED: return @"PinInputCompleted";
         case EFT_PP_STATUS_POS_CANCELLED: return @"PosCancelled";
         case EFT_PP_STATUS_REQUEST_INVALID: return @"RequestInvalid";
