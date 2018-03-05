@@ -258,3 +258,51 @@ Fetches the logs from the device and reports them to the **deviceLogsReady** eve
 ```javascript 
 cordova.plugins.Handpoint.getDeviceLogs({}, successCallback, errorCallback)
 ```
+
+## Event Handling
+If you don't want to deal with callbacks and you prefer to turn **Callbacks** into **Promises** you might want to publish the events received in the callback function passed to `cordova.plugins.Handpoint.eventHandler` method to a [publish-subscribe style event system](https://ionicframework.com/docs/api/util/Events/) and then encapsulate the event handling logic in an [SDK wrapper module](https://github.com/handpoint/handpoint-ionic-app/blob/master/src/services/sdk.service.ts).
+
+Let's suppose that you want to implement a **sale** which returns a **Promise** that resolves when the transaction is completed, or rejects when it is failed.
+
+First we need to publish **sale** related events to our event system:
+
+```javascript
+cordova.plugins.Handpoint.eventHandler(function (event) {
+  …
+  // Publish event
+  if (event.event == 'endOfTransaction') {
+    events.publish("handpoint:" + event.event + ":" + event.data.transactionResult.finStatus, event.data);
+  }
+  …
+}, function (error) {
+  …
+});
+```
+Now we are publishing Handpoint events as **handpoint:endOfTransaction:AUTHORISED**, **handpoint:endOfTransaction:DECLINED**, etc.
+
+And finally encapsulate the Handpoint SDK **sale** method in a function that returns a Promise:
+
+```javascript
+function salePromise(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    cordova.plugins.Handpoint.sale(params, ()=> {
+      // Subscribe to success events and resolve the promise: handpoint:endOfTransaction:AUTHORISED
+      … 
+      successEvents.subscribe((result) => {
+        resolve(result);
+      });
+      // Subscribe to error events and reject the promise: handpoint:endOfTransaction:DECLINE handpoint:endOfTransaction:FAILED handpoint:endOfTransaction:CANCELLED
+      … 
+      errorEvents.subscribe((result) => {
+        reject(result);
+      });
+      // Clean up and unsubscribe
+      …
+    }, (error) => {
+      reject(error);
+    });
+  })
+}
+```
+
+**NOTE**: the example above is pseudocode, you have a [fully implemented wrapper here](https://github.com/handpoint/handpoint-ionic-app/blob/master/src/services/sdk.service.ts).
