@@ -142,6 +142,7 @@ Enum. containing [ISO 4217 codes](https://en.wikipedia.org/wiki/ISO_4217). f.ex.
 #### LogLevel
 
 Enum. containing supported logging levels:
+
 | Value                                        | Notes                          |
 | :------------------------------------------- | :----------------------------- |
 | **cordova.plugins.Handpoint.LogLevel.None**  | No logging                     |
