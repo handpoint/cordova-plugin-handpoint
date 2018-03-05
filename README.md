@@ -154,18 +154,18 @@ Enum. containing supported logging levels:
 All the methods of the plugin are asynchronous and return the result of the execution either to a success or an error callback:
 `cordova.plugins.Handpoint.methodName([config], successCallback, errorCallback)`
 
-#### setup
+#### <span style="color: #6C7E8F">setup</span>
 Initializes the Handpoint SDK with your shared secret:
 ```javascript
 cordova.plugins.Handpoint.setup({ sharedSecret: '0102030405060708091011121314151617181920212223242526272829303132' }, successCallback, errorCallback)
 ```
 
-#### setSharedSecret
+#### <span style="color: #6C7E8F">setSharedSecret</span>
 Validates the app for this session, thus enabling financial transactions:
 ```javascript
 cordova.plugins.Handpoint.setSharedSecret({ sharedSecret: '0102030405060708091011121314151617181920212223242526272829303132' }, successCallback, errorCallback)
 ```
-#### eventHandler
+#### <span style="color: #6C7E8F">eventHandler</span>
 Sets up the SDK event handler
 ```javascript
 cordova.plugins.Handpoint.eventHandler(function(data) {
@@ -173,7 +173,7 @@ cordova.plugins.Handpoint.eventHandler(function(data) {
   // data.data contains the event payload
 }, errorCallback)
 ```
-#### sale
+#### <span style="color: #6C7E8F">sale</span>
 A sale initiates a payment operation to the card reader.
 ```javascript 
 cordova.plugins.Handpoint.sale({
@@ -181,7 +181,7 @@ cordova.plugins.Handpoint.sale({
   currency: cordova.plugins.Handpoint.Currency.GBP
 }, successCallback, errorCallback)
 ```
-#### refund
+#### <span style="color: #6C7E8F">refund</span>
 A refund initiates a refund operation to the card reader. 
 ```javascript 
 cordova.plugins.Handpoint.refund({
@@ -189,7 +189,7 @@ cordova.plugins.Handpoint.refund({
   currency: cordova.plugins.Handpoint.Currency.GBP
 }, successCallback, errorCallback)
 ```
-#### saleReversal
+#### <span style="color: #6C7E8F">saleReversal</span>
 A sale Reversal, also called sale VOID allows the user to reverse a previous sale operation. 
 ```javascript 
 cordova.plugins.Handpoint.saleReversal({
@@ -198,7 +198,7 @@ cordova.plugins.Handpoint.saleReversal({
   originalTransactionID: result.transactionResult.eFTTransactionID // where result is the endOfTransaction event payload
 }, successCallback, errorCallback)
 ```
-#### refundReversal
+#### <span style="color: #6C7E8F">refundReversal</span>
 A Refund Reversal, also called Refund VOID allows the merchant to reverse a previous refund operation. 
 ```javascript 
 cordova.plugins.Handpoint.refundReversal({
@@ -207,45 +207,45 @@ cordova.plugins.Handpoint.refundReversal({
   originalTransactionID: result.transactionResult.eFTTransactionID // where result is the endOfTransaction event payload
 }, successCallback, errorCallback)
 ```
-#### signatureResult
+#### <span style="color: #6C7E8F">signatureResult</span>
 When a **signatureRequired** event is fired, the merchant is required to ask the cardholder for signature and approve (or decline) the signature.
 ```javascript 
 cordova.plugins.Handpoint.signatureResult({
   accepted: true
 }, successCallback, errorCallback)
 ```
-#### listDevices
+#### <span style="color: #6C7E8F">listDevices</span>
 Starts the search for devices to connect to with the specified ConnectionMethod.
 ```javascript 
 cordova.plugins.Handpoint.listDevices({
   method: cordova.plugins.Handpoint.ConnectionMethod.SIMULATOR
 }, successCallback, errorCallback)
 ```
-#### connect
+#### <span style="color: #6C7E8F">connect</span>
 Configures the device as the preferred device and tries to connect to it. 
 ```javascript 
 cordova.plugins.Handpoint.connect({
   device: device // One of the devices returned from listDevices operation
 }, successCallback, errorCallback)
 ```
-#### disconnect
+#### <span style="color: #6C7E8F">disconnect</span>
 Disconnect will stop the active connection
 ```javascript 
 cordova.plugins.Handpoint.disconnect({
   device: device // One of the devices returned from listDevices operation
 }, successCallback, errorCallback)
 ```
-#### getPendingTransaction
+#### <span style="color: #6C7E8F">getPendingTransaction</span>
 In the case of a communication failure between the device and the SDK a TransactionResult might have not been delivered to the SDK. This function fetches a pending TransactionResult (which contains receipts) from the device, if any.
 ```javascript 
 cordova.plugins.Handpoint.getPendingTransaction({}, successCallback, errorCallback)
 ```
-#### update
+#### <span style="color: #6C7E8F">update</span>
 The update operation checks for update to the current card reader and initiates an update if needed. The update can either be a software update or a configuration update.
 ```javascript 
 cordova.plugins.Handpoint.update({}, successCallback, errorCallback)
 ```
-#### setLogLevel
+#### <span style="color: #6C7E8F">setLogLevel</span>
 Sets the log level for both the card reader and the SDK.
 ```javascript 
 cordova.plugins.Handpoint.setLogLevel({
@@ -253,7 +253,7 @@ cordova.plugins.Handpoint.setLogLevel({
   device: device
 }, successCallback, errorCallback)
 ```
-#### getDeviceLogs
+#### <span style="color: #6C7E8F">getDeviceLogs</span>
 Fetches the logs from the device and reports them to the **deviceLogsReady** event.
 ```javascript 
 cordova.plugins.Handpoint.getDeviceLogs({}, successCallback, errorCallback)
