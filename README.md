@@ -129,14 +129,18 @@ cordova.plugins.Handpoint.eventHandler(function (event) {
 ### Properties
 #### ConnectionMethod
 Enum. containing supported connection methods:
+
 | Value                                                    | Notes                         |
 | :------------------------------------------------------- | :---------------------------- |
 | **cordova.plugins.Handpoint.ConnectionMethod.BLUETOOTH** | This is the                   |
 | **cordova.plugins.Handpoint.ConnectionMethod.HTTPS**     | Define for future use         |
 | **cordova.plugins.Handpoint.ConnectionMethod.SIMULATOR** | Supported only in **Android** |
+
 #### Currency
 Enum. containing [ISO 4217 codes](https://en.wikipedia.org/wiki/ISO_4217). f.ex. **cordova.plugins.Handpoint.Currency.ISK** evaluates as **352**.
+
 #### LogLevel
+
 Enum. containing supported logging levels:
 | Value                                        | Notes                          |
 | :------------------------------------------- | :----------------------------- |
