@@ -1,5 +1,5 @@
 # Cordova Handpoint SDK Plugin
-Cross-platform Handpoint SDK for Cordova. Take a look at the [Ionic 2 starter application](https://github.com/handpoint/handpoint-ionic-app)
+Cross-platform Handpoint SDK for Cordova. You might want to take a look at the [Ionic 2 starter application](https://github.com/handpoint/handpoint-ionic-app) to see fully functional example of the plugin.
 
 ## Installation
 **TODO**
@@ -15,23 +15,23 @@ The plugin creates the object **cordova.plugins.Handpoint** with the following p
 | **LogLevel**         | Enum. containing supported logging levels     |
 
 ### Methods
-| Method                    | Description                                                                                                                                                        |
-| :------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **setup**                 | Initializes the SDK                                                                                                                                                |
-| **setSharedSecret**       | Set shared secret for current card reader                                                                                                                          |
-| **eventHandler**          | Adds the event listener.                                                                                                                                           |
-| **sale**                  | A sale initiates a payment operation to the card reader                                                                                                            |
-| **refund**                | A refund initiates a refund operation to the card reader                                                                                                           |
-| **saleReversal**          | A sale Reversal, also called sale VOID allows the user to reverse a previous sale operation                                                                        |
-| **refundReversal**        | A Refund Reversal, also called refund VOID allows the merchant to reverse a previous refund operation                                                              |
-| **signatureResult**       | When signature is required, we use this method to tell the card reader the result of the signature (usually accepted)                                              |
-| **listDevices**           | Starts the search for devices to connect to with the specified ConnectionMethod                                                                                    |
-| **connect**               | Connect to a device                                                                                                                                                |
-| **disconnect**            | Disconnect will stop the active connection with the device                                                                                                         |
-| **getPendingTransaction** | only supported on Card Readers with EFT Software versions 1.7.x and 2.2.x                                                                                          |
-| **update**                | The update operation checks for update to the card reader and initiates an update if needed. The update can either be a software update or a configuration update. |
-| **setLogLevel**           | Sets the log level for both the card reader and the SDK                                                                                                            |
-| **getDeviceLogs**         | Fetches the logs from the device and reports them to the deviceLogsReady event.                                                                                    |
+| Method                                              | Description                                                                                                                                                        |
+| :-------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[setup](#setup)**                                 | Initializes the SDK                                                                                                                                                |
+| **[setSharedSecret](#setSharedSecret)**             | Set shared secret for current card reader                                                                                                                          |
+| **[eventHandler](#eventHandler)**                   | Adds the event listener.                                                                                                                                           |
+| **[sale](#sale)**                                   | A sale initiates a payment operation to the card reader                                                                                                            |
+| **[refund](#refund)**                               | A refund initiates a refund operation to the card reader                                                                                                           |
+| **[saleReversal](#saleReversal)**                   | A sale Reversal, also called sale VOID allows the user to reverse a previous sale operation                                                                        |
+| **[refundReversal](#refundReversal)**               | A Refund Reversal, also called refund VOID allows the merchant to reverse a previous refund operation                                                              |
+| **[signatureResult](#signatureResult)**             | When signature is required, we use this method to tell the card reader the result of the signature (usually accepted)                                              |
+| **[listDevices](#listDevices)**                     | Starts the search for devices to connect to with the specified ConnectionMethod                                                                                    |
+| **[connect](#connect)**                             | Connect to a device                                                                                                                                                |
+| **[disconnect](#disconnect)**                       | Disconnect will stop the active connection with the device                                                                                                         |
+| **[getPendingTransaction](#getPendingTransaction)** | only supported on Card Readers with EFT Software versions 1.7.x and 2.2.x                                                                                          |
+| **[update](#update)**                               | The update operation checks for update to the card reader and initiates an update if needed. The update can either be a software update or a configuration update. |
+| **[setLogLevel](#setLogLevel)**                     | Sets the log level for both the card reader and the SDK                                                                                                            |
+| **[getDeviceLogs](#getDeviceLogs)**                 | Fetches the logs from the device and reports them to the deviceLogsReady event.                                                                                    |
 
 ## Quick start
 - **1.** Setup the Handpoint SDK Singleton:
