@@ -1,8 +1,12 @@
 # Cordova Handpoint SDK Plugin
-Cross-platform Handpoint SDK for Cordova. You might want to take a look at the [Ionic 2 starter application](https://github.com/handpoint/handpoint-ionic-app) to see fully functional app using the plugin.
+Cross-platform Handpoint SDK for Cordova. You might want to take a look at the [Ionic 2 starter application](https://github.com/handpoint/handpoint-ionic-app) to see a fully functional app using the plugin.
 
 ## Installation
-**TODO**
+You can install whitelist plugin with Cordova CLI, from npm:
+
+```bash
+cordova plugin add cordova-plugin-handpoint
+```
 
 ## Overview
 The plugin creates the object **cordova.plugins.Handpoint** with the following public methods and properties:
