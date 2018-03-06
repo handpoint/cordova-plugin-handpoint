@@ -12,11 +12,11 @@ cordova plugin add cordova-plugin-handpoint
 The plugin creates the object **cordova.plugins.Handpoint** with the following public methods and properties:
 
 ### Properties 
-| Property             | Description                                   |
-| :------------------- | :-------------------------------------------- |
-| **ConnectionMethod** | Enum. containing supported connection methods |
-| **Currency**         | Enum. containing **ISO4217** currency codes   |
-| **LogLevel**         | Enum. containing supported logging levels     |
+| Property                                  | Description                                   |
+| :---------------------------------------- | :-------------------------------------------- |
+| **[ConnectionMethod](#connectionmethod)** | Enum. containing supported connection methods |
+| **[Currency](#currency)**                 | Enum. containing **ISO4217** currency codes   |
+| **[LogLevel](#loglevel)**                 | Enum. containing supported logging levels     |
 
 ### Methods
 | Method                                              | Description                                                                                                                                                        |
