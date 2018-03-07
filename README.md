@@ -1,5 +1,7 @@
 # Cordova Handpoint SDK Plugin
-Cross-platform Handpoint SDK for Cordova. You might want to take a look at the [Ionic 2 starter application](https://github.com/handpoint/handpoint-ionic-app) to see a fully functional app using the plugin.
+Cross-platform [Handpoint](https://www.handpoint.com) SDK for Cordova. This plugin is intended to enable the access to Handpoint Card Readers from any cross-platform application built over Cordova.
+
+You might want to take a look at the [Ionic 2 starter application](https://github.com/handpoint/handpoint-ionic-app) to see a fully functional app using the plugin.
 
 ## Installation
 You can install handpoint plugin with Cordova CLI, from npm:
@@ -408,6 +410,8 @@ cordova.plugins.Handpoint.getDeviceLogs({}, successCallback, errorCallback)
 | **errorCallback**   | Executed if the method execution failed  |
 
 ## Event Handling
+As explained before, all the methods of the plugin are asynchronous and return the result of the execution either to a success or an error callback.
+
 If you don't want to deal with callbacks and you prefer to turn **Callbacks** into **Promises** you might want to publish the events received in the callback function passed to `cordova.plugins.Handpoint.eventHandler` method to a [publish-subscribe style event system](https://ionicframework.com/docs/api/util/Events/) and then encapsulate the event handling logic in an [SDK wrapper module](https://github.com/handpoint/handpoint-ionic-app/blob/master/src/services/sdk.service.ts).
 
 Let's suppose that you want to implement a **sale** which returns a **Promise** that resolves when the transaction is completed, or rejects when it is failed.
@@ -428,7 +432,7 @@ cordova.plugins.Handpoint.eventHandler(function (event) {
 ```
 Now we are publishing Handpoint events as **handpoint:endOfTransaction:AUTHORISED**, **handpoint:endOfTransaction:DECLINED**, etc.
 
-And finally encapsulate the Handpoint SDK **sale** method in a function that returns a Promise:
+And finally encapsulate the Handpoint SDK **sale** method in a function that returns a Promise which deals with event subscriptions:
 
 ```javascript
 function salePromise(): Promise<any> {
