@@ -83,7 +83,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  @Deprecated  // This operation should be removed
+  @Deprecated // This operation should be removed
   public void cancelRequest(CallbackContext callbackContext, JSONObject params) throws Throwable {
     callbackContext.error("Can't send cancelRequest operation to device");
   }
@@ -166,16 +166,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void listDevices(CallbackContext callbackContext, JSONObject params) throws Throwable {
     this.api.listDevices(ConnectionMethod.values()[params.getInt("connectionMethod")]);
-    callbackContext.success("ok");
-  }
-
-  public void startMonitoringConnections(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    this.api.startMonitoringConnections();
-    callbackContext.success("ok");
-  }
-
-  public void stopMonitoringConnections(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    this.api.stopMonitoringConnections();
     callbackContext.success("ok");
   }
 

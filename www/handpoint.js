@@ -11,13 +11,9 @@ function Handpoint() {
      * @type Object
      */
     this.ConnectionMethod = {
-        "USB": 0,
-        "SERIAL": 1,
-        "BLUETOOTH": 2,
-        "HTTPS": 3,
-        "WIFI": 4,
-        "ETHERNET": 5,
-        "SIMULATOR": 6
+        "BLUETOOTH": 0,
+        "HTTPS": 1,
+        "SIMULATOR": 2
     };
 
     /**
@@ -256,6 +252,7 @@ Handpoint.prototype.refund = function (config, successCallback, errorCallback) {
  * @param {Object} config parameters 
  * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
  * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
  * @param config.map A map including extra optional transaction parameters
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -461,6 +458,7 @@ Handpoint.prototype.listDevices = function (config, successCallback, errorCallba
  * @param {Function} errorCallback This function will be called if an error happened
  */
 Handpoint.prototype.startMonitoringConnections = function (successCallback, errorCallback) {
+    // Deprecated: removed in hapi-android-4.0.0
     this.exec('startMonitoringConnections', {}, successCallback, errorCallback);
 };
 
@@ -477,6 +475,7 @@ Handpoint.prototype.startMonitoringConnections = function (successCallback, erro
  * @param {Function} errorCallback This function will be called if an error happened
  */
 Handpoint.prototype.stopMonitoringConnections = function (successCallback, errorCallback) {
+    // Deprecated: removed in hapi-android-4.0.0
     this.exec('stopMonitoringConnections', {}, successCallback, errorCallback);
 };
 
@@ -506,20 +505,24 @@ Handpoint.prototype.exec = function (method, config, successCallback, errorCallb
         config = [];
     }
 
-    if (typeof errorCallback != "function") {
+    if (errorCallback && typeof errorCallback != "function") {
         throw new Error("Handpoint." + method + " failure: errorCallback is not a function");
     }
 
-    if (typeof successCallback != "function") {
+    if (successCallback && typeof successCallback != "function") {
         throw new Error("Handpoint." + method + " failure: successCallback is not a function");
     }
 
     // Exec 
-    exec(function (result) {
-        successCallback(result);
-    }, function (error) {
-        errorCallback && errorCallback(error);
-    }, 'HandpointApiCordova', method, config);
+    try {
+        exec(function (result) {
+            successCallback && successCallback(result);
+        }, function (error) {
+            errorCallback && errorCallback(error);
+        }, 'HandpointApiCordova', method, config);
+    } catch (e) {
+        errorCallback && errorCallback(e);
+    }
 
 };
 
