@@ -44,14 +44,22 @@ The plugin creates the object **cordova.plugins.Handpoint** with the following p
 - **1.** Setup the Handpoint SDK Singleton with your shared secret. The shared secret is a key provided by Handpoint when you get your account that enables you to perform live operations with the card reader:
 
 ```javascript
-// Replace sharedSecret with yours
-cordova.plugins.Handpoint.setup({
-  sharedSecret: "0102030405060708091011121314151617181920212223242526272829303132"
-}, function (result) {
-  // SDK initialization succeed
-}, function (error) {
-  // SDK initialization failed
-});
+
+  // Init Handpoint SDK 
+  cordova.plugins.Handpoint.setup({}, () => {
+    // SDK initialization succeed
+    // set shared secret
+    cordova.plugins.Handpoint.setSharedSecret({
+      sharedSecret: '0102030405060708091011121314151617181920212223242526272829303132'
+    }, () => { 
+      // Initialization completed
+    }, (error) => {
+      // Set shared secret failed        
+    });
+
+  }, (error) => {
+    // SDK initialization failed  
+  });
 ```
 
 - **2.** Configure event handler to receive async notifications from the Card Reader. Most of the methods of the SDK are asynchronous. Once you send the operation to the Card reader, you will be notified of the status through the event handler function. See [Event Handling](#event-handling) section.
@@ -185,20 +193,19 @@ All the methods of the plugin are asynchronous and return the result of the exec
 `cordova.plugins.Handpoint.methodName([config], successCallback, errorCallback)`
 
 #### <span style="color: #6C7E8F">setup</span>
-Initializes the Handpoint SDK with your shared secret. Don't forget to execute it before trying to use the SDK:
+Initializes the Handpoint SDK. Don't forget to execute it before trying to use the SDK:
 
 ```javascript
-cordova.plugins.Handpoint.setup({ sharedSecret: '0102030405060708091011121314151617181920212223242526272829303132' }, successCallback, errorCallback)
+cordova.plugins.Handpoint.setup({}, successCallback, errorCallback)
 ```
 
-| Parameter               | Description                              |
-| :---------------------- | :--------------------------------------- |
-| **config.sharedSecret** | Your shared secret                       |
-| **successCallback**     | Executed if the method execution succeed |
-| **errorCallback**       | Executed if the method execution failed  |
+| Parameter           | Description                              |
+| :------------------ | :--------------------------------------- |
+| **successCallback** | Executed if the method execution succeed |
+| **errorCallback**   | Executed if the method execution failed  |
 
 #### <span style="color: #6C7E8F">setSharedSecret</span>
-Validates the app for this session, thus enabling financial transactions. You don't need to execute this method if you already set up the shared secret in the setup call:
+Validates the app for this session, thus enabling financial transactions. Don't forget to set shared secret before connect to a device:
 
 ```javascript
 cordova.plugins.Handpoint.setSharedSecret({ sharedSecret: '0102030405060708091011121314151617181920212223242526272829303132' }, successCallback, errorCallback)
