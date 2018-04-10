@@ -33,7 +33,10 @@
     "test": "jasmine-node --color spec"
   },
   "devDependencies": {
+    "command-line-args": "^5.0.2",
     "jasmine-node": "1.14.5",
-    "pluginpub": "^0.0.6"
+    "nodegit": "^0.22.0",
+    "pluginpub": "^0.0.6",
+    "semver-sort": "0.0.4"
   }
 }
