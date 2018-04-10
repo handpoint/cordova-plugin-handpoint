@@ -8,6 +8,8 @@
 *.tmp.*
 npm-debug.log*
 
+variables.properties
+package-lock.json
 node_modules/
 .idea/
 .sass-cache/
