@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plugin 
-  xmlns="http://apache.org/cordova/ns/plugins/1.0" 
-  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.2.2">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.2.3-RC.0">
   <name>Handpoint</name>
   <description>Cordova Handpoint SDK Plugin</description>
   <license>Apache 2.0</license>
@@ -33,8 +31,8 @@
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
       <feature name="HandpointApiCordova">
-        <param name="ios-package" value="HandpointApiCordova" />
-        <param name="onload" value="false" />
+        <param name="ios-package" value="HandpointApiCordova"/>
+        <param name="onload" value="false"/>
       </feature>
     </config-file>
     <config-file target="*-Info.plist" parent="UISupportedExternalAccessoryProtocols">
@@ -48,29 +46,17 @@
       </array>
     </config-file>
     <header-file src="src/ios/HandpointApiCordova.h"/>
-    <source-file src="src/ios/HandpointApiCordova.m"/>
-    <source-file src="src/ios/SDKEvent.m"/>
     <header-file src="src/ios/SDKEvent.h"/>
-    <source-file src="src/ios/Currency.m"/>
     <header-file src="src/ios/Currency.h"/>
-    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
     <header-file src="src/ios/HeftRemoteDevice+SendableDevice.h"/>
-    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
     <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
     <header-file src="src/ios/ConnectionStatus.h"/>
-    <source-file src="src/ios/DeviceStatus.m"/>
     <header-file src="src/ios/DeviceStatus.h"/>
-    <source-file src="src/ios/StatusInfo.m"/>
     <header-file src="src/ios/StatusInfo.h"/>
-    <source-file src="src/ios/TransactionResult.m"/>
     <header-file src="src/ios/TransactionResult.h"/>
-    <source-file src="src/ios/XMLTags.m"/>
     <header-file src="src/ios/XMLTags.h"/>
-    <source-file src="src/ios/BaseModel.m"/>
     <header-file src="src/ios/BaseModel.h"/>
-    <source-file src="src/ios/NSString+Sanitize.m"/>
     <header-file src="src/ios/NSString+Sanitize.h"/>
-    <!-- SDK header files -->
     <header-file src="src/ios/include/CmdIds.h"/>
     <header-file src="src/ios/include/FinanceResponseInfo.h"/>
     <header-file src="src/ios/include/HandpointAll.h"/>
@@ -85,10 +71,21 @@
     <header-file src="src/ios/include/ResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerDisabledResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerEventResponseInfo.h"/>
-    <framework src="ExternalAccessory.framework" />
-    <framework src="Security.framework" />
-    <source-file src="src/ios/lib/libheft.a" framework="true" />
-    <framework src="libc++.dylib" />
+    <source-file src="src/ios/HandpointApiCordova.m"/>
+    <source-file src="src/ios/SDKEvent.m"/>
+    <source-file src="src/ios/Currency.m"/>
+    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
+    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
+    <source-file src="src/ios/DeviceStatus.m"/>
+    <source-file src="src/ios/StatusInfo.m"/>
+    <source-file src="src/ios/TransactionResult.m"/>
+    <source-file src="src/ios/XMLTags.m"/>
+    <source-file src="src/ios/BaseModel.m"/>
+    <source-file src="src/ios/NSString+Sanitize.m"/>
+    <source-file src="src/ios/lib/libheft.a" framework="true"/>
+    <framework src="ExternalAccessory.framework"/>
+    <framework src="Security.framework"/>
+    <framework src="libc++.dylib"/>
     <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
   </platform>
 </plugin>
