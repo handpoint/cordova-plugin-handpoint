@@ -3,6 +3,7 @@
 #import "Currency.h"
 #import "XMLTags.h"
 #import "DeviceStatus.h"
+#import "NSString+Sanitize.h"
 
 @interface TransactionResult ()
 
@@ -18,8 +19,8 @@
     self = [super initWithDictionary:dictionary];
     if (self)
     {
-        self.customerReceipt = info.customerReceipt ?: @"";
-        self.merchantReceipt = info.merchantReceipt ?: @"";
+        self.customerReceipt = [(info.customerReceipt ?: @"") sanitize];
+        self.merchantReceipt = [(info.merchantReceipt ?: @"") sanitize];
     }
     return self;
 }
@@ -137,7 +138,8 @@
 
 - (NSString *)chipTransactionReport
 {
-    return self.dictionary[XMLTags.ChipTransactionReport] ?: @"";
+    NSString *report = self.dictionary[XMLTags.ChipTransactionReport] ?: @"";
+    return [report sanitize];
 }
 
 - (NSString *)dueAmount

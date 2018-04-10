@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin 
     xmlns="http://apache.org/cordova/ns/plugins/1.0" 
-    xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.2.22">
+    xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.2.23">
     <name>Handpoint</name>
     <description>Cordova Handpoint SDK Plugin</description>
     <license>Apache 2.0</license>
@@ -68,6 +68,8 @@
         <header-file src="src/ios/XMLTags.h"/>
         <source-file src="src/ios/BaseModel.m"/>
         <header-file src="src/ios/BaseModel.h"/>
+        <source-file src="src/ios/NSString+Sanitize.m"/>
+        <header-file src="src/ios/NSString+Sanitize.h"/>
         <!-- SDK header files -->
         <header-file src="src/ios/include/CmdIds.h"/>
         <header-file src="src/ios/include/FinanceResponseInfo.h"/>
