@@ -1,39 +1,39 @@
 {
-    "name": "cordova-plugin-handpoint",
-    "version": "1.2.2",
-    "description": "Cordova Handpoint SDK Plugin",
-    "cordova": {
-        "id": "cordova-plugin-handpoint",
-        "platforms": [
-            "android",
-            "ios"
-        ]
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/handpoint/cordova-plugin-handpoint.git"
-    },
-    "keywords": [
-        "ecosystem:cordova",
-        "ecosystem:phonegap",
-        "cordova-android",
-        "cordova:plugin"
-    ],
-    "engines": {
-        "name": "cordova",
-        "version": ">=3.0.0"
-    },
-    "author": "Handpoint Team",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/handpoint/cordova-plugin-handpoint/issues"
-    },
-    "homepage": "https://github.com/handpoint/cordova-plugin-handpoint#readme",
-    "scripts": {
-        "test": "jasmine-node --color spec"
-    },
-    "devDependencies": {
-        "jasmine-node": "1.14.5",
-        "pluginpub": "^0.0.6"
-    }
+  "name": "cordova-plugin-handpoint",
+  "version": "1.2.2",
+  "description": "Cordova Handpoint SDK Plugin",
+  "cordova": {
+    "id": "cordova-plugin-handpoint",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/handpoint/cordova-plugin-handpoint.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "ecosystem:phonegap",
+    "cordova-android",
+    "cordova:plugin"
+  ],
+  "engines": {
+    "name": "cordova",
+    "version": ">=3.0.0"
+  },
+  "author": "Handpoint Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/handpoint/cordova-plugin-handpoint/issues"
+  },
+  "homepage": "https://github.com/handpoint/cordova-plugin-handpoint#readme",
+  "scripts": {
+    "test": "jasmine-node --color spec"
+  },
+  "devDependencies": {
+    "jasmine-node": "1.14.5",
+    "pluginpub": "^0.0.6"
+  }
 }
