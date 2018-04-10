@@ -50,11 +50,11 @@ public class SDKEvent {
         valueObjectList = new JSONArray(list);
         data.put(key, valueObjectList);
       } else if (value instanceof Enum) {
-        this.data.put(key, value.toString());
+        this.data.put(key, this.sanitize(value.toString()));
       } else if (value instanceof String) {
-        this.data.put(key, value);
+        this.data.put(key, this.sanitize((String) value));
       } else {
-        valueObject = new JSONObject(gson.toJson(value));
+        valueObject = new JSONObject(this.sanitize(gson.toJson(value)));
         this.data.put(key, valueObject);
       }
     } catch (JSONException jse) {
@@ -74,6 +74,11 @@ public class SDKEvent {
       Log.e(TAG, "Error serializing SDKEvent: " + jse.toString());
       return null;
     }
+  }
+
+  private String sanitize(String value) {
+    return value.replaceAll("\\\\u2028", "").replaceAll("\\\\u2029", "").replaceAll("\u2028", "").replaceAll("\u2029",
+        "");
   }
 
 }
