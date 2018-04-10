@@ -68,6 +68,8 @@
         <header-file src="src/ios/XMLTags.h"/>
         <source-file src="src/ios/BaseModel.m"/>
         <header-file src="src/ios/BaseModel.h"/>
+        <source-file src="src/ios/NSString+Sanitize.m"/>
+        <header-file src="src/ios/NSString+Sanitize.h"/>
         <!-- SDK header files -->
         <header-file src="src/ios/include/CmdIds.h"/>
         <header-file src="src/ios/include/FinanceResponseInfo.h"/>

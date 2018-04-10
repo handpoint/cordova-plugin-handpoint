@@ -6,6 +6,7 @@
 #import "CDVInvokedUrlCommand+Arguments.h"
 #import "StatusInfo.h"
 #import "TransactionResult.h"
+#import "NSString+Sanitize.h"
 
 NSString* CONNECTION_CALLBACK_ID = @"CONNECTION_CALLBACK_ID";
 NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
@@ -531,11 +532,11 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 - (void)requestSignature:(NSString *)receipt
 {
     NSLog(@"\n\trequestSignature");
-
+    
     SDKEvent *event = [SDKEvent eventWithName:@"signatureRequired"
                                          data:@{
                                                 @"device": self.preferredDevice.sendableDevice,
-                                                @"merchantReceipt" : receipt ?: @""
+                                                @"merchantReceipt" : [receipt sanitize] ?: @""
                                                 }];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
