@@ -222,10 +222,16 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     
 - (void)setSharedSecret:(CDVInvokedUrlCommand*)command
 {
+    
     [self.commandDelegate runInBackground:^{
         NSLog(@"\n\tsetSharedSecret: %@", command.params);
         
         self.ssk = command.params[@"sharedSecret"];
+        // If we are already connected to this device, update shared secret
+        if (self.api && self.ssk && ![self.ssk isEqualToString:@""])
+        {
+            self.api.sharedSecret = self.ssk;
+        }
         [self sendSuccessWithCallbackId:command.callbackId];
     }];
 }
