@@ -104,11 +104,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     JSONObject device = params.getJSONObject("device");
     this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
         ConnectionMethod.values()[device.getInt("connectionMethod")]);
-    this.api = this.api.useDevice(this.device);
-
-    // TODO i don't know if this is needed
-    this.setEventsHandler();
-    callbackContext.success("ok");
+    if (this.api.connect(this.device)) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't connect to device");
+    }
   }
 
   public void disconnect(CallbackContext callbackContext, JSONObject params) throws Throwable {
