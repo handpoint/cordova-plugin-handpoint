@@ -38,6 +38,7 @@ The plugin creates the object **cordova.plugins.Handpoint** with the following p
 | **[update](#update)**                               | The update operation checks for update to the card reader and initiates an update if needed. The update can either be a software update or a configuration update. |
 | **[setLogLevel](#setloglevel)**                     | Sets the log level for both the card reader and the SDK                                                                                                            |
 | **[getDeviceLogs](#getdevicelogs)**                 | Fetches the logs from the device and reports them to the deviceLogsReady event.                                                                                    |
+| **[getSDKVersion](#setup)**                         | Returns the underlying SDK version                                                                                                                                 |
 
 ## Quick start
 
@@ -392,23 +393,35 @@ Sets the log level for both the card reader and the SDK.
 
 ```javascript 
 cordova.plugins.Handpoint.setLogLevel({
-  level: cordova.plugins.Handpoint.LogLevel.Debug,
-  device: device
+  level: cordova.plugins.Handpoint.LogLevel.Debug
 }, successCallback, errorCallback)
 ```
 
-| Parameter           | Description                                                                                             |
-| :------------------ | :------------------------------------------------------------------------------------------------------ |
-| **config.level**    | Log level. See the list of [supported log levels](#loglevel)                                            |
-| **config.device**   | Device to configure with log level. One of device object returned by [listDevices method](#listdevices) |
-| **successCallback** | Executed if the method execution succeed                                                                |
-| **errorCallback**   | Executed if the method execution failed                                                                 |
+| Parameter           | Description                                                  |
+| :------------------ | :----------------------------------------------------------- |
+| **config.level**    | Log level. See the list of [supported log levels](#loglevel) |
+| **successCallback** | Executed if the method execution succeed                     |
+| **errorCallback**   | Executed if the method execution failed                      |
 
 #### <span style="color: #6C7E8F">getDeviceLogs</span>
 Fetches the logs from the device and reports them to the **deviceLogsReady** event.
 
 ```javascript 
 cordova.plugins.Handpoint.getDeviceLogs({}, successCallback, errorCallback)
+```
+
+| Parameter           | Description                              |
+| :------------------ | :--------------------------------------- |
+| **successCallback** | Executed if the method execution succeed |
+| **errorCallback**   | Executed if the method execution failed  |
+
+#### <span style="color: #6C7E8F">getSDKVersion</span>
+Returns the underlying SDK version in the success callback.
+
+```javascript 
+cordova.plugins.Handpoint.getSDKVersion({}, (version) => {
+  console.log(version);
+}, errorCallback)
 ```
 
 | Parameter           | Description                              |
