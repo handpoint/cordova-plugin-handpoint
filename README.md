@@ -392,17 +392,15 @@ Sets the log level for both the card reader and the SDK.
 
 ```javascript 
 cordova.plugins.Handpoint.setLogLevel({
-  level: cordova.plugins.Handpoint.LogLevel.Debug,
-  device: device
+  level: cordova.plugins.Handpoint.LogLevel.Debug
 }, successCallback, errorCallback)
 ```
 
-| Parameter           | Description                                                                                             |
-| :------------------ | :------------------------------------------------------------------------------------------------------ |
-| **config.level**    | Log level. See the list of [supported log levels](#loglevel)                                            |
-| **config.device**   | Device to configure with log level. One of device object returned by [listDevices method](#listdevices) |
-| **successCallback** | Executed if the method execution succeed                                                                |
-| **errorCallback**   | Executed if the method execution failed                                                                 |
+| Parameter           | Description                                                  |
+| :------------------ | :----------------------------------------------------------- |
+| **config.level**    | Log level. See the list of [supported log levels](#loglevel) |
+| **successCallback** | Executed if the method execution succeed                     |
+| **errorCallback**   | Executed if the method execution failed                      |
 
 #### <span style="color: #6C7E8F">getDeviceLogs</span>
 Fetches the logs from the device and reports them to the **deviceLogsReady** event.
