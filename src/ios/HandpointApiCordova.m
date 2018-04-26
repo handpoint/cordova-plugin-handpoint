@@ -369,6 +369,14 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     }];
 }
 
+- (void)getSDKVersion:(CDVInvokedUrlCommand*)command
+{
+    NSLog(@"\n\tgetSDKVersion");
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+        messageAsString:self.manager.version];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 # pragma mark - Callbacks
     
 - (void)didFindAccessoryDevice:(HeftRemoteDevice*)newDevice

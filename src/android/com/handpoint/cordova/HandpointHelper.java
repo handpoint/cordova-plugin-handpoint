@@ -173,6 +173,14 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     callbackContext.success("ok");
   }
 
+  public void getSDKVersion(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api != null) {
+      callbackContext.success(this.api.getSDKVersion());
+    } else {
+      callbackContext.error("You have to execute setup method first");
+    }
+  }
+
   /**
    * Register event handler 
    */

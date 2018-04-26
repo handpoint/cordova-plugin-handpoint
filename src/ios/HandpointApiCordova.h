@@ -29,5 +29,5 @@ FOUNDATION_EXPORT NSString* LIST_DEVICES_CALLBACK_ID;
 - (void)stopMonitoringConnections:(CDVInvokedUrlCommand*)command;
 - (void)eventHandler:(CDVInvokedUrlCommand*)command;
 - (void)applicationDidGoBackground:(CDVInvokedUrlCommand*)command;
-
+- (void)getSDKVersion:(CDVInvokedUrlCommand*)command;
 @end
