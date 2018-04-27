@@ -511,27 +511,14 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)responseError:(id <ResponseInfo>)info
 {
-    NSLog(@"\n\tresponseError: %@ %@", @(info.statusCode), info.status);
-
-    StatusInfo *statusInfo = [[StatusInfo alloc] initWithDictionary:info.xml
-                                                         statusCode:info.statusCode];
+    NSLog(@"\n\tresponseError: %@", info.status);
     
-    DeviceStatus *deviceStatus = statusInfo.deviceStatus;
-    
-    NSDictionary *data = @{
-                           @"cancelAllowed": @(statusInfo.cancelAllowed),
-                           @"deviceStatus": deviceStatus.toDictionary,
-                           @"message": statusInfo.message ?: @"",
-                           @"status": statusInfo.statusString ?: @""
-                           };
+    NSDictionary *data = @{@"message": info.status ?: @""};
     
     NSLog(@"%@", data);
     
-    SDKEvent *event = [SDKEvent eventWithName:@"currentTransactionStatus"
-                                         data: @{
-                                                 @"info": data,
-                                                 @"device": self.preferredDevice.sendableDevice
-                                                 }];
+    SDKEvent *event = [SDKEvent eventWithName:@"exception"
+                                         data: data];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                   messageAsDictionary:event.JSON];
