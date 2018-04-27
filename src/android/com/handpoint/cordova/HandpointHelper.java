@@ -174,7 +174,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void getSDKVersion(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    callbackContext.success(HapiManager.getSDKVersion());
+    callbackContext.success(HapiManager.getSdkVersion());
   }
 
   /**
