@@ -24,9 +24,8 @@
       <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
       <uses-permission android:name="android.permission.INTERNET"/>
     </config-file>
-    <lib-file src="src/android/hapi-android-4.0.1.jar"/>
+    <lib-file src="src/android/hapi-android-4.0.2.jar"/>
     <lib-file src="src/android/gson-2.8.1.jar"/>
-    <lib-file src="src/android/keen-client-api-android-2.0.0.jar"/>
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
