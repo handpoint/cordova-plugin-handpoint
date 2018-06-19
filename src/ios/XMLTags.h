@@ -75,4 +75,6 @@
 
 + (NSString *)BalanceSign;
 
++ (NSString *)CardToken;
+
 @end;

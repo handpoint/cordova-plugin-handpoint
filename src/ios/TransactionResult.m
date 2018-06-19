@@ -152,6 +152,11 @@
     return self.dictionary[XMLTags.BalanceAmount] ?: @"0";
 }
 
+- (NSString *)cardToken
+{
+    return self.dictionary[XMLTags.CardToken] ?: @"0";
+}
+
 - (NSDictionary *)toDictionary
 {
     return @{
@@ -182,6 +187,7 @@
              @"chipTransactionReport": self.chipTransactionReport,
              @"dueAmount": self.dueAmount,
              @"balance": self.balance
+             @"cardToken": self.cardToken
              };
 }
 @end

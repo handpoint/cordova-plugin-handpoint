@@ -38,6 +38,29 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     self.ssk = @"";
 }
 
+- (void)saleAndTokenizeCard:(CDVInvokedUrlCommand*)command
+{
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tsale: %@", command.params);
+        
+        Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
+        NSInteger amount = [command.params[@"amount"] integerValue];
+        
+        BOOL result = [self.api saleAndTokenizeCardWithAmount:amount
+                                      currency:currency.sendableCurrencyCode
+                                    cardholder:YES];
+        
+        if (result)
+        {
+            [self sendSuccessWithCallbackId:command.callbackId];
+        }
+        else
+        {
+            [self sendErrorWithMessage:@"Can't send saleAndTokenizeCard operation to device" callbackId:command.callbackId];
+        }
+    }];
+}
+
 - (void)sale:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{

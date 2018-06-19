@@ -31,6 +31,7 @@
 @property (readonly, nonatomic) NSString *chipTransactionReport;
 @property (readonly, nonatomic) NSString *dueAmount;
 @property (readonly, nonatomic) NSString *balance;
+@property (readonly, nonatomic) NSString *cardToken;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary financeResponseInfo:(id <FinanceResponseInfo>)info;
 

@@ -28,7 +28,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     this.context = context;
   }
 
-  //An Android Context is required to be able to handle bluetooth
+  // An Android Context is required to be able to handle bluetooth
   public void setup(CallbackContext callbackContext, JSONObject params) throws Throwable {
     String sharedSecret = null;
 
@@ -54,6 +54,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       callbackContext.success("ok");
     } else {
       callbackContext.error("Can't send sale operation to device");
+    }
+  }
+
+  public void saleAndTokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
+        Currency.getCurrency(params.getInt("currency")))) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't send saleAndTokenizeCard operation to device");
     }
   }
 
@@ -178,7 +187,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   /**
-   * Register event handler 
+   * Register event handler
    */
   public void eventHandler(CallbackContext callbackContext, JSONObject params) throws Throwable {
     this.callbackContext = callbackContext;
