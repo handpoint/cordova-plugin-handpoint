@@ -8,9 +8,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.math.BigInteger;
 
 import com.google.gson.*;
@@ -50,7 +53,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")))) {
+    if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
       callbackContext.success("ok");
     } else {
       callbackContext.error("Can't send sale operation to device");
@@ -59,7 +62,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void saleAndTokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
     if (this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
-        Currency.getCurrency(params.getInt("currency")))) {
+        Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
       callbackContext.success("ok");
     } else {
       callbackContext.error("Can't send saleAndTokenizeCard operation to device");
@@ -68,7 +71,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     if (this.api.saleReversal(new BigInteger(params.getString("amount")),
-        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"))) {
+        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"), this.getExtraParams(params))) {
       callbackContext.success("ok");
     } else {
       callbackContext.error("Can't send saleReversal operation to device");
@@ -76,7 +79,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void refund(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")))) {
+    if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
       callbackContext.success("ok");
     } else {
       callbackContext.error("Can't send refund operation to device");
@@ -85,7 +88,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     if (this.api.refundReversal(new BigInteger(params.getString("amount")),
-        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"))) {
+        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"), this.getExtraParams(params))) {
       callbackContext.success("ok");
     } else {
       callbackContext.error("Can't send refundReversal operation to device");
@@ -284,6 +287,55 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
+  }
+
+  protected Map<String, Object> getExtraParams(JSONObject params) throws JSONException {
+    return this.jsonToMap((JSONObject) params.get("map"));
+  }
+
+  protected static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
+    Map<String, Object> retMap = new HashMap<String, Object>();
+
+    if(json != JSONObject.NULL) {
+      retMap = toMap(json);
+    }
+    return retMap;
+  }
+
+  protected static Map<String, Object> toMap(JSONObject object) throws JSONException {
+    Map<String, Object> map = new HashMap<String, Object>();
+
+    Iterator<String> keysItr = object.keys();
+    while(keysItr.hasNext()) {
+      String key = keysItr.next();
+      Object value = object.get(key);
+
+      if(value instanceof JSONArray) {
+        value = toList((JSONArray) value);
+      }
+
+      else if(value instanceof JSONObject) {
+        value = toMap((JSONObject) value);
+      }
+      map.put(key, value);
+    }
+    return map;
+  }
+
+  protected static List<Object> toList(JSONArray array) throws JSONException {
+    List<Object> list = new ArrayList<Object>();
+    for(int i = 0; i < array.length(); i++) {
+      Object value = array.get(i);
+      if(value instanceof JSONArray) {
+        value = toList((JSONArray) value);
+      }
+
+      else if(value instanceof JSONObject) {
+        value = toMap((JSONObject) value);
+      }
+      list.add(value);
+    }
+    return list;
   }
 
   protected void finalize() {
