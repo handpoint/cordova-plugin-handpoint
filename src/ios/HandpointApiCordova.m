@@ -45,8 +45,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         NSInteger amount = [command.params[@"amount"] integerValue];
         
         BOOL result = [self.api saleAndTokenizeCardWithAmount:amount
-                                      currency:currency.sendableCurrencyCode
-                                    cardholder:YES];
+                                                     currency:currency.sendableCurrencyCode];
         
         if (result)
         {
