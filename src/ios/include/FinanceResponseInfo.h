@@ -5,6 +5,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ResponseInfo.h"
+#import "DeviceStatus.h"
 
 
 /**
@@ -59,5 +60,33 @@
 @property (nonatomic) NSString *merchantReceipt;
 
 /**@}*/
+
+@property (nonatomic) NSString *statusMessage;
+@property (nonatomic) NSString *type;
+@property (nonatomic) NSString *finStatus;
+@property (nonatomic) NSString *requestedAmount;
+@property (nonatomic) NSString *gratuityAmount;
+@property (nonatomic) NSString *gratuityPercentage;
+@property (nonatomic) NSString *totalAmount;
+@property (nonatomic) NSString *currency;
+@property (nonatomic) NSString *eFTTransactionID;
+@property (nonatomic) NSString *originalEFTTransactionID;
+@property (nonatomic) NSString *eFTTimestamp;
+@property (nonatomic) NSString *authorisationCode;
+@property (nonatomic) NSString *verificationMethod;
+@property (nonatomic) NSString *cardEntryType;
+@property (nonatomic) NSString *cardSchemeName;
+@property (nonatomic) NSString *errorMessage;
+@property (nonatomic) NSString *customerReference;
+@property (nonatomic) NSString *budgetNumber;
+@property (nonatomic) BOOL recoveredTransaction;
+@property (nonatomic) NSString *cardTypeId;
+@property (nonatomic) NSString *chipTransactionReport;
+@property (nonatomic) DeviceStatus *deviceStatus;
+@property (nonatomic) NSString *dueAmount;
+@property (nonatomic) NSString *balance;
+@property (nonatomic) NSString *cardToken;
+
+- (NSDictionary *)toDictionary;
 
 @end
