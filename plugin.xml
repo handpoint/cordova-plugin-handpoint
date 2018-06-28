@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.4.0">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.5.0-RC.0">
   <name>Handpoint</name>
   <description>Cordova Handpoint SDK Plugin</description>
   <license>Apache 2.0</license>
@@ -45,19 +45,12 @@
       </array>
     </config-file>
     <header-file src="src/ios/HandpointApiCordova.h"/>
-    <source-file src="src/ios/HandpointApiCordova.m"/>
-    <source-file src="src/ios/SDKEvent.m"/>
     <header-file src="src/ios/SDKEvent.h"/>
-    <source-file src="src/ios/Currency.m"/>
     <header-file src="src/ios/Currency.h"/>
-    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
     <header-file src="src/ios/HeftRemoteDevice+SendableDevice.h"/>
-    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
     <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
     <header-file src="src/ios/ConnectionStatus.h"/>
-    <source-file src="src/ios/NSString+Sanitize.m"/>
     <header-file src="src/ios/NSString+Sanitize.h"/>
-    <!-- SDK header files -->
     <header-file src="src/ios/include/DeviceStatus.h"/>
     <header-file src="src/ios/include/StatusInfo.h"/>
     <header-file src="src/ios/include/BaseModel.h"/>
@@ -75,10 +68,16 @@
     <header-file src="src/ios/include/ResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerDisabledResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerEventResponseInfo.h"/>
-    <framework src="ExternalAccessory.framework" />
-    <framework src="Security.framework" />
-    <source-file src="src/ios/lib/libheft.a" framework="true" />
-    <framework src="libc++.dylib" />
+    <source-file src="src/ios/HandpointApiCordova.m"/>
+    <source-file src="src/ios/SDKEvent.m"/>
+    <source-file src="src/ios/Currency.m"/>
+    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
+    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
+    <source-file src="src/ios/NSString+Sanitize.m"/>
+    <source-file src="src/ios/lib/libheft.a" framework="true"/>
+    <framework src="ExternalAccessory.framework"/>
+    <framework src="Security.framework"/>
+    <framework src="libc++.dylib"/>
     <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
   </platform>
 </plugin>
