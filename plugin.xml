@@ -24,7 +24,7 @@
       <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
       <uses-permission android:name="android.permission.INTERNET"/>
     </config-file>
-    <lib-file src="src/android/hapi-android-4.1.0.jar"/>
+    <lib-file src="src/android/hapi-android-4.2.0.jar"/>
     <lib-file src="src/android/gson-2.8.1.jar"/>
   </platform>
   <platform name="ios">
@@ -45,17 +45,22 @@
       </array>
     </config-file>
     <header-file src="src/ios/HandpointApiCordova.h"/>
+    <source-file src="src/ios/HandpointApiCordova.m"/>
+    <source-file src="src/ios/SDKEvent.m"/>
     <header-file src="src/ios/SDKEvent.h"/>
+    <source-file src="src/ios/Currency.m"/>
     <header-file src="src/ios/Currency.h"/>
+    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
     <header-file src="src/ios/HeftRemoteDevice+SendableDevice.h"/>
+    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
     <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
     <header-file src="src/ios/ConnectionStatus.h"/>
-    <header-file src="src/ios/DeviceStatus.h"/>
-    <header-file src="src/ios/StatusInfo.h"/>
-    <header-file src="src/ios/TransactionResult.h"/>
-    <header-file src="src/ios/XMLTags.h"/>
-    <header-file src="src/ios/BaseModel.h"/>
+    <source-file src="src/ios/NSString+Sanitize.m"/>
     <header-file src="src/ios/NSString+Sanitize.h"/>
+    <!-- SDK header files -->
+    <header-file src="src/ios/include/DeviceStatus.h"/>
+    <header-file src="src/ios/include/StatusInfo.h"/>
+    <header-file src="src/ios/include/BaseModel.h"/>
     <header-file src="src/ios/include/CmdIds.h"/>
     <header-file src="src/ios/include/FinanceResponseInfo.h"/>
     <header-file src="src/ios/include/HandpointAll.h"/>
@@ -70,21 +75,10 @@
     <header-file src="src/ios/include/ResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerDisabledResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerEventResponseInfo.h"/>
-    <source-file src="src/ios/HandpointApiCordova.m"/>
-    <source-file src="src/ios/SDKEvent.m"/>
-    <source-file src="src/ios/Currency.m"/>
-    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
-    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
-    <source-file src="src/ios/DeviceStatus.m"/>
-    <source-file src="src/ios/StatusInfo.m"/>
-    <source-file src="src/ios/TransactionResult.m"/>
-    <source-file src="src/ios/XMLTags.m"/>
-    <source-file src="src/ios/BaseModel.m"/>
-    <source-file src="src/ios/NSString+Sanitize.m"/>
-    <source-file src="src/ios/lib/libheft.a" framework="true"/>
-    <framework src="ExternalAccessory.framework"/>
-    <framework src="Security.framework"/>
-    <framework src="libc++.dylib"/>
+    <framework src="ExternalAccessory.framework" />
+    <framework src="Security.framework" />
+    <source-file src="src/ios/lib/libheft.a" framework="true" />
+    <framework src="libc++.dylib" />
     <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
   </platform>
 </plugin>

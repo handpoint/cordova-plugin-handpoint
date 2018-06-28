@@ -4,8 +4,6 @@
 #import "ConnectionStatus.h"
 #import "Currency.h"
 #import "CDVInvokedUrlCommand+Arguments.h"
-#import "StatusInfo.h"
-#import "TransactionResult.h"
 #import "NSString+Sanitize.h"
 
 NSString* CONNECTION_CALLBACK_ID = @"CONNECTION_CALLBACK_ID";
@@ -36,6 +34,28 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     [self fillDevicesFromconnectedCardReaders];
     
     self.ssk = @"";
+}
+
+- (void)saleAndTokenizeCard:(CDVInvokedUrlCommand*)command
+{
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tsale: %@", command.params);
+        
+        Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
+        NSInteger amount = [command.params[@"amount"] integerValue];
+        
+        BOOL result = [self.api saleAndTokenizeCardWithAmount:amount
+                                                     currency:currency.sendableCurrencyCode];
+        
+        if (result)
+        {
+            [self sendSuccessWithCallbackId:command.callbackId];
+        }
+        else
+        {
+            [self sendErrorWithMessage:@"Can't send saleAndTokenizeCard operation to device" callbackId:command.callbackId];
+        }
+    }];
 }
 
 - (void)sale:(CDVInvokedUrlCommand*)command
@@ -134,13 +154,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     }];
 }
 
-- (void)cancelRequest:(CDVInvokedUrlCommand*)command
-{
-    [self.commandDelegate runInBackground:^{
-        NSLog(@"\n\tcancelRequest");
-        [self.api cancel];
-    }];
-}
+- (void)cancelRequest:(CDVInvokedUrlCommand*)command {}
 
 - (void)tipAdjustment:(CDVInvokedUrlCommand*)command
 {
@@ -490,7 +504,6 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 {
     NSLog(@"\n\tresponseStatus: %@ %@", @(info.statusCode), info.status);
     
-   
     StatusInfo *statusInfo = [[StatusInfo alloc] initWithDictionary:info.xml
                                                          statusCode:info.statusCode];
     
@@ -536,12 +549,10 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
 - (void)responseFinanceStatus:(id <FinanceResponseInfo>)info
 {
-    TransactionResult *result = [[TransactionResult alloc] initWithDictionary:info.xml financeResponseInfo:info];
-    
-    NSLog(@"\n\tresponseFinanceStatus: %@", result.toDictionary);
+    NSLog(@"\n\tresponseFinanceStatus: %@", info.toDictionary);
     
     SDKEvent *event = [SDKEvent eventWithName:@"endOfTransaction"
-                                         data: @{@"transactionResult":result.toDictionary}];
+                                         data: @{@"transactionResult":info.toDictionary}];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                   messageAsDictionary:event.JSON];

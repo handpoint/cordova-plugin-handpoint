@@ -219,4 +219,9 @@
     return @"BalanceSign";
 }
 
++ (NSString *)CardToken
+{
+    return @"CardToken";
+}
+
 @end
