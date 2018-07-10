@@ -46,7 +46,8 @@
     </config-file>
     <header-file src="src/ios/HandpointApiCordova.h"/>
     <header-file src="src/ios/SDKEvent.h"/>
-    <header-file src="src/ios/include/Currency.h"/>
+    <header-file src="src/ios/include
+    /Currency.h"/>
     <header-file src="src/ios/HeftRemoteDevice+SendableDevice.h"/>
     <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
     <header-file src="src/ios/ConnectionStatus.h"/>
