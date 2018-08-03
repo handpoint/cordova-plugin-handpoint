@@ -276,6 +276,24 @@ Handpoint.prototype.refundReversal = function (config, successCallback, errorCal
 };
 
 /**
+ * Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
+ * It accepts certain configuration parameters, such as multiScan (boolean)
+ * autoScan (boolean), resultsGrouped (boolean) and timeout (integer),
+ * @param {Object} config parameters 
+ * @param config.multiScan true if you want to scan multiple items before returning to your app.
+ * @param config.autoScan true if you want the scanner always on without the pushing of a button
+ * @param config.resultsGrouped true if you want scans from a multi scan to come all together when 
+ * you're finished.
+ * @param config.timeout the amount of seconds until the scanner shuts itself off. 0 means no timeout.
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.enableScanner = function (config, successCallback, errorCallback) {
+  this.exec('enableScanner', config, successCallback, errorCallback);
+};
+
+/**
  * This method attempts to cancel the current transaction on the card reader. Note that 
  * operations can only be cancelled before requests are sent to the gateway. There is a 
  * flag called cancelAllowed in the currentTransactionStatus event that can be used to check 
