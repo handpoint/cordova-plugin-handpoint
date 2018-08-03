@@ -342,15 +342,15 @@ Starts the search for devices to connect to with the specified ConnectionMethod.
 
 ```javascript 
 cordova.plugins.Handpoint.listDevices({
-  method: cordova.plugins.Handpoint.ConnectionMethod.SIMULATOR
+  connectionMethod: cordova.plugins.Handpoint.ConnectionMethod.SIMULATOR
 }, successCallback, errorCallback)
 ```
 
-| Parameter           | Description                                                 |
-| :------------------ | :---------------------------------------------------------- |
-| **config.method**   | One of the [accepted connection methods](#connectionmethod) |
-| **successCallback** | Executed if the method execution succeed                    |
-| **errorCallback**   | Executed if the method execution failed                     |
+| Parameter                   | Description                                                 |
+| :-------------------------- | :---------------------------------------------------------- |
+| **config.connectionMethod** | One of the [accepted connection methods](#connectionmethod) |
+| **successCallback**         | Executed if the method execution succeed                    |
+| **errorCallback**           | Executed if the method execution failed                     |
 
 #### <span style="color: #6C7E8F">connect</span>
 Configures the device as the preferred device and tries to connect to it. 
