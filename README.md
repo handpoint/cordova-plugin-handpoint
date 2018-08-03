@@ -27,6 +27,7 @@ The plugin creates the object **cordova.plugins.Handpoint** with the following p
 | **[setSharedSecret](#setsharedsecret)**             | Set shared secret for current card reader                                                                                                                          |
 | **[eventHandler](#eventhandler)**                   | Adds the event listener.                                                                                                                                           |
 | **[sale](#sale)**                                   | A sale initiates a payment operation to the card reader                                                                                                            |
+| **[saleAndTokenizeCard](#saleAndTokenizeCard)**     | A saleAndTokenizeCard initiates a payment operation and card tokenization request to the card reader                                                               |
 | **[refund](#refund)**                               | A refund initiates a refund operation to the card reader                                                                                                           |
 | **[saleReversal](#salereversal)**                   | A sale Reversal, also called sale VOID allows the user to reverse a previous sale operation                                                                        |
 | **[refundReversal](#refundreversal)**               | A Refund Reversal, also called refund VOID allows the merchant to reverse a previous refund operation                                                              |
@@ -239,6 +240,23 @@ A sale initiates a payment operation to the card reader.
 
 ```javascript 
 cordova.plugins.Handpoint.sale({
+  amount: 1000, // Amount of funds to charge - in the minor unit of currency (f.ex. 1000 is 10.00 GBP)
+  currency: cordova.plugins.Handpoint.Currency.GBP
+}, successCallback, errorCallback)
+```
+
+| Parameter           | Description                                                                 |
+| :------------------ | :-------------------------------------------------------------------------- |
+| **config.amount**   | Amount to pay in the minor unit of currency (f.ex. 1000 is 10.00 GBP)       |
+| **config.currency** | Currency for this transaction. F. ex cordova.plugins.Handpoint.Currency.ISK |
+| **successCallback** | Executed if the method execution succeed                                    |
+| **errorCallback**   | Executed if the method execution failed                                     |
+
+#### <span style="color: #6C7E8F">saleAndTokenizeCard</span>
+A saleAndTokenizeCard initiates a payment operation and card tokenization request to the card reader 
+
+```javascript 
+cordova.plugins.Handpoint.saleAndTokenizeCard({
   amount: 1000, // Amount of funds to charge - in the minor unit of currency (f.ex. 1000 is 10.00 GBP)
   currency: cordova.plugins.Handpoint.Currency.GBP
 }, successCallback, errorCallback)

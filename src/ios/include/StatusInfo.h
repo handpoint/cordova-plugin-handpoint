@@ -1,7 +1,6 @@
 
 #import "BaseModel.h"
-
-@class DeviceStatus;
+#import "DeviceStatus.h"
 
 @interface StatusInfo : BaseModel
     
