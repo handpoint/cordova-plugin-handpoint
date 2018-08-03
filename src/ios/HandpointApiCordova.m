@@ -16,6 +16,8 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 @property (nonatomic) NSString *ssk;
 @property (nonatomic) HeftRemoteDevice* preferredDevice;
 @property (atomic) NSMutableDictionary *devices;
+@property (atomic) NSMutableArray *scannedCodes;
+@property (nonatomic) BOOL sendScannerCodesGrouped;
 @property (nonatomic) NSString *eventHandlerCallbackId;
 
 @end
@@ -30,6 +32,8 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     self.manager = [HeftManager sharedManager];
     self.manager.delegate = self;
     self.devices = [@{} mutableCopy];
+    self.scannedCodes = [@[] mutableCopy];
+    self.sendScannerCodesGrouped = NO;
 
     [self fillDevicesFromconnectedCardReaders];
     
@@ -171,6 +175,33 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         [self.api acceptSignature:accepted];
         
         [self sendSuccessWithCallbackId:command.callbackId];
+    }];
+}
+
+- (void)enableScanner:(CDVInvokedUrlCommand*)command
+{
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tenableScanner");
+        
+        self.scannedCodes = [@[] mutableCopy];
+
+        BOOL multiScan = command.params[@"multiScan"] ? [command.params[@"multiScan"] boolValue] : YES;
+        BOOL autoScan = command.params[@"autoScan"] ? [command.params[@"autoScan"] boolValue] : NO;
+        self.sendScannerCodesGrouped = command.params[@"resultsGrouped"] ? [command.params[@"resultsGrouped"] boolValue] : YES;
+        NSUInteger timeout = command.params[@"timeout"] ? [command.params[@"timeout"] integerValue] : 0;
+
+        BOOL buttonEnabled = !autoScan;
+
+        BOOL result = [self.api enableScannerWithMultiScan:multiScan buttonMode:buttonEnabled timeoutSeconds:timeout];
+        
+        if (result)
+        {
+            [self sendSuccessWithCallbackId:command.callbackId];
+        }
+        else
+        {
+            [self sendErrorWithMessage:@"Can't enable the scanner" callbackId:command.callbackId];
+        }
     }];
 }
 
@@ -578,6 +609,60 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                                   messageAsDictionary:event.JSON];
+    
+    [self sendPluginResult:pluginResult];
+}
+
+- (void)responseScannerEvent:(id <ScannerEventResponseInfo>)info
+{
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"scanner event: %@", info.scanCode);
+
+        if (self.sendScannerCodesGrouped)
+        {
+            [self.scannedCodes addObject:info.scanCode];
+        }
+        else
+        {
+            [self sendScannerResults:@[info.scanCode]];
+        }
+    }];
+}
+
+- (void)responseScannerDisabled:(id <ScannerDisabledResponseInfo>)info
+{
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"Scanner Off");
+
+        if (self.sendScannerCodesGrouped && self.scannedCodes.count)
+        {
+            [self sendScannerResults:[self.scannedCodes copy]];
+        }
+
+        self.scannedCodes = [@[] mutableCopy];
+
+
+        SDKEvent *event = [SDKEvent eventWithName:@"scannerOff"
+                                             data:@{}];
+        
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                      messageAsDictionary:event.JSON];
+        
+        NSLog(@"\n\tresponseScannerDisabled JSON: %@", event.JSON);
+        
+        [self sendPluginResult:pluginResult];
+    }];
+}
+
+- (void)sendScannerResults:(NSArray *)scannedCodes
+{
+    SDKEvent *event = [SDKEvent eventWithName:@"scannerResults"
+                                         data:@{@"scannedCodes": scannedCodes}];
+    
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                                                  messageAsDictionary:event.JSON];
+    
+    NSLog(@"\n\tsendScannerResults JSON: %@", event.JSON);
     
     [self sendPluginResult:pluginResult];
 }
