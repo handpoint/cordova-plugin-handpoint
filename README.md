@@ -31,6 +31,7 @@ The plugin creates the object **cordova.plugins.Handpoint** with the following p
 | **[refund](#refund)**                               | A refund initiates a refund operation to the card reader                                                                                                           |
 | **[saleReversal](#salereversal)**                   | A sale Reversal, also called sale VOID allows the user to reverse a previous sale operation                                                                        |
 | **[refundReversal](#refundreversal)**               | A Refund Reversal, also called refund VOID allows the merchant to reverse a previous refund operation                                                              |
+| **[enableScanner](#enableScanner)**                 | Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)                                                                               |
 | **[signatureResult](#signatureresult)**             | When signature is required, we use this method to tell the card reader the result of the signature (usually accepted)                                              |
 | **[listDevices](#listdevices)**                     | Starts the search for devices to connect to with the specified ConnectionMethod                                                                                    |
 | **[connect](#connect)**                             | Connect to a device                                                                                                                                                |
@@ -321,6 +322,28 @@ cordova.plugins.Handpoint.refundReversal({
 | **config.currency** | Currency for this transaction. F. ex cordova.plugins.Handpoint.Currency.ISK |
 | **successCallback** | Executed if the method execution succeed                                    |
 | **errorCallback**   | Executed if the method execution failed                                     |
+
+#### <span style="color: #6C7E8F">enableScanner</span>
+Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
+
+```javascript 
+cordova.plugins.Handpoint.enableScanner({
+  multiScan: false,
+  autoScan: false,
+  resultsGrouped: true,
+  timeout: 0
+}, successCallback, errorCallback)
+```
+
+| Parameter                 | Description                                                                                                                                                             |
+| :------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **config.multiScan**      | true if you want to scan multiple items before returning to your app.                                                                                                   |
+| **config.autoScan**       | true if you want the scanner always on without the pushing of a button                                                                                                  |
+| **config.resultsGrouped** | true if you want scans from a multi scan to come all together when true if you want scans from a multi scan to come all together when you're finished. you're finished. |
+| **config.timeout**        | the amount of seconds until the scanner shuts itself off. 0 means no timeout.                                                                                           |
+| **successCallback**       | Executed if the method execution succeed                                                                                                                                |
+| **errorCallback**         | Executed if the method execution failed                                                                                                                                 |
+
 
 #### <span style="color: #6C7E8F">signatureResult</span>
 When a **signatureRequired** event is fired, the merchant is required to ask the cardholder for signature and approve or decline it. After that you can execute this method to inform on the result
