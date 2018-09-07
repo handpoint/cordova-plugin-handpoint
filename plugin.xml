@@ -11,6 +11,7 @@
     <clobbers target="cordova.plugins.Handpoint"/>
   </js-module>
   <platform name="android">
+    <source-file src="src/android/com/handpoint/cordova/GsonUTCDateAdapter.java" target-dir="src/com/handpoint/cordova"/>
     <source-file src="src/android/com/handpoint/cordova/HandpointApiCordova.java" target-dir="src/com/handpoint/cordova"/>
     <source-file src="src/android/com/handpoint/cordova/HandpointHelper.java" target-dir="src/com/handpoint/cordova"/>
     <source-file src="src/android/com/handpoint/cordova/SDKEvent.java" target-dir="src/com/handpoint/cordova"/>
