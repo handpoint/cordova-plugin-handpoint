@@ -1,9 +1,13 @@
 package com.handpoint.cordova;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.AbstractCollection;
 import com.google.gson.*;
@@ -32,7 +36,7 @@ public class SDKEvent {
    * Add event data. Each entry in event data is a key/value pair
    */
   public void put(String key, Object value) {
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new GsonUTCDateAdapter()).create();
     ArrayList list = new ArrayList();
     Iterator iterator = null;
     JSONObject valueObject = null;
@@ -49,6 +53,10 @@ public class SDKEvent {
         }
         valueObjectList = new JSONArray(list);
         data.put(key, valueObjectList);
+      } else if (value instanceof Date) {
+        DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        this.data.put(key, formatter.format((Date) value));
       } else if (value instanceof Enum) {
         this.data.put(key, this.sanitize(value.toString()));
       } else if (value instanceof String) {
