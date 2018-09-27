@@ -297,7 +297,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   protected Map<String, Object> getExtraParams(JSONObject params) throws JSONException {
-    return this.jsonToMap((JSONObject) params.get("map"));
+    if (params.has("map")) {
+      return this.jsonToMap((JSONObject) params.get("map"));
+    } else {
+      return new HashMap<String, Object>();
+    }
   }
 
   protected static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
