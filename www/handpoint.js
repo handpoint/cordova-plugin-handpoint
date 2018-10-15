@@ -386,6 +386,8 @@ Handpoint.prototype.setSharedSecret = function (config, successCallback, errorCa
 /**
  * Init SDK with shared secret
  * @param {Object} config parameters
+ * @param config.automaticReconnection If set to true, the SDK will automatically reconnect 
+ * to the last known device when the connection is lost. The default value is false
  * @param config.sharedSecret 	The shared secret is a key provided by Handpoint when you 
  * get your account that enables you to perform live operations with the card reader. 
  * However, if you're developing with a starter kit, the test shared secret is specified 

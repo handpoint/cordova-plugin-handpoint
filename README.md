@@ -204,8 +204,9 @@ cordova.plugins.Handpoint.setup({}, successCallback, errorCallback)
 
 | Parameter           | Description                              |
 | :------------------ | :--------------------------------------- |
-| **successCallback** | Executed if the method execution succeed |
-| **errorCallback**   | Executed if the method execution failed  |
+| **config.automaticReconnection** | If set to **true**, the SDK will automatically reconnect to the last known device when the connection is lost. The default value is **false**. Supported only in **Android** |
+| **successCallback**              | Executed if the method execution succeed |
+| **errorCallback**                | Executed if the method execution failed  |
 
 #### <span style="color: #6C7E8F">setSharedSecret</span>
 Validates the app for this session, thus enabling financial transactions. Don't forget to set shared secret before connect to a device:
