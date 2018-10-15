@@ -36,13 +36,16 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     String sharedSecret = null;
 
     // Automatic Reconnections are disabled since reconnection is handled in app
-    HapiManager.Settings.AutomaticReconnection = false;
-
+    try {
+      HapiManager.Settings.AutomaticReconnection = params.getBoolean("automaticReconnection");
+    } catch (JSONException ex) {
+      HapiManager.Settings.AutomaticReconnection = false;
+    }
+    
     this.api = HapiFactory.getAsyncInterface(this, this.context);
     try {
       sharedSecret = params.getString("sharedSecret");
-    } catch (Exception ex) {
-    }
+    } catch (JSONException ex) {}
 
     if (sharedSecret != null) {
       this.api.defaultSharedSecret(sharedSecret);
@@ -53,45 +56,69 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send sale operation to device");
+    try {
+      if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")),
+          this.getExtraParams(params))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send sale operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send sale operation to device. Incorrect parameters");
     }
   }
 
   public void saleAndTokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
-        Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send saleAndTokenizeCard operation to device");
+    try {
+      if (this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
+          Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send saleAndTokenizeCard operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send sale operation to device. Incorrect parameters");
     }
   }
 
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.saleReversal(new BigInteger(params.getString("amount")),
-        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"), this.getExtraParams(params))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send saleReversal operation to device");
+    try { 
+      if (this.api.saleReversal(new BigInteger(params.getString("amount")),
+          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
+          this.getExtraParams(params))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send saleReversal operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send saleReversal operation to device. Incorrect parameters");
     }
   }
 
   public void refund(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send refund operation to device");
+    try {
+      if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")),
+          this.getExtraParams(params))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send refund operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send refund operation to device. Incorrect parameters");
     }
   }
 
   public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.refundReversal(new BigInteger(params.getString("amount")),
-        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"), this.getExtraParams(params))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send refundReversal operation to device");
+    try {
+      if (this.api.refundReversal(new BigInteger(params.getString("amount")),
+          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
+          this.getExtraParams(params))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send refundReversal operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send refundReversal operation to device. Incorrect parameters");
     }
   }
 
@@ -105,21 +132,29 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void signatureResult(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.signatureResult(params.getBoolean("accepted"))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send signatureResult operation to device");
+    try {
+      if (this.api.signatureResult(params.getBoolean("accepted"))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send signatureResult operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send signatureResult operation to device. Incorrect parameters");
     }
   }
 
   public void connect(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    JSONObject device = params.getJSONObject("device");
-    this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
-        ConnectionMethod.values()[device.getInt("connectionMethod")]);
-    if (this.api.connect(this.device)) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't connect to device");
+    try {
+      JSONObject device = params.getJSONObject("device");
+      this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
+          ConnectionMethod.values()[device.getInt("connectionMethod")]);
+      if (this.api.connect(this.device)) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't connect to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't connect to device. Incorrect parameters");
     }
   }
 
@@ -133,29 +168,42 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void setSharedSecret(CallbackContext callbackContext, JSONObject params) throws Throwable {
 
-    // Set Shared secret only if there is a connected Device
-    if (this.api.getConnectionStatus() == ConnectionStatus.Connected) {
-      this.api.setSharedSecret(params.getString("sharedSecret"));
-    }
+    try {
+      // Set Shared secret only if there is a connected Device
+      if (this.api.getConnectionStatus() == ConnectionStatus.Connected) {
+        this.api.setSharedSecret(params.getString("sharedSecret"));
+      }
 
-    // Set as default shared secret
-    this.api.defaultSharedSecret(params.getString("sharedSecret"));
-    callbackContext.success("ok");
+      // Set as default shared secret
+      this.api.defaultSharedSecret(params.getString("sharedSecret"));
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't set shared secret. Incorrect parameters");
+    }
+    
   }
 
   public void setParameter(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.setParameter(DeviceParameter.valueOf(params.getString("param")), params.getString("value"))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send setParameter operation to device");
+    try {
+      if (this.api.setParameter(DeviceParameter.valueOf(params.getString("param")), params.getString("value"))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send setParameter operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send setParameter operation to device. Incorrect parameters");
     }
   }
 
   public void setLogLevel(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.setLogLevel(LogLevel.None.getLogLevel(params.getInt("level")))) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send setLogLevel operation to device");
+    try {
+      if (this.api.setLogLevel(LogLevel.None.getLogLevel(params.getInt("level")))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send setLogLevel operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send setLogLevel operation to device. Incorrect parameters");
     }
   }
 
@@ -184,8 +232,13 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void listDevices(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    this.api.listDevices(ConnectionMethod.values()[params.getInt("connectionMethod")]);
-    callbackContext.success("ok");
+    try {
+      this.api.listDevices(ConnectionMethod.values()[params.getInt("connectionMethod")]);
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute listDevices. Incorrect parameters");
+    }
+    
   }
 
   public void applicationDidGoBackground(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -307,7 +360,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   protected static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
     Map<String, Object> retMap = new HashMap<String, Object>();
 
-    if(json != JSONObject.NULL) {
+    if (json != JSONObject.NULL) {
       retMap = toMap(json);
     }
     return retMap;
@@ -317,15 +370,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     Map<String, Object> map = new HashMap<String, Object>();
 
     Iterator<String> keysItr = object.keys();
-    while(keysItr.hasNext()) {
+    while (keysItr.hasNext()) {
       String key = keysItr.next();
       Object value = object.get(key);
 
-      if(value instanceof JSONArray) {
+      if (value instanceof JSONArray) {
         value = toList((JSONArray) value);
       }
 
-      else if(value instanceof JSONObject) {
+      else if (value instanceof JSONObject) {
         value = toMap((JSONObject) value);
       }
       map.put(key, value);
@@ -335,13 +388,13 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   protected static List<Object> toList(JSONArray array) throws JSONException {
     List<Object> list = new ArrayList<Object>();
-    for(int i = 0; i < array.length(); i++) {
+    for (int i = 0; i < array.length(); i++) {
       Object value = array.get(i);
-      if(value instanceof JSONArray) {
+      if (value instanceof JSONArray) {
         value = toList((JSONArray) value);
       }
 
-      else if(value instanceof JSONObject) {
+      else if (value instanceof JSONObject) {
         value = toMap((JSONObject) value);
       }
       list.add(value);
