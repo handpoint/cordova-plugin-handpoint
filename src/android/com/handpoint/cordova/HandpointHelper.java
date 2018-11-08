@@ -77,7 +77,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         callbackContext.error("Can't send saleAndTokenizeCard operation to device");
       }
     } catch (JSONException ex) {
-      callbackContext.error("Can't send sale operation to device. Incorrect parameters");
+      callbackContext.error("Can't send saleAndTokenizeCard operation to device. Incorrect parameters");
     }
   }
 
@@ -119,6 +119,18 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send refundReversal operation to device. Incorrect parameters");
+    }
+  }
+
+  public void tokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      if (this.api.tokenizeCard(this.getExtraParams(params))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send tokenizeCard operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send tokenizeCard operation to device. Incorrect parameters");
     }
   }
 
