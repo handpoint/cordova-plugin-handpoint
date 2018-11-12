@@ -80,4 +80,13 @@
     <framework src="libc++.dylib"/>
     <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
   </platform>
+  <platform name="windows">
+    <config-file target="config.xml" parent="/*">
+        <feature name="HandpointApiCordova">
+            <param name="windows-package" value="HandpointApiCordova"/>
+        </feature>
+    </config-file>
+    <source-file src="src/wp/HandpointApiCordova.cs" />
+    <framework src="src/windows/HandpointSDK.dll" arch="x64" custom="true"/>
+  </platform>
 </plugin>
