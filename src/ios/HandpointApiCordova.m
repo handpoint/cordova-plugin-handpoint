@@ -43,7 +43,7 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 - (void)saleAndTokenizeCard:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        NSLog(@"\n\tsale: %@", command.params);
+        NSLog(@"\n\tsaleAndTokenizeCard: %@", command.params);
         
         Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
         NSInteger amount = [command.params[@"amount"] integerValue];
@@ -58,6 +58,24 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
         else
         {
             [self sendErrorWithMessage:@"Can't send saleAndTokenizeCard operation to device" callbackId:command.callbackId];
+        }
+    }];
+}
+
+- (void)tokenizeCard:(CDVInvokedUrlCommand*)command
+{
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\ttokenizeCard: %@", command.params);
+        
+        BOOL result = [self.api tokenizeCard];
+        
+        if (result)
+        {
+            [self sendSuccessWithCallbackId:command.callbackId];
+        }
+        else
+        {
+            [self sendErrorWithMessage:@"Can't send tokenizeCard operation to device" callbackId:command.callbackId];
         }
     }];
 }
