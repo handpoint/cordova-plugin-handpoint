@@ -26,6 +26,7 @@ The plugin creates the object **cordova.plugins.Handpoint** with the following p
 | **[setup](#setup)**                                 | Initializes the SDK                                                                                                                                                |
 | **[setSharedSecret](#setsharedsecret)**             | Set shared secret for current card reader                                                                                                                          |
 | **[eventHandler](#eventhandler)**                   | Adds the event listener.                                                                                                                                           |
+| **[tokenizeCard](#tokenizecard)**                   | Returns the tokenized version of the card used if successful                                                         |
 | **[sale](#sale)**                                   | A sale initiates a payment operation to the card reader                                                                                                            |
 | **[saleAndTokenizeCard](#saleandtokenizecard)**     | A saleAndTokenizeCard initiates a payment operation and card tokenization request to the card reader                                                               |
 | **[refund](#refund)**                               | A refund initiates a refund operation to the card reader                                                                                                           |
@@ -236,6 +237,13 @@ cordova.plugins.Handpoint.eventHandler(function(data) {
 | :------------------ | :------------------------------------------------------ |
 | **successCallback** | This function will received all the events from the SDK |
 | **errorCallback**   | Executed if event handler was not configured            |
+
+#### <span style="color: #6C7E8F">tokenizeCard</span>
+A tokenizeCard returns the tokenized version of the card used if successful (not available for all acquirers, please check with Handpoint to know if tokenization is supported for your acquirer of choice)
+
+```javascript 
+cordova.plugins.Handpoint.tokenizeCard({}, successCallback, errorCallback)
+```
 
 #### <span style="color: #6C7E8F">sale</span>
 A sale initiates a payment operation to the card reader.
