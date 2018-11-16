@@ -200,9 +200,21 @@ function Handpoint() {
 }
 
 /**
+ * Returns the tokenized version of the card used if successful (not available for all acquirers, 
+ * please check with Handpoint to know if tokenization is supported for your acquirer of choice)
+ * @param {Object} config parameters for tokenizeCard transaction
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.tokenizeCard = function (config, successCallback, errorCallback) {
+  this.exec('tokenizeCard', config, successCallback, errorCallback);
+};
+
+/**
  * A sale initiates a payment operation to the card reader with tokenization. In it's simplest form you only have to pass the 
  * amount and currency but it also accepts a map with extra parameters.
- * @param {Object} config parameters for sale transaction
+ * @param {Object} config parameters for saleAndTokenizeCard transaction
  * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
  * @param config.currency Currency of the charge @see Handpoint.Currency
  * @param config.map A map including extra optional transaction parameters
@@ -386,6 +398,8 @@ Handpoint.prototype.setSharedSecret = function (config, successCallback, errorCa
 /**
  * Init SDK with shared secret
  * @param {Object} config parameters
+ * @param config.automaticReconnection If set to true, the SDK will automatically reconnect 
+ * to the last known device when the connection is lost. The default value is false
  * @param config.sharedSecret 	The shared secret is a key provided by Handpoint when you 
  * get your account that enables you to perform live operations with the card reader. 
  * However, if you're developing with a starter kit, the test shared secret is specified 
