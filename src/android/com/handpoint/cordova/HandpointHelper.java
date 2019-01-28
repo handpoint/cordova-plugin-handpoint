@@ -261,6 +261,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     callbackContext.success(HapiManager.getSdkVersion());
   }
 
+  public void getBluetoothStatus(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    callbackContext.success(this.api.getBluetoothStatus().toString());
+  }
+
   /**
    * Register event handler
    */
@@ -307,6 +311,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("connectionStatusChanged");
     event.put("status", status);
     event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+  
+  public void hardwareStatusChanged(HardwareStatus status, ConnectionMethod hardware) {
+    SDKEvent event = new SDKEvent("hardwareStatusChanged");
+    event.put("status", status);
+    event.put("connectionMethod", hardware);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
