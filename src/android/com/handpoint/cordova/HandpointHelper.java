@@ -181,11 +181,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void setSharedSecret(CallbackContext callbackContext, JSONObject params) throws Throwable {
 
     try {
-      // Set Shared secret only if there is a connected Device
-      if (this.api.getConnectionStatus() == ConnectionStatus.Connected) {
-        this.api.setSharedSecret(params.getString("sharedSecret"));
-      }
-
       // Set as default shared secret
       this.api.defaultSharedSecret(params.getString("sharedSecret"));
       callbackContext.success("ok");
@@ -356,6 +351,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("transactionResultReady");
     event.put("transactionResult", transactionResult);
     event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  public void hardwareStatusChanged(HardwareStatus status, ConnectionMethod hardware) {
+    SDKEvent event = new SDKEvent("hardwareStatusChanged");
+    event.put("status", status);
+    event.put("connectionMethod", hardware);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
