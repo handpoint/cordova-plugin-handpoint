@@ -216,7 +216,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void listDevices(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      this.api.listDevices(ConnectionMethod.values()[params.getInt("connectionMethod")]);
+      this.api.searchDevices(ConnectionMethod.values()[params.getInt("connectionMethod")]);
       callbackContext.success("ok");
     } catch (JSONException ex) {
       callbackContext.error("Can't execute listDevices. Incorrect parameters");
