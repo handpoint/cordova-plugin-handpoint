@@ -202,14 +202,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  public void getDeviceLogs(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    if (this.api.getDeviceLogs()) {
-      callbackContext.success("ok");
-    } else {
-      callbackContext.error("Can't send getDeviceLogs operation to device");
-    }
-  }
-
   public void getPendingTransaction(CallbackContext callbackContext, JSONObject params) throws Throwable {
     if (this.api.getPendingTransaction()) {
       callbackContext.success("ok");
