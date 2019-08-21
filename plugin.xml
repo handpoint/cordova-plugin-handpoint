@@ -25,8 +25,11 @@
       <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
       <uses-permission android:name="android.permission.INTERNET"/>
     </config-file>
-    <lib-file src="src/android/hapi-android-4.4.2.jar"/>
+    <framework src="src/android/pax.gradle" custom="true" type="gradleReference" />
+    <resource-file src="libs/HandpointSDK-Android-release.aar" target="libs/HandpointSDK-Android-release.aar" />
+    <resource-file src="libs/pax-release.aar" target="libs/pax-release.aar" />
     <lib-file src="src/android/gson-2.8.1.jar"/>
+    <lib-file src="src/android/log4j-over-slf4j-1.7.26.jar"/>
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
