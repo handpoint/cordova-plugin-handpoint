@@ -1,6 +1,8 @@
 package com.handpoint.cordova;
 
 import com.handpoint.api.*;
+import com.handpoint.api.Settings;
+
 import org.apache.cordova.*;
 
 import org.json.JSONArray;
@@ -34,15 +36,23 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   // An Android Context is required to be able to handle bluetooth
   public void setup(CallbackContext callbackContext, JSONObject params) throws Throwable {
     String sharedSecret = null;
+    Settings settings = new Settings();
 
     // Automatic Reconnections are disabled since reconnection is handled in app
     try {
-      HapiManager.Settings.AutomaticReconnection = params.getBoolean("automaticReconnection");
+      settings.automaticReconnection = params.getBoolean("automaticReconnection");
     } catch (JSONException ex) {
-      HapiManager.Settings.AutomaticReconnection = false;
+      settings.automaticReconnection = false;
     }
-    
-    this.api = HapiFactory.getAsyncInterface(this, this.context);
+
+    try {
+      settings.appVersion = params.getString("appVersion");
+    } catch (JSONException ex) {
+      settings.appVersion = "";
+    }
+
+    this.api = HapiFactory.getAsyncInterface(this, this.context, settings);
+
     try {
       sharedSecret = params.getString("sharedSecret");
     } catch (JSONException ex) {}
@@ -221,7 +231,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (JSONException ex) {
       callbackContext.error("Can't execute listDevices. Incorrect parameters");
     }
-    
+  
   }
 
   public void applicationDidGoBackground(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -231,6 +241,18 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void getSDKVersion(CallbackContext callbackContext, JSONObject params) throws Throwable {
     callbackContext.success(HapiManager.getSdkVersion());
   }
+
+
+  public void printReceipt(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.api.printReceipt(ReceiptType.values()[params.getInt("receiptType")]);
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute printReceipt. Incorrect parameters");
+    }
+  
+  }
+
 
   /**
    * Register event handler

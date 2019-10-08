@@ -13,7 +13,17 @@ function Handpoint() {
   this.ConnectionMethod = {
     "BLUETOOTH": 0,
     "HTTPS": 1,
-    "SIMULATOR": 2
+    "SIMULATOR": 2,
+    "ANDROID_PAYMENT": 3
+  };
+
+  /**
+   * Receipt Type enum
+   * @type Object
+   */
+  this.ReceiptType = {
+    "CUSTOMER_COPY": 0,
+    "MERCHANT_COPY": 1
   };
 
   /**
@@ -490,6 +500,17 @@ Handpoint.prototype.update = function (config, successCallback, errorCallback) {
  */
 Handpoint.prototype.listDevices = function (config, successCallback, errorCallback) {
   this.exec('listDevices', config, successCallback, errorCallback);
+};
+
+/**
+ * Prints the receipt (if available) with the specified receiptType
+ * @param {Object} config parameters 
+ * @param config.receiptType The type of receipt that we want to print CUSTOMER_COPY, MERCHANT_COPY
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.printReceipt = function (config, successCallback, errorCallback) {
+  this.exec('printReceipt', config, successCallback, errorCallback);
 };
 
 /**

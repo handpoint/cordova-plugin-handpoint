@@ -24,9 +24,9 @@ dependencies {
    //compile project(':HandpointSDK-Android-release')
    //compile project(':pax-release')
 
-   compile(name:'HandpointSDK-Android-release', ext:'aar')
-   compile(name:'pax-release', ext:'aar')
-   //compile(name:'sharedObjects-release', ext:'aar')
+   compile(name:'sdk-release', ext:'aar')
+   compile(name:'sharedObjects-release', ext:'aar')
+   compile(name:'paymentsdk-release', ext:'aar')
 }
 
 android {

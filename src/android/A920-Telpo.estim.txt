@@ -1,0 +1,45 @@
+A920
+
+Figure out encryption
+Do the encryption
+Learn how to inject keys for dev and testing of encryption 
+----------------------> 
+
+[x][G] 
+[G] Print receipts on demand
+[p] Disable girmiti’s loading screens --> 1 day
+Plan A: Enable cancel button on transaction, add operation to cancel transaction --> 10 days
+Plan B: Add timeout for transaction globally (SDK) --> 5 days.
+
+Handle signature event --> 1 day
+
+[G] Enable refunds
+Handle nullpointer exceptions --> 3-4 days
+
+Plan A: Move to OTP -> 3-7 days
+Migration plan for google accounts: when sessions are ended redirect through the new flow
+Plan B: Embed browser -> 15 días?
+PLan C: Install browser -> 7 días?
+
+Handle default endOfTransaction with non standard states. --> 2-5 days
+
+
+----------- X 2 ---------------------
+
+[p] Fix all the bugs -> 4 weeks
+[p] Certs
+
+[p] Figure out how to load apps on prod devices -> 4 days
+[p] define the process from factory (who loads what)
+
+[O] Figure out printing events, what do we want and how to show them
+
+[p] Lock screen from the beginning -> 5 days
+[p] Handle no internet connection -> 2 days
+
+Inyección BDK = 4 días
+* Cálculo de IPEK, teniendo en cuenta el check con el security service = 8 días (6-10días)
+* App Servidor + App Cliente = 8 días (6 - 10 días)
+* Viscusito = 2 días
+* Generar SMID + Check = 20 días
+* Unit todo = 5 días
