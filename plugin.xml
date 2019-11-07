@@ -27,11 +27,6 @@
       <uses-permission android:name="android.permission.INTERNET"/>
     </config-file>
     <framework src="src/android/pax.gradle" custom="true" type="gradleReference" />
-    <resource-file src="libs/sdk-release.aar" target="libs/sdk-release.aar" />
-    <resource-file src="libs/paymentsdk-release.aar" target="libs/paymentsdk-release.aar" />
-    <resource-file src="libs/sharedObjects-release.aar" target="libs/sharedObjects-release.aar" />
-    <lib-file src="src/android/gson-2.8.1.jar"/>
-    <lib-file src="src/android/log4j-over-slf4j-1.7.26.jar"/>
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">

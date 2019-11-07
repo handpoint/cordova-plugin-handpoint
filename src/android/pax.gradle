@@ -1,16 +1,18 @@
 repositories{    
   jcenter()
-  flatDir {
-    dirs 'src/main/libs'
-    //dirs 'libs'
+  maven {
+    credentials {
+      username getCredentialsMavenUsername()
+      password getCredentialsMavenPassword()
+    }
+    url = "http://nexus.handpoint.ninja:8081/repository/public/"
   }
 }
 
 dependencies {
-   implementation 'android.arch.lifecycle:extensions:1.1.0'
+   /*implementation 'android.arch.lifecycle:extensions:1.1.0'
    implementation 'com.android.support:appcompat-v7:28.0.0'
    implementation 'com.android.support:support-v4:28.0.0'
-   implementation 'org.slf4j:slf4j-android:1.7.25'
    implementation 'com.android.support.test.espresso:espresso-core:3.0.2'
    implementation 'com.android.volley:volley:1.1.1'
    implementation group: 'org.jetbrains', name: 'annotations', version: '13.0'
@@ -20,20 +22,31 @@ dependencies {
 
    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31'
    implementation 'nl.dionsegijn:konfetti:1.1.2'
+   implementation 'com.google.code.gson:gson:2.8.5'
+   implementation 'org.slf4j:slf4j-android:1.7.25'
+*/
+   //implementation 'com.handpoint.api:sdk:4.6.1'
+   //implementation 'com.handpoint.api:sharedObjects:1.6.0' 
+   //implementation 'com.handpoint.api:paymentsdk:2.0.3
+   implementation 'com.handpoint.api:sdk:4.6.0-SNAPSHOT'
 
-   //compile project(':HandpointSDK-Android-release')
-   //compile project(':pax-release')
-
-   compile(name:'sdk-release', ext:'aar')
-   compile(name:'sharedObjects-release', ext:'aar')
-   compile(name:'paymentsdk-release', ext:'aar')
 }
 
 android {
-  packagingOptions {
-    exclude 'META-INF/NOTICE'
-    exclude 'META-INF/LICENSE'
-  }
+   packagingOptions {
+
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/paymentsdk_debug.kotlin_module'
+        exclude 'META-INF/sharedObjects_debug.kotlin_module'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 }
 
 configurations.all {
@@ -41,3 +54,23 @@ configurations.all {
         force 'com.android.support:support-v4:28.0.0'
     }
 }
+
+
+/**
+ * Returns the credential username used by Maven repository
+ * Set this value in your ~/.gradle/gradle.properties with MAVEN_USER key
+ * @return
+ */
+def getCredentialsMavenUsername() {
+    return hasProperty('MAVEN_USER') ? MAVEN_USER : ""
+}
+
+/**
+ * Returns the credential password used by Maven repository
+ * Set this value in your ~/.gradle/gradle.properties with MAVEN_PASSWORD key
+ * @return
+ */
+def getCredentialsMavenPassword() {
+    return hasProperty('MAVEN_PASSWORD') ? MAVEN_PASSWORD : ""
+}
+

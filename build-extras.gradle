@@ -1,7 +1,9 @@
 android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     defaultConfig {
+        minSdkVersion 22
         targetSdkVersion 28
-	    compileSdkVersion 28
         multiDexEnabled true
     }
 
