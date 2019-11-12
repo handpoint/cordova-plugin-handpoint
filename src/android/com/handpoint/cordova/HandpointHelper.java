@@ -18,7 +18,17 @@ import java.util.List;
 import java.util.Map;
 import java.math.BigInteger;
 
-import com.google.gson.*;
+import com.handpoint.api.shared.ConnectionMethod;
+import com.handpoint.api.shared.ConnectionStatus;
+import com.handpoint.api.shared.Currency;
+import com.handpoint.api.shared.Device;
+import com.handpoint.api.shared.Events;
+import com.handpoint.api.shared.HardwareStatus;
+import com.handpoint.api.shared.LogLevel;
+import com.handpoint.api.shared.ReceiptType;
+import com.handpoint.api.shared.SignatureRequest;
+import com.handpoint.api.shared.StatusInfo;
+import com.handpoint.api.shared.TransactionResult;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults {
 
