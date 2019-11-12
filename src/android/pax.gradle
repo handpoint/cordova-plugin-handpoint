@@ -28,7 +28,7 @@ dependencies {
    //implementation 'com.handpoint.api:sdk:4.6.1'
    //implementation 'com.handpoint.api:sharedObjects:1.6.0' 
    //implementation 'com.handpoint.api:paymentsdk:2.0.3
-   implementation 'com.handpoint.api:sdk:4.6.2-SNAPSHOT'
+   implementation 'com.handpoint.api:sdk:4.6.5-SNAPSHOT'
 
 }
 
