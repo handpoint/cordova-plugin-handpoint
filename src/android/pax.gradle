@@ -29,7 +29,6 @@ dependencies {
    //implementation 'com.handpoint.api:sharedObjects:1.6.0' 
    //implementation 'com.handpoint.api:paymentsdk:2.0.3
    implementation 'com.handpoint.api:sdk:4.6.5-SNAPSHOT'
-
 }
 
 android {
@@ -50,6 +49,7 @@ android {
 }
 
 configurations.all {
+    exclude group: 'org.json', module: 'json'
     resolutionStrategy {
         force 'com.android.support:support-v4:28.0.0'
     }
