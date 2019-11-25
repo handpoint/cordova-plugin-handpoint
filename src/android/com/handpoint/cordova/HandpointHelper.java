@@ -55,12 +55,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       settings.automaticReconnection = false;
     }
 
-    try {
-      settings.appVersion = params.getString("appVersion");
-    } catch (JSONException ex) {
-      settings.appVersion = "";
-    }
-
     this.api = HapiFactory.getAsyncInterface(this, this.context, settings);
 
     try {
@@ -255,7 +249,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void printReceipt(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      this.api.printReceipt(params.getString("receipt"));
+      this.api.printReceipt(ReceiptType.values()[params.getInt("receiptType")]);
       callbackContext.success("ok");
     } catch (JSONException ex) {
       callbackContext.error("Can't execute printReceipt. Incorrect parameters");
