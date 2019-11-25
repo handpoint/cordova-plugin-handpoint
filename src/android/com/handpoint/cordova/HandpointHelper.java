@@ -55,12 +55,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       settings.automaticReconnection = false;
     }
 
-    try {
-      settings.appVersion = params.getString("appVersion");
-    } catch (JSONException ex) {
-      settings.appVersion = "";
-    }
-
     this.api = HapiFactory.getAsyncInterface(this, this.context, settings);
 
     try {
