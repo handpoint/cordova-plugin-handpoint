@@ -12,7 +12,7 @@ repositories{
 dependencies {
    implementation 'com.google.code.gson:gson:2.8.5'
    implementation 'org.slf4j:slf4j-android:1.7.25'
-   implementation 'com.handpoint.api:sdk:4.6.21-SNAPSHOT'
+   implementation 'com.handpoint.api:sdk:4.6.31-SNAPSHOT'
 }
 
 android {
@@ -33,6 +33,7 @@ android {
 }
 
 configurations.all {
+    exclude group: 'org.json', module: 'json'
     resolutionStrategy {
         force 'com.android.support:support-v4:28.0.0'
     }

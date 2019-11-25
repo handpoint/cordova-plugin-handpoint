@@ -503,9 +503,9 @@ Handpoint.prototype.listDevices = function (config, successCallback, errorCallba
 };
 
 /**
- * Prints the receipt (if available) with the specified receiptType
+ * Prints the HTML receipt.
  * @param {Object} config parameters 
- * @param config.receiptType The type of receipt that we want to print CUSTOMER_COPY, MERCHANT_COPY
+ * @param config.receipt The receipt in HTML format
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
