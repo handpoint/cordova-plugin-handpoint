@@ -249,7 +249,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void printReceipt(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      this.api.printReceipt(ReceiptType.values()[params.getInt("receiptType")]);
+      this.api.printReceipt(params.getString("receipt"));
       callbackContext.success("ok");
     } catch (JSONException ex) {
       callbackContext.error("Can't execute printReceipt. Incorrect parameters");
