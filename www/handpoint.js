@@ -18,15 +18,6 @@ function Handpoint() {
   };
 
   /**
-   * Receipt Type enum
-   * @type Object
-   */
-  this.ReceiptType = {
-    "CUSTOMER_COPY": 0,
-    "MERCHANT_COPY": 1
-  };
-
-  /**
    * Currencies enum
    * @type Object
    */
