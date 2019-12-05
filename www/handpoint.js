@@ -241,21 +241,6 @@ Handpoint.prototype.sale = function (config, successCallback, errorCallback) {
 };
 
 /**
- * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the 
- * amount and currency but it also accepts a map with extra parameters.
- * @param {Object} config parameters 
- * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
- * @param config.currency Currency of the charge @see Handpoint.Currency
- * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
- * @param config.map A map including extra optional transaction parameters
- * @param {Function} successCallback This function will be called if operation succeed
- * @param {Function} errorCallback This function will be called if an error happened
- */
-Handpoint.prototype.saleReversal = function (config, successCallback, errorCallback) {
-  this.exec('saleReversal', config, successCallback, errorCallback);
-};
-
-/**
  * A refund initiates a refund operation to the card reader. This operation moves funds from 
  * the merchant account to the cardholder´s credit card. In it's simplest form you only have 
  * to pass the amount and currency but it also accepts a map with extra parameters.
@@ -271,21 +256,19 @@ Handpoint.prototype.refund = function (config, successCallback, errorCallback) {
 };
 
 /**
- * A Refund Reversal, also called Refund VOID allows the merchant to reverse a previous 
+ * A Reversal, also called Refund VOID allows the merchant to reverse a previous 
  * refund operation. This operation reverts (if possible) a specific refund identified 
  * with a transaction id. In it's simplest form you only have to pass the amount, currency 
  * and originalTransactionID but it also accepts a map with extra parameters. Note that transactions 
  * can only be reversed within the same day as the transaction was made.
  * @param {Object} config parameters 
- * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
- * @param config.currency Currency of the charge @see Handpoint.Currency
  * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
  * @param config.map A map including extra optional transaction parameters
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
-Handpoint.prototype.refundReversal = function (config, successCallback, errorCallback) {
-  this.exec('refundReversal', config, successCallback, errorCallback);
+Handpoint.prototype.reversal = function (config, successCallback, errorCallback) {
+  this.exec('reversal', config, successCallback, errorCallback);
 };
 
 /**

@@ -62,7 +62,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (JSONException ex) {}
 
     if (sharedSecret != null) {
-      this.api.defaultSharedSecret(sharedSecret);
+      this.api.sharedSecret(sharedSecret);
     }
 
     this.setEventsHandler();
@@ -95,17 +95,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+  public void reversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try { 
-      if (this.api.saleReversal(new BigInteger(params.getString("amount")),
-          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
-          this.getExtraParams(params))) {
+      if (this.api.reversal(params.getString("originalTransactionID"), this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleReversal operation to device");
       }
     } catch (JSONException ex) {
-      callbackContext.error("Can't send saleReversal operation to device. Incorrect parameters");
+      callbackContext.error("Can't send reversal operation to device. Incorrect parameters");
     }
   }
 
@@ -119,20 +117,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send refund operation to device. Incorrect parameters");
-    }
-  }
-
-  public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    try {
-      if (this.api.refundReversal(new BigInteger(params.getString("amount")),
-          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
-          this.getExtraParams(params))) {
-        callbackContext.success("ok");
-      } else {
-        callbackContext.error("Can't send refundReversal operation to device");
-      }
-    } catch (JSONException ex) {
-      callbackContext.error("Can't send refundReversal operation to device. Incorrect parameters");
     }
   }
 
@@ -196,7 +180,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
     try {
       // Set as default shared secret
-      this.api.defaultSharedSecret(params.getString("sharedSecret"));
+      this.api.sharedSecret(params.getString("sharedSecret"));
       callbackContext.success("ok");
     } catch (JSONException ex) {
       callbackContext.error("Can't set shared secret. Incorrect parameters");
@@ -421,17 +405,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   protected void finalize() {
-    this.api.removeRequiredEventHandler(this);
-    this.api.removeStatusNotificationEventHandler(this);
-    this.api.removeLogEventHandler(this);
-    this.api.removePendingResultsEventHandler(this);
+    this.api.unregisterEventsDelegate(this);
   }
 
   private void setEventsHandler() {
     // Register class as listener for all events
-    this.api.addRequiredEventHandler(this);
-    this.api.addStatusNotificationEventHandler(this);
-    this.api.addLogEventHandler(this);
-    this.api.addPendingResultsEventHandler(this);
+    this.api.registerEventsDelegate(this);
   }
 }
