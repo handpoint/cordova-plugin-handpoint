@@ -30,4 +30,6 @@ FOUNDATION_EXPORT NSString* LIST_DEVICES_CALLBACK_ID;
 - (void)eventHandler:(CDVInvokedUrlCommand*)command;
 - (void)applicationDidGoBackground:(CDVInvokedUrlCommand*)command;
 - (void)getSDKVersion:(CDVInvokedUrlCommand*)command;
+- (void)setLocale:(CDVInvokedUrlCommand*)command;
+
 @end

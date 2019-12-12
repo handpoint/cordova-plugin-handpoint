@@ -328,6 +328,15 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     }];
 }
 
+- (void)setLocale:(CDVInvokedUrlCommand*)command
+{
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"\n\tsetLocale %@", command.params);
+        
+        // TODO call SDK method
+    }];
+}
+
 - (void)getDeviceLogs:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{

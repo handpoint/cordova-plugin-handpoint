@@ -2,7 +2,8 @@ package com.handpoint.cordova;
 
 import com.handpoint.api.*;
 import com.handpoint.api.Settings;
-
+import com.handpoint.api.shared.i18n.SupportedLocales;
+import com.handpoint.api.shared.TransactionType;
 import org.apache.cordova.*;
 
 import org.json.JSONArray;
@@ -30,7 +31,7 @@ import com.handpoint.api.shared.SignatureRequest;
 import com.handpoint.api.shared.StatusInfo;
 import com.handpoint.api.shared.TransactionResult;
 
-public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults {
+public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults, Events.TransactionStarted {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -230,7 +231,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     callbackContext.success(HapiManager.getSdkVersion());
   }
 
-
   public void printReceipt(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       this.api.printReceipt(params.getString("receipt"));
@@ -238,9 +238,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (JSONException ex) {
       callbackContext.error("Can't execute printReceipt. Incorrect parameters");
     }
-  
   }
-
 
   /**
    * Register event handler
@@ -251,6 +249,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
+  }
+
+  public void setLocale(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.api.setLocale(SupportedLocales.fromString(params.getString("locale")));
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can not execute setLocale. Incorrect parameters");
+    }
   }
 
   @Override
@@ -337,6 +344,17 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("transactionResultReady");
     event.put("transactionResult", transactionResult);
     event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency) {
+    SDKEvent event = new SDKEvent("transactionStarted");
+    event.put("type", type.toString());
+    event.put("amount", amount.toString());
+    event.put("currency", currency.getAlpha());
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
