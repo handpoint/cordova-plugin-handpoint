@@ -201,6 +201,16 @@ function Handpoint() {
 }
 
 /**
+ * Change SDK locale
+ * @param config.locale Locale code
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+Handpoint.prototype.setLocale = function (config, successCallback, errorCallback) {
+  this.exec('setLocale', config, successCallback, errorCallback);
+};
+
+/**
  * Returns the tokenized version of the card used if successful (not available for all acquirers, 
  * please check with Handpoint to know if tokenization is supported for your acquirer of choice)
  * @param {Object} config parameters for tokenizeCard transaction

@@ -41,8 +41,8 @@ The plugin creates the object **cordova.plugins.Handpoint** with the following p
 | **[update](#update)**                               | The update operation checks for update to the card reader and initiates an update if needed. The update can either be a software update or a configuration update. |
 | **[setLogLevel](#setloglevel)**                     | Sets the log level for both the card reader and the SDK                                                                                                            |
 | **[getDeviceLogs](#getdevicelogs)**                 | Fetches the logs from the device and reports them to the deviceLogsReady event.                                                                                    |
-| **[getSDKVersion](#setup)**                         | Returns the underlying SDK version                                                                                                                                 |
-
+| **[getSDKVersion](#getdsdkversion)**                | Returns the underlying SDK version                                                                                                                                 |
+| **[setLocale](#setlocale)**                         | Sets the SDK locale. Locale is used to translate messages and format numbers and dates                                                                                  |
 ## Quick start
 
 - **1.** Setup the Handpoint SDK Singleton with your shared secret. The shared secret is a key provided by Handpoint when you get your account that enables you to perform live operations with the card reader:
@@ -471,6 +471,20 @@ Returns the underlying SDK version in the success callback.
 ```javascript 
 cordova.plugins.Handpoint.getSDKVersion({}, (version) => {
   console.log(version);
+}, errorCallback)
+```
+
+| Parameter           | Description                              |
+| :------------------ | :--------------------------------------- |
+| **successCallback** | Executed if the method execution succeed |
+| **errorCallback**   | Executed if the method execution failed  |
+
+#### <span style="color: #6C7E8F">setLocale</span>
+Sets the SDK locale. Locale is used to translate messages and format numbers and dates.
+
+```javascript 
+cordova.plugins.Handpoint.setLocale({ locale: 'is_IS' }, () => {
+  console.log("Locale applied");  
 }, errorCallback)
 ```
 
