@@ -183,6 +183,11 @@ NSString* LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSLog(@"\n\ttipAdjustment: %@", command.params);
 }
 
+- (void)stopCurrentTransaction:(CDVInvokedUrlCommand*)command
+{
+    NSLog(@"\n\stopCurrentTransaction");
+}
+
 - (void)signatureResult:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{

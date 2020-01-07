@@ -197,7 +197,6 @@ function Handpoint() {
     "Full": 2,
     "Debug": 3
   };
-
 }
 
 /**
@@ -312,6 +311,22 @@ Handpoint.prototype.enableScanner = function (config, successCallback, errorCall
 Handpoint.prototype.cancelRequest = function (config, successCallback, errorCallback) {
   this.exec('cancelRequest', config, successCallback, errorCallback);
 };
+
+/**
+ * This method attempts to stop the current transaction on the card reader. Note that 
+ * operations can only be cancelled before requests are sent to the gateway. There is a 
+ * flag called cancelAllowed in the currentTransactionStatus event that can be used to check 
+ * if the transaction is in a state that allows cancel.
+ * @param {Object} device This parameter specifies to the system which device you want to use for the 
+ * operations. If none is supplied the system will attempt to use a default device, if any.
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.stopCurrentTransaction = function (config, successCallback, errorCallback) {
+  this.exec('stopCurrentTransaction', config, successCallback, errorCallback);
+};
+
+
 
 /**
  * A tip adjustment operation allows merchants to adjust the tip amount of a sale transaction before the batch 
