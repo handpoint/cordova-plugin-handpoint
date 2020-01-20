@@ -96,15 +96,17 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  public void reversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+  public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try { 
-      if (this.api.reversal(params.getString("originalTransactionID"), this.getExtraParams(params))) {
+      if (this.api.saleReversal(new BigInteger(params.getString("amount")),
+          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
+          this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleReversal operation to device");
       }
     } catch (JSONException ex) {
-      callbackContext.error("Can't send reversal operation to device. Incorrect parameters");
+      callbackContext.error("Can't send saleReversal operation to device. Incorrect parameters");
     }
   }
 
@@ -121,6 +123,20 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      if (this.api.refundReversal(new BigInteger(params.getString("amount")),
+          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
+          this.getExtraParams(params))) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send refundReversal operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send refundReversal operation to device. Incorrect parameters");
+    }
+  }
+  
   public void tokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.tokenizeCard(this.getExtraParams(params))) {
