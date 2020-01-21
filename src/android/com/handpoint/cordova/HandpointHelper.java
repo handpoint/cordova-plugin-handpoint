@@ -335,6 +335,16 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   @Override
+  public void networkStatusChanged(NetworkStatus networkStatus, Device device) {
+    SDKEvent event = new SDKEvent("networkStatusChanged");
+    event.put("networkStatus", networkStatus);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
   public void deviceLogsReady(String logs, Device device) {
     SDKEvent event = new SDKEvent("deviceLogsReady");
     event.put("logs", logs);
