@@ -30,6 +30,7 @@ import com.handpoint.api.shared.ReceiptType;
 import com.handpoint.api.shared.SignatureRequest;
 import com.handpoint.api.shared.StatusInfo;
 import com.handpoint.api.shared.TransactionResult;
+import com.handpoint.api.shared.NetworkStatus;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults, Events.TransactionStarted {
 
