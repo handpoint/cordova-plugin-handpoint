@@ -3,7 +3,7 @@ package com.handpoint.cordova;
 import com.handpoint.api.*;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.i18n.SupportedLocales;
-import com.handpoint.api.shared.TransactionType;
+import com.handpoint.api.shared.*;
 import org.apache.cordova.*;
 
 import org.json.JSONArray;
@@ -19,19 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.math.BigInteger;
 
-import com.handpoint.api.shared.ConnectionMethod;
-import com.handpoint.api.shared.ConnectionStatus;
-import com.handpoint.api.shared.Currency;
-import com.handpoint.api.shared.Device;
-import com.handpoint.api.shared.Events;
-import com.handpoint.api.shared.HardwareStatus;
-import com.handpoint.api.shared.LogLevel;
-import com.handpoint.api.shared.ReceiptType;
-import com.handpoint.api.shared.SignatureRequest;
-import com.handpoint.api.shared.StatusInfo;
-import com.handpoint.api.shared.TransactionResult;
-
-public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults, Events.TransactionStarted {
+public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults, Events.TransactionStarted, Events.AuthStatus {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -264,6 +252,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.api.mposAuth(params.getString("service"));
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute mposAuth. Incorrect parameters");
+    }
+  }
+
   /**
    * Register event handler
    */
@@ -379,6 +376,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("type", type.toString());
     event.put("amount", amount.toString());
     event.put("currency", currency.getAlpha());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
+  public void authStatus(AuthStatusType authStatus) {
+    SDKEvent event = new SDKEvent("authStatus");
+    event.put("info", authStatus);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
