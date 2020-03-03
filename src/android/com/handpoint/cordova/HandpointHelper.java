@@ -254,6 +254,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
+      this.api = HapiFactory.getAsyncInterface(this, this.context, new Settings());
       this.api.mposAuth(params.getString("service"));
       callbackContext.success("ok");
     } catch (JSONException ex) {
