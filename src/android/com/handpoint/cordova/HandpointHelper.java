@@ -5,12 +5,14 @@ import com.handpoint.api.Settings;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
 import org.apache.cordova.*;
+import org.apache.commons.lang3.NotImplementedException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.math.BigInteger;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import io.reactivex.Single;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults, Events.TransactionStarted, Events.AuthStatus {
 
@@ -85,7 +92,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    try { 
+    try {
       if (this.api.saleReversal(new BigInteger(params.getString("amount")),
           Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
           this.getExtraParams(params))) {
@@ -124,7 +131,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       callbackContext.error("Can't send refundReversal operation to device. Incorrect parameters");
     }
   }
-  
+
   public void tokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.tokenizeCard(this.getExtraParams(params))) {
@@ -198,7 +205,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (JSONException ex) {
       callbackContext.error("Can't set shared secret. Incorrect parameters");
     }
-    
+
   }
 
   public void setLogLevel(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -232,7 +239,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (JSONException ex) {
       callbackContext.error("Can't execute listDevices. Incorrect parameters");
     }
-  
+
   }
 
   public void applicationDidGoBackground(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -254,12 +261,26 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      this.api = HapiFactory.getAsyncInterface(this, this.context, new Settings());
-      this.api.mposAuth(params.getString("service"));
-      callbackContext.success("ok");
-    } catch (JSONException ex) {
-      callbackContext.error("Can't execute mposAuth. Incorrect parameters");
+      Class auth = Class.forName("com.handpoint.api.paymentsdk.tasks.MposAuthentication");
+      Method authMethod = auth.getDeclaredMethod("authenticateMPos");
+      Single<AuthenticationResponse> result = (Single<AuthenticationResponse>) authMethod.invoke(null);
+      result.doOnSuccess(data -> {
+        authStatus(data);
+      }).subscribe();
+    } catch (ClassNotFoundException e) {
+      throw new NotImplementedException("Method not implemented");
+    } catch (NoSuchMethodException e) {
+      throw new NotImplementedException("Method not implemented");
+    } catch (SecurityException e) {
+      throw new NotImplementedException("Method not implemented");
+    } catch (IllegalAccessException e) {
+      throw new NotImplementedException("Method not implemented");
+    } catch (IllegalArgumentException e) {
+      throw new NotImplementedException("Method not implemented");
+    } catch (InvocationTargetException e) {
+      throw new NotImplementedException("Method not implemented");
     }
+    callbackContext.success("ok");
   }
 
   /**
@@ -383,7 +404,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   @Override
-  public void authStatus(AuthStatusType authStatus) {
+  public void authStatus(AuthenticationResponse authStatus) {
     SDKEvent event = new SDKEvent("authStatus");
     event.put("info", authStatus);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
