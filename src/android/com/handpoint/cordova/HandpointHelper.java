@@ -5,6 +5,7 @@ import com.handpoint.api.Settings;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
 import org.apache.cordova.*;
+import org.apache.commons.lang3.NotImplementedException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -267,17 +268,17 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         authStatus(data);
       }).subscribe();
     } catch (ClassNotFoundException e) {
-      Log.e("mposAuth", "Method not allowed");
+      throw new NotImplementedException("Method not implemented");
     } catch (NoSuchMethodException e) {
-      Log.e("mposAuth", "Method not allowed");
+      throw new NotImplementedException("Method not implemented");
     } catch (SecurityException e) {
-      Log.e("mposAuth", "Method not allowed");
+      throw new NotImplementedException("Method not implemented");
     } catch (IllegalAccessException e) {
-      Log.e("mposAuth", "Method not allowed");
+      throw new NotImplementedException("Method not implemented");
     } catch (IllegalArgumentException e) {
-      Log.e("mposAuth", "Method not allowed");
+      throw new NotImplementedException("Method not implemented");
     } catch (InvocationTargetException e) {
-      Log.e("mposAuth", "Method not allowed");
+      throw new NotImplementedException("Method not implemented");
     }
     callbackContext.success("ok");
   }
