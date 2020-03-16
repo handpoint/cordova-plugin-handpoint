@@ -266,17 +266,17 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         authStatus(data);
       }).subscribe();
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      Log.e("mposAuth", "Method not allowed");
     } catch (NoSuchMethodException e) {
-      e.printStackTrace();
+      Log.e("mposAuth", "Method not allowed");
     } catch (SecurityException e) {
-      e.printStackTrace();
+      Log.e("mposAuth", "Method not allowed");
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      Log.e("mposAuth", "Method not allowed");
     } catch (IllegalArgumentException e) {
-      e.printStackTrace();
+      Log.e("mposAuth", "Method not allowed");
     } catch (InvocationTargetException e) {
-      e.printStackTrace();
+      Log.e("mposAuth", "Method not allowed");
     }
     callbackContext.success("ok");
   }
