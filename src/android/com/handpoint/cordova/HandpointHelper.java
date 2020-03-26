@@ -26,7 +26,7 @@ import java.math.BigInteger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults, Events.TransactionStarted, Events.AuthStatus {
+public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted, Events.AuthStatus {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -57,15 +57,13 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       settings.getReceiptsAsURLs = false;
     }
 
-    this.api = HapiFactory.getAsyncInterface(this, this.context, settings);
-
     try {
       sharedSecret = params.getString("sharedSecret");
     } catch (JSONException ex) {}
 
-    if (sharedSecret != null) {
-      this.api.sharedSecret(sharedSecret);
-    }
+    HandpointCredentials handpointCredentials = new HandpointCredentials(sharedSecret);
+
+    this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
 
     this.setEventsHandler();
     callbackContext.success("ok");
@@ -203,15 +201,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void setSharedSecret(CallbackContext callbackContext, JSONObject params) throws Throwable {
-
-    try {
-      // Set as default shared secret
-      this.api.sharedSecret(params.getString("sharedSecret"));
-      callbackContext.success("ok");
-    } catch (JSONException ex) {
-      callbackContext.error("Can't set shared secret. Incorrect parameters");
-    }
-
+    callbackContext.success("ok");
   }
 
   public void setLogLevel(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -339,6 +329,16 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   @Override
+  public void networkStatusChanged(NetworkStatus networkStatus, Device device) {
+     SDKEvent event = new SDKEvent("networkStatusChanged");
+    event.put("networkStatus", networkStatus);
+    event.put("device", device);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    this.callbackContext.sendPluginResult(result);
+  }
+
+  @Override
   public void currentTransactionStatus(StatusInfo info, Device device) {
     SDKEvent event = new SDKEvent("currentTransactionStatus");
     event.put("info", info);
@@ -363,15 +363,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     SDKEvent event = new SDKEvent("onMessageLogged");
     event.put("level", level);
     event.put("message", message);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
-  }
-
-  @Override
-  public void pendingTransactionResult(Device device) {
-    SDKEvent event = new SDKEvent("pendingTransactionResult");
-    event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     this.callbackContext.sendPluginResult(result);
