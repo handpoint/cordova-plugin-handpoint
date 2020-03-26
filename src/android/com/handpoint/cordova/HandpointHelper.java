@@ -4,6 +4,8 @@ import com.handpoint.api.*;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
+import com.handpoint.api.paymentsdk.tasks.*;
+import com.handpoint.api.paymentsdk.tasks.AuthenticationResponseHandler;
 import org.apache.cordova.*;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -23,8 +25,6 @@ import java.math.BigInteger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import io.reactivex.Single;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.PendingResults, Events.TransactionStarted, Events.AuthStatus {
 
@@ -56,7 +56,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (JSONException ex) {
       settings.getReceiptsAsURLs = false;
     }
-    
+
     this.api = HapiFactory.getAsyncInterface(this, this.context, settings);
 
     try {
@@ -74,7 +74,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")),
-          this.getExtraParams(params))) {
+        this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send sale operation to device");
@@ -87,7 +87,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void saleAndTokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
-          Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
+        Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleAndTokenizeCard operation to device");
@@ -100,8 +100,8 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.saleReversal(new BigInteger(params.getString("amount")),
-          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
-          this.getExtraParams(params))) {
+        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
+        this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleReversal operation to device");
@@ -114,7 +114,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void refund(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")),
-          this.getExtraParams(params))) {
+        this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send refund operation to device");
@@ -127,8 +127,8 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.refundReversal(new BigInteger(params.getString("amount")),
-          Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
-          this.getExtraParams(params))) {
+        Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
+        this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send refundReversal operation to device");
@@ -157,11 +157,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void stopCurrentTransaction(CallbackContext callbackContext, JSONObject params) throws Throwable {
     if (this.api.stopCurrentTransaction()) {
-        callbackContext.success("ok");
+      callbackContext.success("ok");
     } else {
       callbackContext.error("Can't sop current transaction");
     }
-	}
+  }
 
   public void tipAdjustment(CallbackContext callbackContext, JSONObject params) throws Throwable {
     // TODO
@@ -183,7 +183,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     try {
       JSONObject device = params.getJSONObject("device");
       this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
-          ConnectionMethod.values()[device.getInt("connectionMethod")]);
+        ConnectionMethod.values()[device.getInt("connectionMethod")]);
       if (this.api.connect(this.device)) {
         callbackContext.success("ok");
       } else {
@@ -266,27 +266,16 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    try {
-      Class auth = Class.forName("com.handpoint.api.paymentsdk.tasks.MposAuthentication");
-      Method authMethod = auth.getDeclaredMethod("authenticateMPos");
-      Single<AuthenticationResponse> result = (Single<AuthenticationResponse>) authMethod.invoke(null);
-      result.doOnSuccess(data -> {
-        authStatus(data);
-      }).subscribe();
-    } catch (ClassNotFoundException e) {
-      throw new NotImplementedException("Method not implemented");
-    } catch (NoSuchMethodException e) {
-      throw new NotImplementedException("Method not implemented");
-    } catch (SecurityException e) {
-      throw new NotImplementedException("Method not implemented");
-    } catch (IllegalAccessException e) {
-      throw new NotImplementedException("Method not implemented");
-    } catch (IllegalArgumentException e) {
-      throw new NotImplementedException("Method not implemented");
-    } catch (InvocationTargetException e) {
-      throw new NotImplementedException("Method not implemented");
-    }
-    callbackContext.success("ok");
+    Class auth = Class.forName("com.handpoint.api.paymentsdk.tasks.MposAuthentication");
+    Method authMethod = auth.getDeclaredMethod("authenticateMPos", AuthenticationResponseHandler.class);
+
+    AuthenticationResponseHandler authenticationResponseHandler = new AuthenticationResponseHandler() {
+      @Override
+      public void setAuthenticationResult(AuthenticationResponse oneThing) {
+        authStatus(oneThing);
+      }
+    };
+    authMethod.invoke(auth, authenticationResponseHandler);
   }
 
   /**
