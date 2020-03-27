@@ -295,7 +295,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -304,7 +306,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("devices", devices);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -314,7 +318,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   /** Status Events */
@@ -325,7 +331,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -335,7 +343,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -345,7 +355,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -355,7 +367,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -365,7 +379,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("message", message);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -375,7 +391,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("device", device);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -386,7 +404,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("currency", currency.getAlpha());
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   @Override
@@ -395,7 +415,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("info", authStatus);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   public void hardwareStatusChanged(HardwareStatus status, ConnectionMethod hardware) {
@@ -404,7 +426,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     event.put("connectionMethod", hardware);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
-    this.callbackContext.sendPluginResult(result);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   protected Map<String, String> getExtraParams(JSONObject params) throws JSONException {
