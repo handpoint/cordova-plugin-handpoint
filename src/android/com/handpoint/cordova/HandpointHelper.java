@@ -256,16 +256,31 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    Class auth = Class.forName("com.handpoint.api.paymentsdk.tasks.MposAuthentication");
-    Method authMethod = auth.getDeclaredMethod("authenticateMPos", AuthenticationResponseHandler.class);
+    try {
+        Class auth = Class.forName("com.handpoint.api.paymentsdk.tasks.MposAuthentication");
+        Method authMethod = auth.getDeclaredMethod("authenticateMPos", AuthenticationResponseHandler.class);
 
-    AuthenticationResponseHandler authenticationResponseHandler = new AuthenticationResponseHandler() {
-      @Override
-      public void setAuthenticationResult(AuthenticationResponse oneThing) {
-        authStatus(oneThing);
+        AuthenticationResponseHandler authenticationResponseHandler = new AuthenticationResponseHandler() {
+        @Override
+        public void setAuthenticationResult(AuthenticationResponse oneThing) {
+            authStatus(oneThing);
+        }
+        };
+        authMethod.invoke(auth, authenticationResponseHandler);
+    }
+    catch (ClassNotFoundException e) {
+        throw new NotImplementedException("Method not implemented");
+      } catch (NoSuchMethodException e) {
+        throw new NotImplementedException("Method not implemented");
+      } catch (SecurityException e) {
+        throw new NotImplementedException("Method not implemented");
+      } catch (IllegalAccessException e) {
+        throw new NotImplementedException("Method not implemented");
+      } catch (IllegalArgumentException e) {
+        throw new NotImplementedException("Method not implemented");
+      } catch (InvocationTargetException e) {
+        throw new NotImplementedException("Method not implemented");
       }
-    };
-    authMethod.invoke(auth, authenticationResponseHandler);
   }
 
   /**
