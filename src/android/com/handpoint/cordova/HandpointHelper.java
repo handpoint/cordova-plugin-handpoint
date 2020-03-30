@@ -258,15 +258,15 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
         Class auth = Class.forName("com.handpoint.api.paymentsdk.tasks.MposAuthentication");
-        Method authMethod = auth.getDeclaredMethod("authenticateMPos", AuthenticationResponseHandler.class);
+        Method authMethod = auth.getDeclaredMethod("authenticateMPos", AuthenticationResponseHandler.class, Context.class);
 
         AuthenticationResponseHandler authenticationResponseHandler = new AuthenticationResponseHandler() {
-        @Override
-        public void setAuthenticationResult(AuthenticationResponse oneThing) {
-            authStatus(oneThing);
-        }
+            @Override
+            public void setAuthenticationResult(AuthenticationResponse oneThing) {
+                authStatus(oneThing);
+            }
         };
-        authMethod.invoke(auth, authenticationResponseHandler);
+        authMethod.invoke(auth, authenticationResponseHandler, this.context);
     }
     catch (ClassNotFoundException e) {
         throw new NotImplementedException("Method not implemented");
