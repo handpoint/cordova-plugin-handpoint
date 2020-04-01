@@ -7,7 +7,6 @@ import com.handpoint.api.shared.*;
 import com.handpoint.api.paymentsdk.tasks.*;
 import com.handpoint.api.paymentsdk.tasks.AuthenticationResponseHandler;
 import org.apache.cordova.*;
-import org.apache.commons.lang3.NotImplementedException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
