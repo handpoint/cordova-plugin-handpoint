@@ -268,19 +268,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         };
         authMethod.invoke(auth, authenticationResponseHandler, this.context);
     }
-    catch (ClassNotFoundException e) {
-        throw new NotImplementedException("Method not implemented");
-      } catch (NoSuchMethodException e) {
-        throw new NotImplementedException("Method not implemented");
-      } catch (SecurityException e) {
-        throw new NotImplementedException("Method not implemented");
-      } catch (IllegalAccessException e) {
-        throw new NotImplementedException("Method not implemented");
-      } catch (IllegalArgumentException e) {
-        throw new NotImplementedException("Method not implemented");
-      } catch (InvocationTargetException e) {
-        throw new NotImplementedException("Method not implemented");
-      }
+    catch (Exception e) {
+        callbackContext.error("Method not implemented");
+    } 
   }
 
   /**
