@@ -12,7 +12,7 @@ repositories{
 dependencies {
    implementation 'com.google.code.gson:gson:2.8.5'
    implementation 'org.slf4j:slf4j-android:1.7.25'
-   implementation ('com.handpoint.api:sdk:5.1.0-RC.19-SNAPSHOT') { changing = true }   
+   implementation ('com.handpoint.api:sdk:5.2.0-RC.4-SNAPSHOT') { changing = true }   
 }
 
 android {
