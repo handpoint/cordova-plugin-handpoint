@@ -4,8 +4,6 @@ import com.handpoint.api.*;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
-import com.handpoint.api.paymentsdk.tasks.*;
-import com.handpoint.api.paymentsdk.tasks.AuthenticationResponseHandler;
 import org.apache.cordova.*;
 
 import org.json.JSONArray;
@@ -256,10 +254,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-        Class auth = Class.forName("com.handpoint.api.paymentsdk.tasks.MposAuthentication");
-        Method authMethod = auth.getDeclaredMethod("authenticateMPos", AuthenticationResponseHandler.class, Context.class);
+        Class auth = Class.forName("com.handpoint.api.HapiMposAuthentication");
+        Method authMethod = auth.getDeclaredMethod("authenticateMPos", HapiMPosAuthResponse.class, Context.class);
 
-        AuthenticationResponseHandler authenticationResponseHandler = new AuthenticationResponseHandler() {
+      HapiMPosAuthResponse authenticationResponseHandler = new HapiMPosAuthResponse() {
             @Override
             public void setAuthenticationResult(AuthenticationResponse oneThing) {
                 authStatus(oneThing);
@@ -269,7 +267,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
     catch (Exception e) {
         callbackContext.error("Method not implemented");
-    } 
+    }
   }
 
   /**
