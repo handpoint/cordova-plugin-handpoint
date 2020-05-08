@@ -12,29 +12,14 @@ repositories{
 dependencies {
    implementation 'com.google.code.gson:gson:2.8.5'
    implementation 'org.slf4j:slf4j-android:1.7.25'
-   implementation ('com.handpoint.api:sdk:5.2.0-RC.11-SNAPSHOT') { changing = true }   
+   implementation ('com.handpoint.api:sdk:5.2.0-RC.12-SNAPSHOT') { changing = true }   
 }
 
 android {
-   packagingOptions {
-
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/INDEX.LIST'
-        exclude 'META-INF/paymentsdk_debug.kotlin_module'
-        exclude 'META-INF/sharedObjects_debug.kotlin_module'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/ASL2.0'
-	pickFirst 'lib/armeabi/libDeviceConfig.so'
-        pickFirst 'lib/armeabi/libiconv.so'
-        pickFirst 'lib/armeabi/libDCL.so'
-        pickFirst 'lib/armeabi/libIGLBarDecoder.so'
-        pickFirst 'lib/armeabi/libZBarDecoder.so'
-    }
+  packagingOptions {
+    pickFirst '**/**/*.so'
+    exclude 'META-INF/**'
+  }
 }
 
 configurations.all {
