@@ -23,7 +23,7 @@ import java.math.BigInteger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted, Events.AuthStatus {
+public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted, Events.AuthStatus, Events.MessageHandling {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -415,6 +415,30 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void authStatus(AuthenticationResponse authStatus) {
     SDKEvent event = new SDKEvent("authStatus");
     event.put("info", authStatus);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
+  public void showMessage(String message, boolean dismissible, int duration) {
+    SDKEvent event = new SDKEvent("showMessage");
+    event.put("message", message);
+    event.put("dismissible", Boolean.toString(dismissible));
+    event.put("duration", String.valueOf(duration));
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
+  public void hideMessage(String message) {
+    SDKEvent event = new SDKEvent("hideMessage");
+    event.put("message", message);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
