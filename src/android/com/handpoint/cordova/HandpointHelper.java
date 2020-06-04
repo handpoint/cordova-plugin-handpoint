@@ -254,7 +254,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-        Class auth = Class.forName("com.handpoint.api.HapiMposAuthentication");
+        Class auth = Class.forName("com.handpoint.api.privateops.HapiMposAuthentication");
         Method authMethod = auth.getDeclaredMethod("authenticateMPos", HapiMPosAuthResponse.class, Context.class);
 
       HapiMPosAuthResponse authenticationResponseHandler = new HapiMPosAuthResponse() {
