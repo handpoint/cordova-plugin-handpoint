@@ -45,7 +45,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     try {
       settings.automaticReconnection = params.getBoolean("automaticReconnection");
     } catch (JSONException ex) {
-      settings.automaticReconnection = false;
+      settings.automaticReconnection = true;
     }
 
     try {
