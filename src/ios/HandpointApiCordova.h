@@ -6,6 +6,10 @@
 FOUNDATION_EXPORT NSString *CONNECTION_CALLBACK_ID;
 FOUNDATION_EXPORT NSString *LIST_DEVICES_CALLBACK_ID;
 
+typedef void (^ArrayBlock)(NSArray *devices);
+typedef void (^VoidBlock)(void);
+typedef void (^ErrorBlock)(NSError *error);
+
 @interface HandpointApiCordova : CDVPlugin
 
 - (void)sale:(CDVInvokedUrlCommand *)command;

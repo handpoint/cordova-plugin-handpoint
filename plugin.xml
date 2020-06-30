@@ -70,12 +70,15 @@
     <header-file src="src/ios/include/StatusInfo.h"/>
     <header-file src="src/ios/NSString+Sanitize.h"/>
     <header-file src="src/ios/SDKEvent.h"/>
+    <header-file src="src/ios/HandpointApiManager.h"/>
+    <header-file src="src/ios/HandpointSampleBasicEvents.h"/>
     <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
     <source-file src="src/ios/HandpointApiCordova.m"/>
     <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
     <source-file src="src/ios/lib/libheft.a" framework="true"/>
     <source-file src="src/ios/NSString+Sanitize.m"/>
     <source-file src="src/ios/SDKEvent.m"/>
+    <source-file src="src/ios/HandpointApiManager.m"/>
     <framework src="ExternalAccessory.framework"/>
     <framework src="Security.framework"/>
     <framework src="libc++.dylib"/>
