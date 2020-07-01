@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.7.5">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.7.5">
   <name>Handpoint</name>
   <description>Cordova Handpoint SDK Plugin</description>
   <license>Apache 2.0</license>
@@ -69,12 +70,15 @@
     <header-file src="src/ios/include/StatusInfo.h"/>
     <header-file src="src/ios/NSString+Sanitize.h"/>
     <header-file src="src/ios/SDKEvent.h"/>
+    <header-file src="src/ios/HandpointApiManager.h"/>
+    <header-file src="src/ios/HandpointSampleBasicEvents.h"/>
     <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
     <source-file src="src/ios/HandpointApiCordova.m"/>
     <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
     <source-file src="src/ios/lib/libheft.a" framework="true"/>
     <source-file src="src/ios/NSString+Sanitize.m"/>
     <source-file src="src/ios/SDKEvent.m"/>
+    <source-file src="src/ios/HandpointApiManager.m"/>
     <framework src="ExternalAccessory.framework"/>
     <framework src="Security.framework"/>
     <framework src="libc++.dylib"/>
