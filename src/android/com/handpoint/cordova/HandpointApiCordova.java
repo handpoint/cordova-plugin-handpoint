@@ -29,7 +29,7 @@ public class HandpointApiCordova extends CordovaPlugin {
     try {
       super.initialize(cordova, webView);
       this.mCordova = cordova;
-      this.context = this.mCordova.getActivity().getApplicationContext();
+      this.context = this.mCordova.getActivity();
       this.handpointHelper = new HandpointHelper(this.context);
     } catch (Throwable thr) {
       this.error = thr.toString();
@@ -43,7 +43,7 @@ public class HandpointApiCordova extends CordovaPlugin {
     final JSONArray args = arguments;
     final CallbackContext callbackContext = cbc;
 
-    cordova.getThreadPool().execute(new Runnable() {
+    cordova.getActivity().runOnUiThread(new Runnable() {
       public void run() {
 
         Method method = null;

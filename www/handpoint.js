@@ -13,7 +13,8 @@ function Handpoint() {
   this.ConnectionMethod = {
     "BLUETOOTH": 0,
     "HTTPS": 1,
-    "SIMULATOR": 2
+    "SIMULATOR": 2,
+    "ANDROID_PAYMENT": 3
   };
 
   /**
@@ -196,8 +197,17 @@ function Handpoint() {
     "Full": 2,
     "Debug": 3
   };
-
 }
+
+/**
+ * Change SDK locale
+ * @param config.locale Locale code
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+Handpoint.prototype.setLocale = function (config, successCallback, errorCallback) {
+  this.exec('setLocale', config, successCallback, errorCallback);
+};
 
 /**
  * Returns the tokenized version of the card used if successful (not available for all acquirers, 
@@ -240,21 +250,6 @@ Handpoint.prototype.sale = function (config, successCallback, errorCallback) {
 };
 
 /**
- * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the 
- * amount and currency but it also accepts a map with extra parameters.
- * @param {Object} config parameters 
- * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
- * @param config.currency Currency of the charge @see Handpoint.Currency
- * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
- * @param config.map A map including extra optional transaction parameters
- * @param {Function} successCallback This function will be called if operation succeed
- * @param {Function} errorCallback This function will be called if an error happened
- */
-Handpoint.prototype.saleReversal = function (config, successCallback, errorCallback) {
-  this.exec('saleReversal', config, successCallback, errorCallback);
-};
-
-/**
  * A refund initiates a refund operation to the card reader. This operation moves funds from 
  * the merchant account to the cardholder´s credit card. In it's simplest form you only have 
  * to pass the amount and currency but it also accepts a map with extra parameters.
@@ -267,6 +262,21 @@ Handpoint.prototype.saleReversal = function (config, successCallback, errorCallb
  */
 Handpoint.prototype.refund = function (config, successCallback, errorCallback) {
   this.exec('refund', config, successCallback, errorCallback);
+};
+
+/**
+ * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the 
+ * amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters 
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.saleReversal = function (config, successCallback, errorCallback) {
+  this.exec('saleReversal', config, successCallback, errorCallback);
 };
 
 /**
@@ -318,6 +328,22 @@ Handpoint.prototype.enableScanner = function (config, successCallback, errorCall
 Handpoint.prototype.cancelRequest = function (config, successCallback, errorCallback) {
   this.exec('cancelRequest', config, successCallback, errorCallback);
 };
+
+/**
+ * This method attempts to stop the current transaction on the card reader. Note that 
+ * operations can only be cancelled before requests are sent to the gateway. There is a 
+ * flag called cancelAllowed in the currentTransactionStatus event that can be used to check 
+ * if the transaction is in a state that allows cancel.
+ * @param {Object} device This parameter specifies to the system which device you want to use for the 
+ * operations. If none is supplied the system will attempt to use a default device, if any.
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.stopCurrentTransaction = function (config, successCallback, errorCallback) {
+  this.exec('stopCurrentTransaction', config, successCallback, errorCallback);
+};
+
+
 
 /**
  * A tip adjustment operation allows merchants to adjust the tip amount of a sale transaction before the batch 
@@ -493,6 +519,17 @@ Handpoint.prototype.listDevices = function (config, successCallback, errorCallba
 };
 
 /**
+ * Prints the HTML receipt.
+ * @param {Object} config parameters 
+ * @param config.receipt The receipt in HTML format
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.printReceipt = function (config, successCallback, errorCallback) {
+  this.exec('printReceipt', config, successCallback, errorCallback);
+};
+
+/**
  * Starts a connection monitoring service. The service listens to events sent by the operating system about 
  * the connected hardware. If the service notices that a previously connected device suddenly disconnects 
  * on the hardware layer it attempts to reconnect to that particular device. Since this is a service it 
@@ -550,6 +587,17 @@ Handpoint.prototype.applicationDidGoBackground = function (successCallback, erro
  */
 Handpoint.prototype.getSDKVersion = function (successCallback, errorCallback) {
   this.exec('getSDKVersion', {}, successCallback, errorCallback);
+};
+
+/**
+ * Authenticates MPOS device
+ * @param {Object} config parameters for mposAuth operation
+ * @param config.service Service to authenticate to
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.mposAuth = function (config, successCallback, errorCallback) {
+  this.exec('mposAuth', config, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
