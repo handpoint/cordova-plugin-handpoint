@@ -205,7 +205,7 @@ cordova.plugins.Handpoint.setup({}, successCallback, errorCallback)
 
 | Parameter           | Description                              |
 | :------------------ | :--------------------------------------- |
-| **config.automaticReconnection** | If set to **true**, the SDK will automatically reconnect to the last known device when the connection is lost. The default value is **false**. Supported only in **Android** |
+| **config.automaticReconnection** | If set to **true**, the SDK will automatically reconnect to the last known device when the connection is lost. The default value is **false** |
 | **successCallback**              | Executed if the method execution succeed |
 | **errorCallback**                | Executed if the method execution failed  |
 
