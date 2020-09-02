@@ -590,6 +590,18 @@ Handpoint.prototype.getSDKVersion = function (successCallback, errorCallback) {
 };
 
 /**
+ * Show location setting dialog
+ * @param config.text Text to be shown 
+ * @param config.okBtnText Accept button text
+ * @param config.cancelBtnText Cancel button text
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+Handpoint.prototype.enableLocation = function (config, successCallback, errorCallback) {
+  this.exec('enableLocation', config, successCallback, errorCallback);
+};
+
+/**
  * Authenticates MPOS device
  * @param {Object} config parameters for mposAuth operation
  * @param config.service Service to authenticate to

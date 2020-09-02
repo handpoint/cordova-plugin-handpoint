@@ -6,21 +6,16 @@ import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
 import org.apache.cordova.*;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.math.BigInteger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
