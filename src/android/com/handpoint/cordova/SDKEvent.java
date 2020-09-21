@@ -36,7 +36,11 @@ public class SDKEvent {
    * Add event data. Each entry in event data is a key/value pair
    */
   public void put(String key, Object value) {
-    Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new GsonUTCDateAdapter()).create();
+    Gson gson = new GsonBuilder()
+      .registerTypeAdapter(Date.class, new GsonUTCDateAdapter())
+      .registerTypeAdapter(TenderType.class, new GsonTenderTypeAdapter())
+      .registerTypeAdapter(PaymentScenario.class, new GsonPaymentScenarioAdapter())
+      .create();
     ArrayList list = new ArrayList();
     Iterator iterator = null;
     JSONObject valueObject = null;
