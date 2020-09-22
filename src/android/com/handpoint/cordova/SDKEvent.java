@@ -16,6 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import com.handpoint.api.shared.PaymentScenario;
+import com.handpoint.api.shared.TenderType;
+
 import android.util.Log;
 
 public class SDKEvent {

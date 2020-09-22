@@ -15,7 +15,8 @@
     <source-file src="src/android/com/handpoint/cordova/GsonUTCDateAdapter.java" target-dir="src/com/handpoint/cordova"/>
     <source-file src="src/android/com/handpoint/cordova/HandpointApiCordova.java" target-dir="src/com/handpoint/cordova"/>
     <source-file src="src/android/com/handpoint/cordova/HandpointHelper.java" target-dir="src/com/handpoint/cordova"/>
-    <source-file src="src/android/com/handpoint/cordova/SDKEvent.java" target-dir="src/com/handpoint/cordova"/>
+    <source-file src="src/android/com/handpoint/cordova/GsonPaymentScenarioAdapter.java" target-dir="src/com/handpoint/cordova"/>
+    <source-file src="src/android/com/handpoint/cordova/GsonTenderTypeAdapter.java" target-dir="src/com/handpoint/cordova"/>
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="HandpointApiCordova">
         <param name="android-package" value="com.handpoint.cordova.HandpointApiCordova"/>
