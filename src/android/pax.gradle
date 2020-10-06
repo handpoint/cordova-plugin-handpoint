@@ -1,18 +1,25 @@
-repositories{    
+repositories{
   jcenter()
   maven {
     credentials {
       username getCredentialsMavenUsername()
       password getCredentialsMavenPassword()
     }
-    url = "http://nexus.handpoint.ninja:8081/repository/public/"
+    url = "http://nexus.handpoint.ninja:8081/repository/maven-public/"
+  }
+  maven {
+    credentials {
+      username getCredentialsMavenUsername()
+      password getCredentialsMavenPassword()
+    }
+    url = "http://nexus.handpoint.ninja:8081/repository/maven-releases/"
   }
 }
 
 dependencies {
    implementation 'com.google.code.gson:gson:2.8.5'
    implementation 'org.slf4j:slf4j-android:1.7.25'
-   implementation ('com.handpoint.api:private-sdk:5.11.0-RC.5-SNAPSHOT') { changing = true }   
+   implementation ('com.handpoint.api:private-sdk:5.11.0-RC.5-SNAPSHOT') { changing = true }
 }
 
 android {
