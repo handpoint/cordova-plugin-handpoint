@@ -133,8 +133,10 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
 
         Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
         NSInteger amount = [command.params[@"amount"] integerValue];
+        NSString *originaltransactionID = command.params[@"originaltransactionID"];
         BOOL result = [self.api refundWithAmount:amount
-                                        currency:currency];
+                                        currency:currency 
+                                     transaction:originaltransactionID];
 
         if (result)
         {
