@@ -105,7 +105,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void refund(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")),
+      if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
           this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
