@@ -97,6 +97,17 @@ static const NSTimeInterval WAIT_TIME_BETWEEN_RECONNECTIONS = 3.0;
                            cardholder:YES];
 }
 
+- (BOOL)refundWithAmount:(NSInteger)amount
+                currency:(Currency *)currency
+                transaction:(NSString *)transaction
+{
+    NSLog(@"\n\trefundWithAmount: %@ %@ %@", @(amount), currency.alpha, transaction);
+
+    return [self.api refundWithAmount:amount
+                          currency:currency.sendableCurrencyCode
+                          transaction:transaction];
+}
+
 - (BOOL)refundReversalWithAmount:(NSInteger)amount
                         currency:(Currency *)currency
                    transactionId:(NSString *)transactionId

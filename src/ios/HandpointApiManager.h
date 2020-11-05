@@ -29,6 +29,10 @@ typedef void (^ErrorBlock) (NSError *error);
 - (BOOL)refundWithAmount:(NSInteger)amount
                 currency:(Currency *)currency;
 
+- (BOOL)refundWithAmount:(NSInteger)amount
+                currency:(Currency *)currency
+                   transaction:(NSString *)transaction;
+
 - (BOOL)refundReversalWithAmount:(NSInteger)amount
                         currency:(Currency *)currency
                    transactionId:(NSString *)transactionId;
