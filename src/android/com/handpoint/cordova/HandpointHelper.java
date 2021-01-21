@@ -70,14 +70,16 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     JSONObject tipConfigurationObj = params.has("tipConfiguration") ? params.getJSONObject("tipConfiguration") : null;
     TipConfiguration tipConfiguration = null;
     if (tipConfigurationObj != null) {
-      String headerName = tipConfigurationObj.getString("headerName");
+      String headerName = tipConfigurationObj.has("headerName") ? tipConfigurationObj.getString("headerName") : "";
       String footer = tipConfigurationObj.has("footer") ? tipConfigurationObj.getString("footer") : "";
       boolean enterAmountEnabled = tipConfigurationObj.has("enterAmountEnabled") ? tipConfigurationObj.getBoolean("enterAmountEnabled") : false;
       boolean skipEnabled = tipConfigurationObj.has("skipEnabled") ? tipConfigurationObj.getBoolean("skipEnabled") : false;
       List<Integer> tipPercentages = new ArrayList<>();
-      JSONArray tipPer = tipConfigurationObj.getJSONArray("tipPercentages");
-      for (int i = 0; i < tipPer.length(); i++) {
-        tipPercentages.add(tipPer.getInt(i));
+      JSONArray tipPer = tipConfigurationObj.has("tipPercentages") ? tipConfigurationObj.getJSONArray("tipPercentages") : null;
+      if (tipPer != null) {
+        for (int i = 0; i < tipPer.length(); i++) {
+          tipPercentages.add(tipPer.getInt(i));
+        }
       }
       tipConfiguration = new TipConfiguration(null, headerName, tipPercentages, enterAmountEnabled, skipEnabled, footer);
     }
