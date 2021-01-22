@@ -6,10 +6,13 @@ import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
 import org.apache.cordova.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -64,8 +67,24 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    JSONObject tipConfigurationObj = params.has("tipConfiguration") ? params.getJSONObject("tipConfiguration") : null;
+    TipConfiguration tipConfiguration = null;
+    if (tipConfigurationObj != null) {
+      String headerName = tipConfigurationObj.has("headerName") ? tipConfigurationObj.getString("headerName") : "";
+      String footer = tipConfigurationObj.has("footer") ? tipConfigurationObj.getString("footer") : "";
+      boolean enterAmountEnabled = tipConfigurationObj.has("enterAmountEnabled") ? tipConfigurationObj.getBoolean("enterAmountEnabled") : false;
+      boolean skipEnabled = tipConfigurationObj.has("skipEnabled") ? tipConfigurationObj.getBoolean("skipEnabled") : false;
+      List<Integer> tipPercentages = new ArrayList<>();
+      JSONArray tipPer = tipConfigurationObj.has("tipPercentages") ? tipConfigurationObj.getJSONArray("tipPercentages") : null;
+      if (tipPer != null) {
+        for (int i = 0; i < tipPer.length(); i++) {
+          tipPercentages.add(tipPer.getInt(i));
+        }
+      }
+      tipConfiguration = new TipConfiguration(null, headerName, tipPercentages, enterAmountEnabled, skipEnabled, footer);
+    }
     try {
-      if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")),
+      if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), tipConfiguration,
           this.getExtraParams(params))) {
         callbackContext.success("ok");
       } else {
