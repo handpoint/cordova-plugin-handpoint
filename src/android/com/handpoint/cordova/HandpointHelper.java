@@ -66,7 +66,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")),
-          this.getExtraParams(params))) {
+             this.getOptions(params, SaleOptions.class))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send sale operation to device");
@@ -79,7 +79,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void saleAndTokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
-          Currency.getCurrency(params.getInt("currency")), this.getExtraParams(params))) {
+          Currency.getCurrency(params.getInt("currency")), this.getOptions(params, SaleOptions.class))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleAndTokenizeCard operation to device");
@@ -93,7 +93,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     try {
       if (this.api.saleReversal(new BigInteger(params.getString("amount")),
           Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
-          this.getExtraParams(params))) {
+          this.getOptions(params, MerchantAuthOptions.class))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleReversal operation to device");
@@ -106,7 +106,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void refund(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.refund(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
-          this.getExtraParams(params))) {
+          this.getOptions(params, RefundOptions.class))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send refund operation to device");
@@ -120,7 +120,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     try {
       if (this.api.refundReversal(new BigInteger(params.getString("amount")),
           Currency.getCurrency(params.getInt("currency")), params.getString("originalTransactionID"),
-          this.getExtraParams(params))) {
+          this.getOptions(params, MerchantAuthOptions.class))) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send refundReversal operation to device");
@@ -454,11 +454,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  protected Map<String, String> getExtraParams(JSONObject params) throws JSONException {
-    if (params.has("map")) {
-      return this.jsonToMap((JSONObject) params.get("map"));
+  protected <T> T getOptions(JSONObject params, Class<T> tClass) throws JSONException {
+    if (params.has("options")) {
+      return ConverterUtil.getModelObjectFromJSON(params.get("options"), tClass);
     } else {
-      return new HashMap<String, String>();
+      return null;
     }
   }
 
