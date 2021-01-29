@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-handpoint",
-  "version": "2.3.0-RC.3",
+  "version": "3.0.0",
   "description": "Cordova Handpoint SDK Plugin",
   "cordova": {
     "id": "cordova-plugin-handpoint",
