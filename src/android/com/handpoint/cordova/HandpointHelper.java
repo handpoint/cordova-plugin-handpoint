@@ -4,6 +4,10 @@ import com.handpoint.api.*;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
+import com.handpoint.api.shared.options.MerchantAuthOptions;
+import com.handpoint.api.shared.options.Options;
+import com.handpoint.api.shared.options.RefundOptions;
+import com.handpoint.api.shared.options.SaleOptions;
 import org.apache.cordova.*;
 
 import org.json.JSONException;
@@ -456,7 +460,8 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   protected <T> T getOptions(JSONObject params, Class<T> tClass) throws JSONException {
     if (params.has("options")) {
-      return ConverterUtil.getModelObjectFromJSON(params.get("options"), tClass);
+      JSONObject object = (JSONObject) params.get("options");
+      return ConverterUtil.getModelObjectFromJSON(object.toString(), tClass);
     } else {
       return null;
     }
