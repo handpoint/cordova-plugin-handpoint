@@ -4,6 +4,10 @@ import com.handpoint.api.*;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.*;
+import com.handpoint.api.shared.options.MerchantAuthOptions;
+import com.handpoint.api.shared.options.Options;
+import com.handpoint.api.shared.options.RefundOptions;
+import com.handpoint.api.shared.options.SaleOptions;
 import org.apache.cordova.*;
 
 import org.json.JSONException;
