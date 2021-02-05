@@ -71,6 +71,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     try {
       boolean result = false;
       SaleOptions options = this.getOptions(params, SaleOptions.class);
+      
       if (options != null) {
         result = this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), options);
       } else {
