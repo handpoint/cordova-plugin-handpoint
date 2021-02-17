@@ -20,7 +20,7 @@ public class GsonTenderTypeAdapter implements JsonSerializer<TenderType>, JsonDe
 
   @Override
   public TenderType deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
-    return TenderType.Companion.fromString(jsonElement.getAsString());
+    return TenderType.valueOf(jsonElement.getAsString());
   }
 
 }

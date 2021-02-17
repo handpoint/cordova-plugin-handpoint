@@ -17,7 +17,7 @@ public class GsonPaymentScenarioAdapter implements JsonSerializer<PaymentScenari
   }
 
   @Override public synchronized PaymentScenario deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
-    return PaymentScenario.getPaymentScenario(jsonElement.getAsString());
+    return PaymentScenario.parse(jsonElement.getAsString());
   }
 
 }
