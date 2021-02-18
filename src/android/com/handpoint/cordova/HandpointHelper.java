@@ -260,8 +260,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       JSONObject device = params.getJSONObject("device");
       this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
           ConnectionMethod.values()[device.getInt("connectionMethod")]);
+          
       try {
-        this.device.setForceReconnect(params.getBoolean("forceReconnect"));
+        this.device.setForceReconnect(device.getBoolean("forceReconnect"));
       } catch (JSONException ex) {
         this.device.setForceReconnect(false);
       }
