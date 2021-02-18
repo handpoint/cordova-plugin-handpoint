@@ -261,9 +261,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
           ConnectionMethod.values()[device.getInt("connectionMethod")]);
       try {
-        device.setForceReconnect(params.getBoolean("forceReconnect"));
+        this.device.setForceReconnect(params.getBoolean("forceReconnect"));
       } catch (JSONException ex) {
-        device.setForceReconnect(false);
+        this.device.setForceReconnect(false);
       }
 
       if (this.api.connect(this.device)) {
