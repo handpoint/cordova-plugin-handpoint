@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
-  Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents {
+    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -91,7 +91,8 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       boolean result;
       SaleOptions options = this.getOptions(params, SaleOptions.class);
       if (options != null) {
-        result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), options);
+        result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
+            options);
       } else {
         result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
       }
@@ -111,9 +112,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       boolean result;
       SaleOptions options = this.getOptions(params, SaleOptions.class);
       if (options != null) {
-        result = this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), options);
+        result = this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), options);
       } else {
-        result = this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
+        result = this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")));
       }
 
       if (result) {
@@ -131,9 +134,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       boolean result;
       MerchantAuthOptions options = this.getOptions(params, MerchantAuthOptions.class);
       if (options != null) {
-        result = this.api.saleReversal(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
+        result = this.api.saleReversal(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
       } else {
-        result = this.api.saleReversal(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
+        result = this.api.saleReversal(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
       }
 
       if (result) {
@@ -153,15 +158,19 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       String originalTxnid = params.getString("originalTransactionID");
       if (options != null) {
         if (originalTxnid != null && !originalTxnid.isEmpty()) {
-          result = this.api.refund(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), originalTxnid, options);
+          result = this.api.refund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), originalTxnid, options);
         } else {
-          result = this.api.refund(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), options);
+          result = this.api.refund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), options);
         }
       } else {
         if (originalTxnid != null && !originalTxnid.isEmpty()) {
-          result = this.api.refund(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), originalTxnid);
+          result = this.api.refund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), originalTxnid);
         } else {
-          result = this.api.refund(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
+          result = this.api.refund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")));
         }
       }
 
@@ -180,9 +189,11 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       boolean result;
       MerchantAuthOptions options = this.getOptions(params, MerchantAuthOptions.class);
       if (options != null) {
-        result = this.api.refundReversal(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
+        result = this.api.refundReversal(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
       } else {
-        result = this.api.refundReversal(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
+        result = this.api.refundReversal(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
       }
 
       if (result) {
@@ -248,7 +259,14 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     try {
       JSONObject device = params.getJSONObject("device");
       this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
-        ConnectionMethod.values()[device.getInt("connectionMethod")]);
+          ConnectionMethod.values()[device.getInt("connectionMethod")]);
+          
+      try {
+        this.device.setForceReconnect(device.getBoolean("forceReconnect"));
+      } catch (JSONException ex) {
+        this.device.setForceReconnect(false);
+      }
+
       if (this.api.connect(this.device)) {
         callbackContext.success("ok");
       } else {
