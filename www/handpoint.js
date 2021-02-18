@@ -14,7 +14,8 @@ function Handpoint() {
     "BLUETOOTH": 0,
     "HTTPS": 1,
     "SIMULATOR": 2,
-    "ANDROID_PAYMENT": 3
+    "ANDROID_PAYMENT": 3,
+    "CLOUD": 4
   };
 
   /**
