@@ -81,7 +81,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
           tipPercentages.add(tipPer.getInt(i));
         }
       }
-      tipConfiguration = new TipConfiguration(null, headerName, tipPercentages, enterAmountEnabled, skipEnabled, footer);
+      tipConfiguration = new TipConfiguration(null, null, headerName, tipPercentages, enterAmountEnabled, skipEnabled, footer);
     }
     try {
       if (this.api.sale(new BigInteger(params.getString("amount")), Currency.getCurrency(params.getInt("currency")), tipConfiguration,
