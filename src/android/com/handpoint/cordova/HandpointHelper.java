@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
-    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents {
+    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.CardLanguage {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -591,6 +591,16 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   @Override
   public void printSuccess() {
     SDKEvent event = new SDKEvent("printSuccess");
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  public void cardLanguage(String language) {
+    SDKEvent event = new SDKEvent("cardLanguage");
+    event.put("language", language);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
