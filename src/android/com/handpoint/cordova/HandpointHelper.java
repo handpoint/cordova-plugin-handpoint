@@ -598,7 +598,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  public void cardLanguage(String language) {
+  public void cardLanguage(SupportedLocales language) {
     SDKEvent event = new SDKEvent("cardLanguage");
     event.put("language", language);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
