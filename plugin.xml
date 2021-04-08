@@ -77,6 +77,12 @@
     <header-file src="src/ios/include/ScannerDisabledResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerEventResponseInfo.h"/>
     <header-file src="src/ios/include/StatusInfo.h"/>
+    <header-file src="src/ios/include/MerchantAuth.h"/>
+    <header-file src="src/ios/include/SaleOptions.h"/>
+    <header-file src="src/ios/include/MerchantAuthOptions.h"/>
+    <header-file src="src/ios/include/Options.h"/>
+    <header-file src="src/ios/include/Credential.h"/>
+    <header-file src="src/ios/include/toXML.h"/>
     <header-file src="src/ios/NSString+Sanitize.h"/>
     <header-file src="src/ios/SDKEvent.h"/>
     <header-file src="src/ios/HandpointApiManager.h"/>

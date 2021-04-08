@@ -50,22 +50,25 @@ static const NSTimeInterval WAIT_TIME_BETWEEN_RECONNECTIONS = 3.0;
 
 - (BOOL)saleWithAmount:(NSInteger)amount
               currency:(Currency *)currency
+               options:(SaleOptions *)options
 {
     NSLog(@"\n\tsaleWithAmount: %@ currency: %@", @(amount), currency.alpha);
 
     return [self.api saleWithAmount:amount
                            currency:currency.sendableCurrencyCode
-                         cardholder:YES];
+                            options:options];
 }
 
 
 - (BOOL)saleAndTokenizeCardWithAmount:(NSInteger)amount
                              currency:(Currency *)currency
+                              options:(SaleOptions *)options
 {
     NSLog(@"\n\tsaleAndTokenizeCardWithAmount: %@ currency: %@", @(amount), currency.alpha);
 
     return [self.api saleAndTokenizeCardWithAmount:amount
-                                          currency:currency.sendableCurrencyCode];
+                                          currency:currency.sendableCurrencyCode
+                                           options:options];
 }
 
 - (BOOL)tokenizeCard
@@ -78,46 +81,51 @@ static const NSTimeInterval WAIT_TIME_BETWEEN_RECONNECTIONS = 3.0;
 - (BOOL)saleReversalWithAmount:(NSInteger)amount
                       currency:(Currency *)currency
                  transactionId:(NSString *)transactionId
+                       options:(Options *)options
 {
     NSLog(@"\n\tsaleReversalWithAmount: %@ %@ %@", @(amount), currency.alpha, transactionId);
 
     return [self.api saleVoidWithAmount:amount
                                currency:currency.sendableCurrencyCode
-                             cardholder:YES
-                            transaction:transactionId];
+                            transaction:transactionId
+                                options:options];
 }
 
 - (BOOL)refundWithAmount:(NSInteger)amount
                 currency:(Currency *)currency
+                 options:(MerchantAuthOptions *)options
 {
     NSLog(@"\n\trefundWithAmount: %@ %@", @(amount), currency.alpha);
 
     return [self.api refundWithAmount:amount
                              currency:currency.sendableCurrencyCode
-                           cardholder:YES];
+                              options:options];
 }
 
 - (BOOL)refundWithAmount:(NSInteger)amount
                 currency:(Currency *)currency
-                transaction:(NSString *)transaction
+             transaction:(NSString*)transaction
+                 options:(MerchantAuthOptions *)options
 {
     NSLog(@"\n\trefundWithAmount: %@ %@ %@", @(amount), currency.alpha, transaction);
 
     return [self.api refundWithAmount:amount
                           currency:currency.sendableCurrencyCode
-                          transaction:transaction];
+                          transaction:transaction
+                              options:options];
 }
 
 - (BOOL)refundReversalWithAmount:(NSInteger)amount
                         currency:(Currency *)currency
                    transactionId:(NSString *)transactionId
+                         options:(Options *)options
 {
     NSLog(@"\n\trefundReversalWithAmount: %@ %@ %@", @(amount), currency.alpha, transactionId);
 
     return [self.api refundVoidWithAmount:amount
                                  currency:currency.sendableCurrencyCode
-                               cardholder:YES
-                              transaction:transactionId];
+                              transaction:transactionId
+                                  options:options];
 }
 
 - (void)tipAdjustmentWithTransactionId:(NSString *)transactionId

@@ -44,6 +44,36 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     [self sendSuccessWithCallbackId:command.callbackId];
 }
 
+
+- (void)sale:(CDVInvokedUrlCommand *)command
+{
+    NSLog(@"\n\tsale: %@", command.params);
+
+    Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
+    NSInteger amount = [command.params[@"amount"] integerValue];
+    
+    SaleOptions *options = [SaleOptions new];
+    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    
+    if(customerReference.length) {
+        options.customerReference = customerReference;
+    }
+    
+    options.merchantAuth = [self getMerchantAuthFromParams:command.params];
+    
+    BOOL result = [self.api saleWithAmount:amount
+                                  currency:currency
+                                   options:options];
+
+    if (result)
+    {
+        [self sendSuccessWithCallbackId:command.callbackId];
+    } else
+    {
+        [self sendErrorWithMessage:@"Can't send sale operation to device" callbackId:command.callbackId];
+    }
+}
+
 - (void)saleAndTokenizeCard:(CDVInvokedUrlCommand *)command
 {
     NSLog(@"\n\tsaleAndTokenizeCard: %@", command.params);
@@ -51,8 +81,18 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
     NSInteger amount = [command.params[@"amount"] integerValue];
 
+    SaleOptions *options = [SaleOptions new];
+    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    
+    if(customerReference.length) {
+        options.customerReference = customerReference;
+    }
+    
+    options.merchantAuth = [self getMerchantAuthFromParams:command.params];
+    
     BOOL result = [self.api saleAndTokenizeCardWithAmount:amount
-                                                  currency:currency];
+                                                 currency:currency
+                                                  options:options];
 
     if (result)
     {
@@ -79,25 +119,6 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     }
 }
 
-- (void)sale:(CDVInvokedUrlCommand *)command
-{
-    NSLog(@"\n\tsale: %@", command.params);
-
-    Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
-    NSInteger amount = [command.params[@"amount"] integerValue];
-
-    BOOL result = [self.api saleWithAmount:amount
-                                  currency:currency];
-
-    if (result)
-    {
-        [self sendSuccessWithCallbackId:command.callbackId];
-    } else
-    {
-        [self sendErrorWithMessage:@"Can't send sale operation to device" callbackId:command.callbackId];
-    }
-}
-
 - (void)saleReversal:(CDVInvokedUrlCommand *)command
 {
     NSLog(@"\n\tsaleReversal");
@@ -105,9 +126,18 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
     NSInteger amount = [command.params[@"amount"] integerValue];
     NSString *originalTransactionID = command.params[@"originalTransactionID"];
+    
+    Options *options = [Options new];
+    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    
+    if(customerReference.length) {
+        options.customerReference = customerReference;
+    }
+    
     BOOL result = [self.api saleReversalWithAmount:amount
                                           currency:currency
-                                      transactionId:originalTransactionID];
+                                     transactionId:originalTransactionID
+                                           options:options];
 
     if (result)
     {
@@ -125,9 +155,20 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
     NSInteger amount = [command.params[@"amount"] integerValue];
     NSString *originalTransactionID = command.params[@"originalTransactionID"];
+    
+    MerchantAuthOptions *options = [MerchantAuthOptions new];
+    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    
+    if(customerReference.length) {
+        options.customerReference = customerReference;
+    }
+    
+    options.merchantAuth = [self getMerchantAuthFromParams:command.params];
+    
     BOOL result = [self.api refundWithAmount:amount
                                     currency:currency
-                                  transaction:originalTransactionID];
+                                 transaction:originalTransactionID
+                                     options:options];
 
     if (result)
     {
@@ -145,9 +186,18 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     Currency *currency = [Currency currencyFromCode:command.params[@"currency"]];
     NSInteger amount = [command.params[@"amount"] integerValue];
     NSString *originalTransactionID = command.params[@"originalTransactionID"];
+    
+    Options *options = [Options new];
+    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    
+    if(customerReference.length) {
+        options.customerReference = customerReference;
+    }
+    
     BOOL result = [self.api refundReversalWithAmount:amount
                                             currency:currency
-                                        transactionId:originalTransactionID];
+                                       transactionId:originalTransactionID
+                                             options:options];
 
     if (result)
     {
@@ -558,6 +608,22 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     }
 
     [self.commandDelegate sendPluginResult:result callbackId:callbackId];
+}
+
+- (MerchantAuth *)getMerchantAuthFromParams:(NSDictionary *)params {
+    NSArray *credentials = [params valueForKeyPath:@"options.merchantAuth"];
+    
+    MerchantAuth *auth = [MerchantAuth new];
+    
+    for (NSDictionary *credential in credentials) {
+        Credential *cred = [Credential new];
+        cred.acquirer = [Credential getAcquirerFromString:credential[@"acquirer"]];
+        cred.mid = credential[@"mid"];
+        cred.tid = credential[@"tid"];
+        [auth add:cred];
+    }
+    
+    return auth;
 }
 
 @end

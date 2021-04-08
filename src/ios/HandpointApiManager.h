@@ -12,30 +12,38 @@ typedef void (^ErrorBlock) (NSError *error);
 
 @property (readonly) NSString *version;
 
-- (instancetype)initWithBasicEventsDelegate:(id <HandpointSampleBasicEvents>)delegate sharedSecret:(NSString *)sharedSecret automaticReconnection:(BOOL)automaticReconnection;
+- (instancetype)initWithBasicEventsDelegate:(id <HandpointSampleBasicEvents>)delegate
+                               sharedSecret:(NSString *)sharedSecret
+                      automaticReconnection:(BOOL)automaticReconnection;
 
 - (BOOL)saleWithAmount:(NSInteger)amount
-              currency:(Currency *)currency;
+              currency:(Currency *)currency
+               options:(SaleOptions *)options;
 
 - (BOOL)saleAndTokenizeCardWithAmount:(NSInteger)amount
-                             currency:(Currency *)currency;
+                             currency:(Currency *)currency
+                              options:(SaleOptions *)options;
 
 - (BOOL)tokenizeCard;
 
 - (BOOL)saleReversalWithAmount:(NSInteger)amount
                       currency:(Currency *)currency
-                 transactionId:(NSString *)transactionId;
-
-- (BOOL)refundWithAmount:(NSInteger)amount
-                currency:(Currency *)currency;
+                 transactionId:(NSString *)transactionId
+                       options:(Options *)options;
 
 - (BOOL)refundWithAmount:(NSInteger)amount
                 currency:(Currency *)currency
-                   transaction:(NSString *)transaction;
+                 options:(MerchantAuthOptions *)options;
+
+- (BOOL)refundWithAmount:(NSInteger)amount
+                currency:(Currency *)currency
+             transaction:(NSString*)transaction
+                 options:(MerchantAuthOptions *)options;
 
 - (BOOL)refundReversalWithAmount:(NSInteger)amount
                         currency:(Currency *)currency
-                   transactionId:(NSString *)transactionId;
+                   transactionId:(NSString *)transactionId
+                         options:(Options *)options;
 
 - (void)tipAdjustmentWithTransactionId:(NSString *)transactionId
                              tipAmount:(NSInteger)tipAmount
