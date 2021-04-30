@@ -28,6 +28,7 @@ import com.handpoint.api.shared.options.MerchantAuthOptions;
 import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
+import com.handpoint.api.shared.options.ReportConfiguration;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
-    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.CardLanguage {
+    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -260,7 +261,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       JSONObject device = params.getJSONObject("device");
       this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
           ConnectionMethod.values()[device.getInt("connectionMethod")]);
-          
+
       try {
         this.device.setForceReconnect(device.getBoolean("forceReconnect"));
       } catch (JSONException ex) {
@@ -337,6 +338,16 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       callbackContext.success("ok");
     } catch (JSONException ex) {
       callbackContext.error("Can't execute printReceipt. Incorrect parameters");
+    }
+  }
+
+    public void getTransactionsReport(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      ReportConfiguration config = this.getOptions(params, ReportConfiguration.class);
+      this.api.getTransactionsReport(config);
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute getTransactionsReport. Incorrect parameters");
     }
   }
 
@@ -596,6 +607,21 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     if (this.callbackContext != null) {
       this.callbackContext.sendPluginResult(result);
     }
+  }
+
+
+  /**
+   * Retrieves the report data and prints the HTML report
+   */
+  @Override
+  public void reportResult(TypeOfResult type, String report, DeviceStatus status, Device device) {
+    SDKEvent event = new SDKEvent("reportResult");
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+    this.api.printReceipt(report);
   }
 
   public void cardLanguage(SupportedLocales locale) {
