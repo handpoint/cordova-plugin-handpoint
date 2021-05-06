@@ -624,7 +624,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     if (this.callbackContext != null) {
       this.callbackContext.sendPluginResult(result);
     }
-    // this.api.printReceipt(report);
   }
 
   public void cardLanguage(SupportedLocales locale) {
