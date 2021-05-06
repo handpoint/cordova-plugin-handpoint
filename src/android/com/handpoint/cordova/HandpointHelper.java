@@ -615,7 +615,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   @Override
   public void reportResult(TypeOfResult type, String report, DeviceStatus status, Device device) {
     SDKEvent event = new SDKEvent("reportResult");
-    event.put("reportString", report);
+    event.put("htmlReport", report);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
