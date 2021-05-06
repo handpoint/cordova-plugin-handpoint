@@ -346,7 +346,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     public void getTransactionsReport(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       ReportConfiguration config = this.getOptions(params, ReportConfiguration.class);
-      config.currency = Currency.parse(params.getInt("currency"));
+      config.setCurrency(Currency.parse(params.getInt("currency")));
       this.api.getTransactionsReport(config);
       callbackContext.success("ok");
     } catch (JSONException ex) {
@@ -619,6 +619,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   @Override
   public void reportResult(TypeOfResult type, String report, DeviceStatus status, Device device) {
     SDKEvent event = new SDKEvent("reportResult");
+    event.put("reportString", report);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
