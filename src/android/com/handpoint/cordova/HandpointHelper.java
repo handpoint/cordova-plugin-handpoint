@@ -13,6 +13,7 @@ import com.handpoint.api.shared.ConnectionStatus;
 import com.handpoint.api.shared.ConverterUtil;
 import com.handpoint.api.shared.Currency;
 import com.handpoint.api.shared.Device;
+import com.handpoint.api.shared.DeviceStatus;
 import com.handpoint.api.shared.Events;
 import com.handpoint.api.shared.HapiMPosAuthResponse;
 import com.handpoint.api.shared.HardwareStatus;
@@ -29,6 +30,7 @@ import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
 import com.handpoint.api.shared.options.ReportConfiguration;
+import com.handpoint.api.shared.TypeOfResult;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -344,6 +346,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     public void getTransactionsReport(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       ReportConfiguration config = this.getOptions(params, ReportConfiguration.class);
+      config.currency = Currency.parse(params.getInt("currency"));
       this.api.getTransactionsReport(config);
       callbackContext.success("ok");
     } catch (JSONException ex) {
@@ -621,7 +624,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     if (this.callbackContext != null) {
       this.callbackContext.sendPluginResult(result);
     }
-    this.api.printReceipt(report);
   }
 
   public void cardLanguage(SupportedLocales locale) {
