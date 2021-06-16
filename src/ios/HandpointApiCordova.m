@@ -53,7 +53,7 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSInteger amount = [command.params[@"amount"] integerValue];
     
     SaleOptions *options = [SaleOptions new];
-    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    NSString *customerReference = [command.params valueForKeyPath:@"options.customerReference"];
     
     if(customerReference.length) {
         options.customerReference = customerReference;
@@ -82,7 +82,7 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSInteger amount = [command.params[@"amount"] integerValue];
 
     SaleOptions *options = [SaleOptions new];
-    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    NSString *customerReference = [command.params valueForKeyPath:@"options.customerReference"];
     
     if(customerReference.length) {
         options.customerReference = customerReference;
@@ -128,7 +128,7 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSString *originalTransactionID = command.params[@"originalTransactionID"];
     
     Options *options = [Options new];
-    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    NSString *customerReference = [command.params valueForKeyPath:@"options.customerReference"];
     
     if(customerReference.length) {
         options.customerReference = customerReference;
@@ -157,7 +157,7 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSString *originalTransactionID = command.params[@"originalTransactionID"];
     
     MerchantAuthOptions *options = [MerchantAuthOptions new];
-    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    NSString *customerReference = [command.params valueForKeyPath:@"options.customerReference"];
     
     if(customerReference.length) {
         options.customerReference = customerReference;
@@ -188,7 +188,7 @@ NSString *LIST_DEVICES_CALLBACK_ID = @"LIST_DEVICES_CALLBACK_ID";
     NSString *originalTransactionID = command.params[@"originalTransactionID"];
     
     Options *options = [Options new];
-    NSString *customerReference = [[command.params valueForKeyPath:@"options.customerReference"] string];
+    NSString *customerReference = [command.params valueForKeyPath:@"options.customerReference"];
     
     if(customerReference.length) {
         options.customerReference = customerReference;
