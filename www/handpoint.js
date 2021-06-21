@@ -13,7 +13,9 @@ function Handpoint() {
   this.ConnectionMethod = {
     "BLUETOOTH": 0,
     "HTTPS": 1,
-    "SIMULATOR": 2
+    "SIMULATOR": 2,
+    "ANDROID_PAYMENT": 3,
+    "CLOUD": 4
   };
 
   /**
@@ -196,11 +198,20 @@ function Handpoint() {
     "Full": 2,
     "Debug": 3
   };
-
 }
 
 /**
- * Returns the tokenized version of the card used if successful (not available for all acquirers, 
+ * Change SDK locale
+ * @param config.locale Locale code
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.setLocale = function (config, successCallback, errorCallback) {
+  this.exec('setLocale', config, successCallback, errorCallback);
+};
+
+/**
+ * Returns the tokenized version of the card used if successful (not available for all acquirers,
  * please check with Handpoint to know if tokenization is supported for your acquirer of choice)
  * @param {Object} config parameters for tokenizeCard transaction
  * @param config.map A map including extra optional transaction parameters
@@ -212,7 +223,7 @@ Handpoint.prototype.tokenizeCard = function (config, successCallback, errorCallb
 };
 
 /**
- * A sale initiates a payment operation to the card reader with tokenization. In it's simplest form you only have to pass the 
+ * A sale initiates a payment operation to the card reader with tokenization. In it's simplest form you only have to pass the
  * amount and currency but it also accepts a map with extra parameters.
  * @param {Object} config parameters for saleAndTokenizeCard transaction
  * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
@@ -226,7 +237,7 @@ Handpoint.prototype.saleAndTokenizeCard = function (config, successCallback, err
 };
 
 /**
- * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the 
+ * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the
  * amount and currency but it also accepts a map with extra parameters.
  * @param {Object} config parameters for sale transaction
  * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
@@ -240,9 +251,24 @@ Handpoint.prototype.sale = function (config, successCallback, errorCallback) {
 };
 
 /**
- * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the 
+ * A refund initiates a refund operation to the card reader. This operation moves funds from
+ * the merchant account to the cardholder´s credit card. In it's simplest form you only have
+ * to pass the amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.refund = function (config, successCallback, errorCallback) {
+  this.exec('refund', config, successCallback, errorCallback);
+};
+
+/**
+ * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the
  * amount and currency but it also accepts a map with extra parameters.
- * @param {Object} config parameters 
+ * @param {Object} config parameters
  * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
  * @param config.currency Currency of the charge @see Handpoint.Currency
  * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
@@ -255,27 +281,12 @@ Handpoint.prototype.saleReversal = function (config, successCallback, errorCallb
 };
 
 /**
- * A refund initiates a refund operation to the card reader. This operation moves funds from 
- * the merchant account to the cardholder´s credit card. In it's simplest form you only have 
- * to pass the amount and currency but it also accepts a map with extra parameters.
- * @param {Object} config parameters 
- * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
- * @param config.currency Currency of the charge @see Handpoint.Currency
- * @param config.map A map including extra optional transaction parameters
- * @param {Function} successCallback This function will be called if operation succeed
- * @param {Function} errorCallback This function will be called if an error happened
- */
-Handpoint.prototype.refund = function (config, successCallback, errorCallback) {
-  this.exec('refund', config, successCallback, errorCallback);
-};
-
-/**
- * A Refund Reversal, also called Refund VOID allows the merchant to reverse a previous 
- * refund operation. This operation reverts (if possible) a specific refund identified 
- * with a transaction id. In it's simplest form you only have to pass the amount, currency 
- * and originalTransactionID but it also accepts a map with extra parameters. Note that transactions 
+ * A Refund Reversal, also called Refund VOID allows the merchant to reverse a previous
+ * refund operation. This operation reverts (if possible) a specific refund identified
+ * with a transaction id. In it's simplest form you only have to pass the amount, currency
+ * and originalTransactionID but it also accepts a map with extra parameters. Note that transactions
  * can only be reversed within the same day as the transaction was made.
- * @param {Object} config parameters 
+ * @param {Object} config parameters
  * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
  * @param config.currency Currency of the charge @see Handpoint.Currency
  * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
@@ -291,10 +302,10 @@ Handpoint.prototype.refundReversal = function (config, successCallback, errorCal
  * Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
  * It accepts certain configuration parameters, such as multiScan (boolean)
  * autoScan (boolean), resultsGrouped (boolean) and timeout (integer),
- * @param {Object} config parameters 
+ * @param {Object} config parameters
  * @param config.multiScan true if you want to scan multiple items before returning to your app.
  * @param config.autoScan true if you want the scanner always on without the pushing of a button
- * @param config.resultsGrouped true if you want scans from a multi scan to come all together when 
+ * @param config.resultsGrouped true if you want scans from a multi scan to come all together when
  * you're finished.
  * @param config.timeout the amount of seconds until the scanner shuts itself off. 0 means no timeout.
  * @param config.map A map including extra optional transaction parameters
@@ -306,11 +317,11 @@ Handpoint.prototype.enableScanner = function (config, successCallback, errorCall
 };
 
 /**
- * This method attempts to cancel the current transaction on the card reader. Note that 
- * operations can only be cancelled before requests are sent to the gateway. There is a 
- * flag called cancelAllowed in the currentTransactionStatus event that can be used to check 
+ * This method attempts to cancel the current transaction on the card reader. Note that
+ * operations can only be cancelled before requests are sent to the gateway. There is a
+ * flag called cancelAllowed in the currentTransactionStatus event that can be used to check
  * if the transaction is in a state that allows cancel.
- * @param {Object} device This parameter specifies to the system which device you want to use for the 
+ * @param {Object} device This parameter specifies to the system which device you want to use for the
  * operations. If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -320,11 +331,27 @@ Handpoint.prototype.cancelRequest = function (config, successCallback, errorCall
 };
 
 /**
- * A tip adjustment operation allows merchants to adjust the tip amount of a sale transaction before the batch 
- * of transactions is settled by the processor at the end of the day. 
- * Note: This functionality is only available for the restaurant industry in the United States 
- * and the processors currently supporting this functionality are TSYS and VANTIV. 
- * @param {Object} config parameters 
+ * This method attempts to stop the current transaction on the card reader. Note that
+ * operations can only be cancelled before requests are sent to the gateway. There is a
+ * flag called cancelAllowed in the currentTransactionStatus event that can be used to check
+ * if the transaction is in a state that allows cancel.
+ * @param {Object} device This parameter specifies to the system which device you want to use for the
+ * operations. If none is supplied the system will attempt to use a default device, if any.
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.stopCurrentTransaction = function (config, successCallback, errorCallback) {
+  this.exec('stopCurrentTransaction', config, successCallback, errorCallback);
+};
+
+
+
+/**
+ * A tip adjustment operation allows merchants to adjust the tip amount of a sale transaction before the batch
+ * of transactions is settled by the processor at the end of the day.
+ * Note: This functionality is only available for the restaurant industry in the United States
+ * and the processors currently supporting this functionality are TSYS and VANTIV.
+ * @param {Object} config parameters
  * @param config.tipAmount Tip amount added to the original (base) transaction amount - in the minor unit of currency
  * @param config.originalTransactionID Unique id of the original sale transaction as received from the card reader (EFTTransactionID)
  * @param {Function} successCallback This function will be called if operation succeed
@@ -335,11 +362,11 @@ Handpoint.prototype.tipAdjustment = function (config, successCallback, errorCall
 };
 
 /**
- * A signatureRequired event is invoked during transaction when signature verification is needed 
- * (f.ex when payment is done with a magstripe card). The merchant is required to ask the cardholder 
- * for signature and approve (or disapprove) the signature. signatureResult tells the card reader 
+ * A signatureRequired event is invoked during transaction when signature verification is needed
+ * (f.ex when payment is done with a magstripe card). The merchant is required to ask the cardholder
+ * for signature and approve (or disapprove) the signature. signatureResult tells the card reader
  * if the signature was approved by passing true in the method. To disapprove then false is passed.
- * @param {Object} config parameters 
+ * @param {Object} config parameters
  * @param config.accepted pass true if merchant accepts customer signature
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -349,10 +376,10 @@ Handpoint.prototype.signatureResult = function (config, successCallback, errorCa
 };
 
 /**
- * Configures the device as the preferred device and tries to connect to it. Everytime a 
- * new connection is started the SDK will make 3 attempts to reestablish the connection. 
+ * Configures the device as the preferred device and tries to connect to it. Everytime a
+ * new connection is started the SDK will make 3 attempts to reestablish the connection.
  * If those attempts fail, the connection is considered dead.
- * @param {Object} config parameters 
+ * @param {Object} config parameters
  * @param config.device This parameter specifies to the system which device you want to use for the operations.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -362,13 +389,13 @@ Handpoint.prototype.connect = function (config, successCallback, errorCallback) 
 };
 
 /**
- * Disconnect will stop the active connection (and reconnection process). Please note 
- * that the method does NOT ignore the current state of the card reader. This means that 
- * if a disconnect is attempted during a transaction it will not be successful and the 
- * method will return false. If a transaction is not in progress the disconnect will take 
+ * Disconnect will stop the active connection (and reconnection process). Please note
+ * that the method does NOT ignore the current state of the card reader. This means that
+ * if a disconnect is attempted during a transaction it will not be successful and the
+ * method will return false. If a transaction is not in progress the disconnect will take
  * 1-3 seconds to successfully finish and will then return true.
  * @param {Object} config parameters
- * @param config.device This parameter specifies to the system which device you want to use for the operations. 
+ * @param config.device This parameter specifies to the system which device you want to use for the operations.
  * If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -380,11 +407,11 @@ Handpoint.prototype.disconnect = function (config, successCallback, errorCallbac
 /**
  * Validates the app for this session, thus enabling financial transactions
  * @param {Object} config parameters
- * @param config.sharedSecret 	The shared secret is a key provided by Handpoint when you 
- * get your account that enables you to perform live operations with the card reader. 
- * However, if you're developing with a starter kit, the test shared secret is specified 
- * in the example 
- * @param config.device This parameter specifies to the system which device you want to use for 
+ * @param config.sharedSecret 	The shared secret is a key provided by Handpoint when you
+ * get your account that enables you to perform live operations with the card reader.
+ * However, if you're developing with a starter kit, the test shared secret is specified
+ * in the example
+ * @param config.device This parameter specifies to the system which device you want to use for
  * the operations. If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -398,12 +425,12 @@ Handpoint.prototype.setSharedSecret = function (config, successCallback, errorCa
 /**
  * Init SDK with shared secret
  * @param {Object} config parameters
- * @param config.automaticReconnection If set to true, the SDK will automatically reconnect 
+ * @param config.automaticReconnection If set to true, the SDK will automatically reconnect
  * to the last known device when the connection is lost. The default value is false
- * @param config.sharedSecret 	The shared secret is a key provided by Handpoint when you 
- * get your account that enables you to perform live operations with the card reader. 
- * However, if you're developing with a starter kit, the test shared secret is specified 
- * in the example 
+ * @param config.sharedSecret 	The shared secret is a key provided by Handpoint when you
+ * get your account that enables you to perform live operations with the card reader.
+ * However, if you're developing with a starter kit, the test shared secret is specified
+ * in the example
  */
 Handpoint.prototype.setup = function (config, successCallback, errorCallback) {
   this.exec('setup', config, successCallback, errorCallback);
@@ -411,10 +438,10 @@ Handpoint.prototype.setup = function (config, successCallback, errorCallback) {
 
 /**
  * Changes values of certain parameters on the card reader.
- * @param {Object} config parameters 
+ * @param {Object} config parameters
  * @param config.param The name of the parameter to change
  * @param config.value New value of the parameter
- * @param config.device This parameter specifies to the system which device you want to use for the operations. 
+ * @param config.device This parameter specifies to the system which device you want to use for the operations.
  * If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -424,11 +451,11 @@ Handpoint.prototype.setParameter = function (config, successCallback, errorCallb
 };
 
 /**
- * Sets the log level (info, debug...) for both the card reader and the API. Note : At the end of a transaction, 
+ * Sets the log level (info, debug...) for both the card reader and the API. Note : At the end of a transaction,
  * the card reader logs are always automatically fetched to the API.
- * @param {Object} config parameters 
+ * @param {Object} config parameters
  * @param config.level The desired log level. Can be LogLevel.None, LogLevel.Info, LogLevel.Full, LogLevel.Debug
- * @param config.device This parameter specifies to the system which device you want to use for the operations. 
+ * @param config.device This parameter specifies to the system which device you want to use for the operations.
  * If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -439,8 +466,8 @@ Handpoint.prototype.setLogLevel = function (config, successCallback, errorCallba
 
 /**
  * Fetches the logs from the device and reports them to the deviceLogsReady event.
- * @param {Object} config parameters 
- * @param config.device This parameter specifies to the system which device you want to use for the operations. 
+ * @param {Object} config parameters
+ * @param config.device This parameter specifies to the system which device you want to use for the operations.
  * If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -450,15 +477,15 @@ Handpoint.prototype.getDeviceLogs = function (config, successCallback, errorCall
 };
 
 /**
- * Please note this method is only supported on Card Readers with EFT Software versions 1.7.x and 2.2.x and up 
- * In the case of a communication failure between the device and the API a TransactionResult might have not 
- * been delivered to the API. This function fetches a pending TransactionResult (which contains receipts) 
- * from the device, if any. If no TransactionResult was pending a result will be delivered containing default 
- * fields. In order to receive only valid TransactionResults this function should only be called when 
- * pendingTransactionResult event is invoked or when HapiManager.isTransactionResultPending() is true. 
+ * Please note this method is only supported on Card Readers with EFT Software versions 1.7.x and 2.2.x and up
+ * In the case of a communication failure between the device and the API a TransactionResult might have not
+ * been delivered to the API. This function fetches a pending TransactionResult (which contains receipts)
+ * from the device, if any. If no TransactionResult was pending a result will be delivered containing default
+ * fields. In order to receive only valid TransactionResults this function should only be called when
+ * pendingTransactionResult event is invoked or when HapiManager.isTransactionResultPending() is true.
  * To receive events when a TransactionResult is pending on the device please add a Events.PendingResults listener.
- * @param {Object} config parameters 
- * @param config.device This parameter specifies to the system which device you want to use for the operations. 
+ * @param {Object} config parameters
+ * @param config.device This parameter specifies to the system which device you want to use for the operations.
  * If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -468,10 +495,10 @@ Handpoint.prototype.getPendingTransaction = function (config, successCallback, e
 };
 
 /**
- * The update operation checks for update to the card reader and initiates an update if needed. The update 
+ * The update operation checks for update to the card reader and initiates an update if needed. The update
  * can either be a software update or a configuration update.
- * @param {Object} config parameters 
- * @param config.device This parameter specifies to the system which device you want to use for the operations. 
+ * @param {Object} config parameters
+ * @param config.device This parameter specifies to the system which device you want to use for the operations.
  * If none is supplied the system will attempt to use a default device, if any.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -482,8 +509,8 @@ Handpoint.prototype.update = function (config, successCallback, errorCallback) {
 
 /**
  * Starts the search for devices to connect with the specified connectionMethod
- * @param {Object} config parameters 
- * @param config.connectionMethod The means of connection you intend to use to talk to the device. 
+ * @param {Object} config parameters
+ * @param config.connectionMethod The means of connection you intend to use to talk to the device.
  * (Bluetooth, Serial, USB, etc...)
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -493,12 +520,34 @@ Handpoint.prototype.listDevices = function (config, successCallback, errorCallba
 };
 
 /**
- * Starts a connection monitoring service. The service listens to events sent by the operating system about 
- * the connected hardware. If the service notices that a previously connected device suddenly disconnects 
- * on the hardware layer it attempts to reconnect to that particular device. Since this is a service it 
- * is necessary that the service is turned off before the application ends its life-time. This means that, 
- * if the service was running, stopMonitoringConnections() has to be called before the application is exited 
- * completely. Note that the service currently only works with BLUETOOTH. In the case of BLUETOOTH the service 
+ * Prints the HTML receipt.
+ * @param {Object} config parameters
+ * @param config.receipt The receipt in HTML format
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.printReceipt = function (config, successCallback, errorCallback) {
+  this.exec('printReceipt', config, successCallback, errorCallback);
+};
+
+/**
+ * Gets the report data.
+ * @param {Object} config parameters
+ * @param config.config The configuration for report data
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+ Handpoint.prototype.getTransactionsReport = function (config, successCallback, errorCallback) {
+  this.exec('getTransactionsReport', config, successCallback, errorCallback);
+};
+
+/**
+ * Starts a connection monitoring service. The service listens to events sent by the operating system about
+ * the connected hardware. If the service notices that a previously connected device suddenly disconnects
+ * on the hardware layer it attempts to reconnect to that particular device. Since this is a service it
+ * is necessary that the service is turned off before the application ends its life-time. This means that,
+ * if the service was running, stopMonitoringConnections() has to be called before the application is exited
+ * completely. Note that the service currently only works with BLUETOOTH. In the case of BLUETOOTH the service
  * will attempt to reconnect to the device three times, if unsuccessful the connection is considered Disconnected.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -509,13 +558,13 @@ Handpoint.prototype.startMonitoringConnections = function (successCallback, erro
 };
 
 /**
- * Stops a connection monitoring service. The service listens to events sent by the operating system about 
- * the connected hardware. If the service notices that a previously connected device suddenly disconnects 
- * on the hardware layer it attempts to reconnect to that particular device. Since this is a service it 
- * is necessary that the service is turned off before the application ends its life-time. This means that, 
- * if the service was running, stopMonitoringConnections() has to be called before the application is exited 
- * completely. Note that the service currently only works with BLUETOOTH. In the case of BLUETOOTH the 
- * service will attempt to reconnect to the device three times, if unsuccessful the connection is considered 
+ * Stops a connection monitoring service. The service listens to events sent by the operating system about
+ * the connected hardware. If the service notices that a previously connected device suddenly disconnects
+ * on the hardware layer it attempts to reconnect to that particular device. Since this is a service it
+ * is necessary that the service is turned off before the application ends its life-time. This means that,
+ * if the service was running, stopMonitoringConnections() has to be called before the application is exited
+ * completely. Note that the service currently only works with BLUETOOTH. In the case of BLUETOOTH the
+ * service will attempt to reconnect to the device three times, if unsuccessful the connection is considered
  * Disconnected.
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
@@ -545,11 +594,34 @@ Handpoint.prototype.applicationDidGoBackground = function (successCallback, erro
 
 /**
  * Returns the underlying SDK version
- * @param {*} successCallback 
- * @param {*} errorCallback 
+ * @param {*} successCallback
+ * @param {*} errorCallback
  */
 Handpoint.prototype.getSDKVersion = function (successCallback, errorCallback) {
   this.exec('getSDKVersion', {}, successCallback, errorCallback);
+};
+
+/**
+ * Show location setting dialog
+ * @param config.text Text to be shown
+ * @param config.okBtnText Accept button text
+ * @param config.cancelBtnText Cancel button text
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.enableLocation = function (config, successCallback, errorCallback) {
+  this.exec('enableLocation', config, successCallback, errorCallback);
+};
+
+/**
+ * Authenticates MPOS device
+ * @param {Object} config parameters for mposAuth operation
+ * @param config.service Service to authenticate to
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.mposAuth = function (config, successCallback, errorCallback) {
+  this.exec('mposAuth', config, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
@@ -568,7 +640,7 @@ Handpoint.prototype.exec = function (method, config, successCallback, errorCallb
     throw new Error("Handpoint." + method + " failure: successCallback is not a function");
   }
 
-  // Exec 
+  // Exec
   try {
     exec(function (result) {
       successCallback && successCallback(result);

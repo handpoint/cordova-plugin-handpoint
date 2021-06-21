@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="1.7.5">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="3.0.0">
   <name>Handpoint</name>
   <description>Cordova Handpoint SDK Plugin</description>
   <license>Apache 2.0</license>
@@ -15,6 +16,8 @@
     <source-file src="src/android/com/handpoint/cordova/HandpointApiCordova.java" target-dir="src/com/handpoint/cordova"/>
     <source-file src="src/android/com/handpoint/cordova/HandpointHelper.java" target-dir="src/com/handpoint/cordova"/>
     <source-file src="src/android/com/handpoint/cordova/SDKEvent.java" target-dir="src/com/handpoint/cordova"/>
+    <source-file src="src/android/com/handpoint/cordova/GsonPaymentScenarioAdapter.java" target-dir="src/com/handpoint/cordova"/>
+    <source-file src="src/android/com/handpoint/cordova/GsonTenderTypeAdapter.java" target-dir="src/com/handpoint/cordova"/>
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="HandpointApiCordova">
         <param name="android-package" value="com.handpoint.cordova.HandpointApiCordova"/>
@@ -22,11 +25,13 @@
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-permission android:name="android.permission.BLUETOOTH"/>
+      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
       <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
       <uses-permission android:name="android.permission.INTERNET"/>
+      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     </config-file>
-    <lib-file src="src/android/hapi-android-4.4.2.jar"/>
-    <lib-file src="src/android/gson-2.8.1.jar"/>
+    <framework src="src/android/pax.gradle" custom="true" type="gradleReference" />
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
@@ -43,6 +48,11 @@
     <config-file target="*-Info.plist" parent="UIBackgroundModes">
       <array>
         <string>external-accessory</string>
+      </array>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSBluetoothAlwaysUsageDescription">
+      <array>
+        <string>Handpoint mPOS needs access to Bluetooth to connect to Handpoint payment devices</string>
       </array>
     </config-file>
     <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
@@ -67,14 +77,23 @@
     <header-file src="src/ios/include/ScannerDisabledResponseInfo.h"/>
     <header-file src="src/ios/include/ScannerEventResponseInfo.h"/>
     <header-file src="src/ios/include/StatusInfo.h"/>
+    <header-file src="src/ios/include/MerchantAuth.h"/>
+    <header-file src="src/ios/include/SaleOptions.h"/>
+    <header-file src="src/ios/include/MerchantAuthOptions.h"/>
+    <header-file src="src/ios/include/Options.h"/>
+    <header-file src="src/ios/include/Credential.h"/>
+    <header-file src="src/ios/include/toXML.h"/>
     <header-file src="src/ios/NSString+Sanitize.h"/>
     <header-file src="src/ios/SDKEvent.h"/>
+    <header-file src="src/ios/HandpointApiManager.h"/>
+    <header-file src="src/ios/HandpointSampleBasicEvents.h"/>
     <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
     <source-file src="src/ios/HandpointApiCordova.m"/>
     <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
     <source-file src="src/ios/lib/libheft.a" framework="true"/>
     <source-file src="src/ios/NSString+Sanitize.m"/>
     <source-file src="src/ios/SDKEvent.m"/>
+    <source-file src="src/ios/HandpointApiManager.m"/>
     <framework src="ExternalAccessory.framework"/>
     <framework src="Security.framework"/>
     <framework src="libc++.dylib"/>
