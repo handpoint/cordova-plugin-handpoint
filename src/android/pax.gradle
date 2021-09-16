@@ -1,5 +1,4 @@
 repositories{
-  jcenter()
   maven {
     credentials {
       username getCredentialsMavenUsername()
