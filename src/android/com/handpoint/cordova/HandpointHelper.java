@@ -29,7 +29,7 @@ import com.handpoint.api.shared.options.MerchantAuthOptions;
 import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
-import com.handpoint.api.shared.options.ReportConfiguration;
+import com.handpoint.api.shared.ReportConfiguration;
 import com.handpoint.api.shared.TypeOfResult;
 
 import org.apache.cordova.CallbackContext;
