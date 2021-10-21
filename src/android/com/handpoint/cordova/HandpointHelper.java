@@ -8,6 +8,7 @@ import com.handpoint.api.HapiFactory;
 import com.handpoint.api.HapiManager;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.AuthenticationResponse;
+import com.handpoint.api.shared.CardBrands;
 import com.handpoint.api.shared.ConnectionMethod;
 import com.handpoint.api.shared.ConnectionStatus;
 import com.handpoint.api.shared.ConverterUtil;
@@ -45,7 +46,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
-    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage, Events.PhysicalKeyboardEvent {
+    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
+    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -636,6 +638,18 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void onKeyPressed(String key) {
     SDKEvent event = new SDKEvent("onKeyPressed");
     event.put("key", key);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  public void deviceCapabilities(List<? extends CardBrands> supportedCardBrands) {
+  }
+  public void readCard(CardBrands cardBrands) {
+    SDKEvent event = new SDKEvent("readCard");
+    event.put("cardBrands", cardBrands);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
