@@ -647,6 +647,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void deviceCapabilities(List<? extends CardBrands> supportedCardBrands) {
   }
+
   public void readCard(CardBrands usedCard) {
     SDKEvent event = new SDKEvent("readCard");
     event.put("usedCard", usedCard);
