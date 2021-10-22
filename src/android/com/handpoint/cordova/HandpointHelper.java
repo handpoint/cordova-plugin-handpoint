@@ -646,6 +646,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void deviceCapabilities(List<? extends CardBrands> supportedCardBrands) {
+    //TODO: will be implemented in EFTCLIENT-4352
   }
 
   public void readCard(CardBrands usedCard) {
