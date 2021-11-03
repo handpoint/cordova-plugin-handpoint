@@ -646,7 +646,13 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   }
 
   public void deviceCapabilities(List<? extends CardBrands> supportedCardBrands) {
-    //TODO: will be implemented in EFTCLIENT-4352
+    SDKEvent event = new SDKEvent("deviceCapabilities");
+    event.put("supportedCardBrands", ConverterUtil.convertToJSON(supportedCardBrands));
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
   }
 
   public void readCard(CardBrands usedCard) {
