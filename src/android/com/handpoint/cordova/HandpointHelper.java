@@ -134,6 +134,27 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  public void motoSale(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      boolean result;
+      SaleOptions options = this.getOptions(params, MoToOptions.class);
+      if (options != null) {
+        result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
+            options);
+      } else {
+        result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
+      }
+
+      if (result) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send sale operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send sale operation to device. Incorrect parameters");
+    }
+  }
+
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       boolean result;
