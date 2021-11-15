@@ -30,6 +30,7 @@ import com.handpoint.api.shared.options.MerchantAuthOptions;
 import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
+import com.handpoint.api.shared.options.MoToOptions;
 import com.handpoint.api.shared.ReportConfiguration;
 import com.handpoint.api.shared.TypeOfResult;
 
@@ -137,12 +138,12 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void motoSale(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       boolean result;
-      SaleOptions options = this.getOptions(params, MoToOptions.class);
+      MoToOptions options = this.getOptions(params, MoToOptions.class);
       if (options != null) {
-        result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
+        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
             options);
       } else {
-        result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
+        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
       }
 
       if (result) {
