@@ -135,27 +135,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  public void motoSale(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    try {
-      boolean result;
-      MoToOptions options = this.getOptions(params, MoToOptions.class);
-      if (options != null) {
-        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
-            options);
-      } else {
-        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
-      }
-
-      if (result) {
-        callbackContext.success("ok");
-      } else {
-        callbackContext.error("Can't send sale operation to device");
-      }
-    } catch (JSONException ex) {
-      callbackContext.error("Can't send sale operation to device. Incorrect parameters");
-    }
-  }
-
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       boolean result;
@@ -252,6 +231,76 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       callbackContext.error("Can't send tokenizeCard operation to device. Incorrect parameters");
     }
   }
+
+  /* MoTo operations */
+  public void motoSale(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      boolean result;
+      MoToOptions options = this.getOptions(params, MoToOptions.class);
+      if (options != null) {
+        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
+            options);
+      } else {
+        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
+      }
+
+      if (result) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send motoSale operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send motoSale operation to the api. Incorrect parameters");
+    }
+  }
+
+  public void motoRefund(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      boolean result;
+      MoToOptions options = this.getOptions(params, MoToOptions.class);
+      String originalTxnid = params.getString("originalTransactionID");
+      if (options != null) {
+        if (originalTxnid != null && !originalTxnid.isEmpty()) {
+          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), originalTxnid, options);
+        } else {
+          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), options);
+        }
+      } else {
+        if (originalTxnid != null && !originalTxnid.isEmpty()) {
+          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), originalTxnid);
+        } else {
+          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")));
+        }
+      }
+
+      if (result) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send motoRefund operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send motoRefund operation to the api. Incorrect parameters");
+    }
+  }
+
+  public void motoReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      boolean result;
+      result = this.api.motoReversal(params.getString("originalTransactionID"));
+      if (result) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send motoReversal operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send motoReversal operation to the api. Incorrect parameters");
+    }
+  }
+  /* End MoTo operations */
 
   @Deprecated // This operation should be removed
   public void cancelRequest(CallbackContext callbackContext, JSONObject params) throws Throwable {
