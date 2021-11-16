@@ -316,9 +316,7 @@ Handpoint.prototype.refundReversal = function (config, successCallback, errorCal
  * A manual entry refund. In it's simplest form you only have to pass the
  * amount and currency but it also accepts a map with extra parameters.
  * @param {Object} config parameters for motoSale transaction
- * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
- * @param config.currency Currency of the charge @see Handpoint.Currency
- * @param config.map A map including extra optional transaction parameters
+ * @param config.originalTransactionID As received from the card reader (EFTTransactionID)
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
@@ -340,19 +338,6 @@ Handpoint.prototype.refundReversal = function (config, successCallback, errorCal
   this.exec('motoReversal', config, successCallback, errorCallback);
 };
 
-/**
- * A manual entry sale. In it's simplest form you only have to pass the
- * amount and currency but it also accepts a map with extra parameters.
- * @param {Object} config parameters for motoSale transaction
- * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
- * @param config.currency Currency of the charge @see Handpoint.Currency
- * @param config.map A map including extra optional transaction parameters
- * @param {Function} successCallback This function will be called if operation succeed
- * @param {Function} errorCallback This function will be called if an error happened
- */
- Handpoint.prototype.motoSale = function (config, successCallback, errorCallback) {
-  this.exec('motoSale', config, successCallback, errorCallback);
-};
 
 /**
  * Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
