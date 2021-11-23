@@ -265,7 +265,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
               Currency.parse(params.getInt("currency")), originalTxnid, options);
         } else {
           result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), options);
+              Currency.parse(params.getInt("currency")), "", options);
         }
       } else {
         if (originalTxnid != null && !originalTxnid.isEmpty()) {
@@ -273,7 +273,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
               Currency.parse(params.getInt("currency")), originalTxnid);
         } else {
           result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")));
+              Currency.parse(params.getInt("currency")), "");
         }
       }
 
