@@ -624,6 +624,17 @@ Handpoint.prototype.mposAuth = function (config, successCallback, errorCallback)
   this.exec('mposAuth', config, successCallback, errorCallback);
 };
 
+/**
+ * Updates the webview of the terminal to the minimum supported version
+ * @param {Object} config parameters for mposAuth operation
+ * @param config.service Service to authenticate to
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.updateWebView = function (config, successCallback, errorCallback) {
+  this.exec('updateWebView', config, successCallback, errorCallback);
+};
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {

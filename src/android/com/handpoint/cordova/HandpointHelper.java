@@ -374,6 +374,14 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  public void updateWebView(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.api.updateWebView()) {
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't execute printReceipt. Incorrect parameters");
+    }
+  }
+
   /**
    * Register event handler
    */
