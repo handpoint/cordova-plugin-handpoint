@@ -64,6 +64,8 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   // An Android Context is required to be able to handle bluetooth
   public void setup(CallbackContext callbackContext, JSONObject params) throws Throwable {
     String sharedSecret = null;
+    String cloudApiKey = null;
+    boolean supportsMoto = false;
     Settings settings = new Settings();
 
     // Automatic Reconnections are disabled since reconnection is handled in app
@@ -84,7 +86,21 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (JSONException ex) {
     }
 
-    HandpointCredentials handpointCredentials = new HandpointCredentials(sharedSecret);
+    try {
+      supportsMoto = params.getBoolean("supportsMoto");
+    } catch (JSONException ex) {
+    }
+
+    if (supportsMoto) {
+      try {
+        cloudApiKey = params.getString("cloudApiKey");
+      } catch (JSONException ex) {
+      }
+      HandpointCredentials handpointCredentials = new HandpointCredentials(sharedSecret, cloudApiKey);
+    } else {
+      HandpointCredentials handpointCredentials = new HandpointCredentials(sharedSecret);
+    }
+
 
     this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
 
