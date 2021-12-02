@@ -683,7 +683,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void webViewUpdate(boolean success) {
     SDKEvent event = new SDKEvent("webViewUpdated");
-    event.put("success", success);
+    event.put("success", new Boolean(success).toString());
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
