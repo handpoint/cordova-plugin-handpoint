@@ -8,12 +8,14 @@ import com.handpoint.api.HapiFactory;
 import com.handpoint.api.HapiManager;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.AuthenticationResponse;
+import com.handpoint.api.shared.CardBrands;
 import com.handpoint.api.shared.ConnectionMethod;
 import com.handpoint.api.shared.ConnectionStatus;
 import com.handpoint.api.shared.ConverterUtil;
 import com.handpoint.api.shared.Currency;
 import com.handpoint.api.shared.Device;
 import com.handpoint.api.shared.DeviceStatus;
+import com.handpoint.api.shared.EventHandler;
 import com.handpoint.api.shared.Events;
 import com.handpoint.api.shared.HapiMPosAuthResponse;
 import com.handpoint.api.shared.HardwareStatus;
@@ -45,7 +47,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
-    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage, Events.PhysicalKeyboardEvent {
+    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
+    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -372,6 +375,21 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  public void updateWebView(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class updateWebViewClass = Class.forName("com.handpoint.api.privateops.UpdateWebView");
+      Method authMethod = updateWebViewClass.getDeclaredMethod("update");
+
+      EventHandler.getInstance().registerEventsDelegate(this);
+
+      authMethod.invoke(updateWebViewClass);
+      callbackContext.success("ok");
+    } catch (Exception e) {
+      callbackContext.error("UpdateWebView Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("UpdateWebView Error -> " + e.getCause());
+    }
+  }
+
   /**
    * Register event handler
    */
@@ -643,6 +661,36 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  public void deviceCapabilities(List<? extends CardBrands> supportedCardBrands) {
+    SDKEvent event = new SDKEvent("deviceCapabilities");
+    event.put("supportedCardBrands", ConverterUtil.convertToJSON(supportedCardBrands));
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  public void readCard(CardBrands usedCard) {
+    SDKEvent event = new SDKEvent("readCard");
+    event.put("usedCard", usedCard);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  public void webViewUpdate(boolean success) {
+    SDKEvent event = new SDKEvent("webViewUpdated");
+    event.put("success", new Boolean(success).toString());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
   }
@@ -651,4 +699,5 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     // Register class as listener for all events
     this.api.registerEventsDelegate(this);
   }
+
 }
