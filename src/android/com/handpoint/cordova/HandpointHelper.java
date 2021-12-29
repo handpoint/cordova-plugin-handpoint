@@ -779,6 +779,35 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
+  public void setApn(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method setApnMethod = sysManager.getDeclaredMethod("setApn", String.class, String.class, String.class, String.class);
+      Object result = setApnMethod.invoke(sysManager, params.getString("name"), params.getString("apn"),
+        params.getString("user"), params.getString("passwd"));
+      if (Boolean.class.cast(result)) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Error setting APN");
+      }
+    } catch (Exception e) {
+      callbackContext.error("setApn Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("setApn Error -> " + e.getCause());
+    }
+  }
+
+  public void reboot(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method rebootMethod = sysManager.getDeclaredMethod("reboot");
+      rebootMethod.invoke(sysManager);
+      callbackContext.success("ok");
+    } catch (Exception e) {
+      callbackContext.error("reboot Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("reboot Error -> " + e.getCause());
+    }
+  }
+
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
   }
