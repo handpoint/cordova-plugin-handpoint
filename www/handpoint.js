@@ -676,6 +676,30 @@ Handpoint.prototype.updateWebView = function (config, successCallback, errorCall
   this.exec('updateWebView', config, successCallback, errorCallback);
 };
 
+/**
+ * Set the APN settings on a smartPOS device
+ * @param {Object} config parameters for setApn operation
+ * @param config.name Name
+ * @param config.apn APN server
+ * @param config.user User name
+ * @param config.passwd Password
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.setApn = function (config, successCallback, errorCallback) {
+  this.exec('setApn', config, successCallback, errorCallback);
+};
+
+/**
+ * Reboots the device
+ * @param {Object} config parameters for reboot operation
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+ Handpoint.prototype.reboot = function (config, successCallback, errorCallback) {
+  this.exec('reboot', config, successCallback, errorCallback);
+};
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
