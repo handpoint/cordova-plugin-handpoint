@@ -35,6 +35,8 @@ import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
 import com.handpoint.api.shared.TransactionStartResult;
+import com.handpoint.api.shared.options.RefundReversalOptions;
+import com.handpoint.api.shared.options.SaleReversalOptions;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -157,7 +159,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       TransactionStartResult result;
-      MerchantAuthOptions options = this.getOptions(params, MerchantAuthOptions.class);
+      SaleReversalOptions options = new SaleReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
       if (options != null) {
         result = this.api.saleReversal(new BigInteger(params.getString("amount")),
           Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
@@ -212,7 +214,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       TransactionStartResult result;
-      MerchantAuthOptions options = this.getOptions(params, MerchantAuthOptions.class);
+      RefundReversalOptions options = new RefundReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
       if (options != null) {
         result = this.api.refundReversal(new BigInteger(params.getString("amount")),
           Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
