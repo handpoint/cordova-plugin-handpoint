@@ -166,7 +166,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
           Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
       }
 
-      if (resultgetTransactionStarted()) {
+      if (result.getTransactionStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleReversal operation to device");
