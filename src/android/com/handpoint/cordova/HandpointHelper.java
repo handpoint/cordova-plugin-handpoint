@@ -828,7 +828,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void unblockUiBars(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
-      Method blockUiBarsMethod = sysManager.getDeclaredMethod("unblockUiBars");
+      Method unblockUiBarsMethod = sysManager.getDeclaredMethod("unblockUiBars");
       unblockUiBarsMethod.invoke(sysManager);
       callbackContext.success("ok");
     } catch (Exception e) {
