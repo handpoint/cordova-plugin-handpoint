@@ -51,8 +51,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
-  Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
-  Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc {
+    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
+    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -106,7 +106,6 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       handpointCredentials = new HandpointCredentials(sharedSecret);
     }
 
-
     this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
 
     this.setEventsHandler();
@@ -119,7 +118,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       SaleOptions options = this.getOptions(params, SaleOptions.class);
       if (options != null) {
         result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
-          options);
+            options);
       } else {
         result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
       }
@@ -140,10 +139,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       SaleOptions options = this.getOptions(params, SaleOptions.class);
       if (options != null) {
         result = this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
-          Currency.parse(params.getInt("currency")), options);
+            Currency.parse(params.getInt("currency")), options);
       } else {
         result = this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
-          Currency.parse(params.getInt("currency")));
+            Currency.parse(params.getInt("currency")));
       }
 
       if (result.getTransactionStarted()) {
@@ -162,10 +161,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       SaleReversalOptions options = new SaleReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
       if (options != null) {
         result = this.api.saleReversal(new BigInteger(params.getString("amount")),
-          Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
       } else {
         result = this.api.saleReversal(new BigInteger(params.getString("amount")),
-          Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
       }
 
       if (result.getTransactionStarted()) {
@@ -186,18 +185,18 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       if (options != null) {
         if (originalTxnid != null && !originalTxnid.isEmpty()) {
           result = this.api.refund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")), originalTxnid, options);
+              Currency.parse(params.getInt("currency")), originalTxnid, options);
         } else {
           result = this.api.refund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")), options);
+              Currency.parse(params.getInt("currency")), options);
         }
       } else {
         if (originalTxnid != null && !originalTxnid.isEmpty()) {
           result = this.api.refund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")), originalTxnid);
+              Currency.parse(params.getInt("currency")), originalTxnid);
         } else {
           result = this.api.refund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")));
+              Currency.parse(params.getInt("currency")));
         }
       }
 
@@ -217,10 +216,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       RefundReversalOptions options = new RefundReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
       if (options != null) {
         result = this.api.refundReversal(new BigInteger(params.getString("amount")),
-          Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
       } else {
         result = this.api.refundReversal(new BigInteger(params.getString("amount")),
-          Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
+            Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
       }
 
       if (result.getTransactionStarted()) {
@@ -259,10 +258,12 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       boolean result;
       MoToOptions options = this.getOptions(params, MoToOptions.class);
       if (options != null) {
-        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
-          options);
+        result = this.api.motoSale(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")),
+            options);
       } else {
-        result = this.api.motoSale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
+        result = this.api.motoSale(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")));
       }
 
       if (result) {
@@ -283,18 +284,18 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       if (options != null) {
         if (originalTxnid != null && !originalTxnid.isEmpty()) {
           result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")), originalTxnid, options);
+              Currency.parse(params.getInt("currency")), originalTxnid, options);
         } else {
           result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")), "", options);
+              Currency.parse(params.getInt("currency")), "", options);
         }
       } else {
         if (originalTxnid != null && !originalTxnid.isEmpty()) {
           result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")), originalTxnid);
+              Currency.parse(params.getInt("currency")), originalTxnid);
         } else {
           result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-            Currency.parse(params.getInt("currency")), "");
+              Currency.parse(params.getInt("currency")), "");
         }
       }
 
@@ -356,7 +357,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     try {
       JSONObject device = params.getJSONObject("device");
       this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
-        ConnectionMethod.values()[device.getInt("connectionMethod")]);
+          ConnectionMethod.values()[device.getInt("connectionMethod")]);
 
       try {
         this.device.setForceReconnect(device.getBoolean("forceReconnect"));
@@ -785,9 +786,10 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   public void setApn(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
-      Method setApnMethod = sysManager.getDeclaredMethod("setApn", String.class, String.class, String.class, String.class);
+      Method setApnMethod = sysManager.getDeclaredMethod("setApn", String.class, String.class, String.class,
+          String.class);
       Object result = setApnMethod.invoke(sysManager, params.getString("name"), params.getString("apn"),
-        params.getString("user"), params.getString("passwd"));
+          params.getString("user"), params.getString("passwd"));
       if (Boolean.class.cast(result)) {
         callbackContext.success("ok");
       } else {
@@ -808,6 +810,30 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     } catch (Exception e) {
       callbackContext.error("reboot Error -> Method not implemented " + e.getMessage());
       callbackContext.error("reboot Error -> " + e.getCause());
+    }
+  }
+
+  public void blockUiBars(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method blockUiBarsMethod = sysManager.getDeclaredMethod("blockUiBars");
+      blockUiBarsMethod.invoke(sysManager);
+      callbackContext.success("ok");
+    } catch (Exception e) {
+      callbackContext.error("blockUiBars Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("blockUiBars Error -> " + e.getCause());
+    }
+  }
+
+  public void unblockUiBars(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method blockUiBarsMethod = sysManager.getDeclaredMethod("unblockUiBars");
+      unblockUiBarsMethod.invoke(sysManager);
+      callbackContext.success("ok");
+    } catch (Exception e) {
+      callbackContext.error("unblockUiBars Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("unblockUiBars Error -> " + e.getCause());
     }
   }
 
