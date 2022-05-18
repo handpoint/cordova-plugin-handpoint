@@ -17,7 +17,6 @@ import com.handpoint.api.shared.Device;
 import com.handpoint.api.shared.DeviceStatus;
 import com.handpoint.api.shared.EventHandler;
 import com.handpoint.api.shared.Events;
-import com.handpoint.api.shared.HapiMPosAuthResponse;
 import com.handpoint.api.shared.HardwareStatus;
 import com.handpoint.api.shared.LogLevel;
 import com.handpoint.api.shared.NetworkStatus;
@@ -28,6 +27,7 @@ import com.handpoint.api.shared.StatusInfo;
 import com.handpoint.api.shared.TransactionResult;
 import com.handpoint.api.shared.TransactionType;
 import com.handpoint.api.shared.TypeOfResult;
+import com.handpoint.api.shared.auth.HapiMPosAuthResponse;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.options.MerchantAuthOptions;
 import com.handpoint.api.shared.options.MoToOptions;
@@ -48,8 +48,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HandpointHelper implements Events.Required, Events.Status, Events.Log, Events.TransactionStarted,
-    Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
-    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc {
+  Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
+  Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
