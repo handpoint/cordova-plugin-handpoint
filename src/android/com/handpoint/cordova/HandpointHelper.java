@@ -278,22 +278,30 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       boolean result;
       MoToOptions options = this.getOptions(params, MoToOptions.class);
       String originalTxnid = params.getString("originalTransactionID");
+      /*
+       * For future unlinked refund, do not delete
+       * if (options != null) {
+       * if (originalTxnid != null && !originalTxnid.isEmpty()) {
+       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+       * Currency.parse(params.getInt("currency")), originalTxnid, options);
+       * } else {
+       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+       * Currency.parse(params.getInt("currency")), "", options);
+       * }
+       * } else {
+       * if (originalTxnid != null && !originalTxnid.isEmpty()) {
+       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+       * Currency.parse(params.getInt("currency")), originalTxnid);
+       * } else {
+       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+       * Currency.parse(params.getInt("currency")), "");
+       * }
+       * }
+       */
       if (options != null) {
-        if (originalTxnid != null && !originalTxnid.isEmpty()) {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), originalTxnid, options);
-        } else {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), "", options);
-        }
+        result = this.api.motoRefund(originalTxnid, options);
       } else {
-        if (originalTxnid != null && !originalTxnid.isEmpty()) {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), originalTxnid);
-        } else {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), "");
-        }
+        result = this.api.motoRefund(originalTxnid);
       }
 
       if (result) {
