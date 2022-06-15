@@ -278,30 +278,22 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
       boolean result;
       MoToOptions options = this.getOptions(params, MoToOptions.class);
       String originalTxnid = params.getString("originalTransactionID");
-      /*
-       * For future unlinked refund, do not delete
-       * if (options != null) {
-       * if (originalTxnid != null && !originalTxnid.isEmpty()) {
-       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-       * Currency.parse(params.getInt("currency")), originalTxnid, options);
-       * } else {
-       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-       * Currency.parse(params.getInt("currency")), "", options);
-       * }
-       * } else {
-       * if (originalTxnid != null && !originalTxnid.isEmpty()) {
-       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-       * Currency.parse(params.getInt("currency")), originalTxnid);
-       * } else {
-       * result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-       * Currency.parse(params.getInt("currency")), "");
-       * }
-       * }
-       */
+      boolean hasAmount = params.has("amount");
+      // will always bring the originalTransactionID
       if (options != null) {
-        result = this.api.motoRefund(originalTxnid, options);
+        if (hasAmount) {
+          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), originalTxnid, options);
+        } else {
+          result = this.api.motoRefund(originalTxnid, options);
+        }
       } else {
-        result = this.api.motoRefund(originalTxnid);
+        if (hasAmount) {
+          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+              Currency.parse(params.getInt("currency")), originalTxnid);
+        } else {
+          result = this.api.motoRefund(originalTxnid);
+        }
       }
 
       if (result) {
