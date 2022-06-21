@@ -308,7 +308,7 @@ Handpoint.prototype.refundReversal = function (config, successCallback, errorCal
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
- Handpoint.prototype.motoSale = function (config, successCallback, errorCallback) {
+Handpoint.prototype.motoSale = function (config, successCallback, errorCallback) {
   this.exec('motoSale', config, successCallback, errorCallback);
 };
 
@@ -320,7 +320,7 @@ Handpoint.prototype.refundReversal = function (config, successCallback, errorCal
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
- Handpoint.prototype.motoRefund = function (config, successCallback, errorCallback) {
+Handpoint.prototype.motoRefund = function (config, successCallback, errorCallback) {
   this.exec('motoRefund', config, successCallback, errorCallback);
 };
 
@@ -334,7 +334,7 @@ Handpoint.prototype.refundReversal = function (config, successCallback, errorCal
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
- Handpoint.prototype.motoReversal = function (config, successCallback, errorCallback) {
+Handpoint.prototype.motoReversal = function (config, successCallback, errorCallback) {
   this.exec('motoReversal', config, successCallback, errorCallback);
 };
 
@@ -578,7 +578,7 @@ Handpoint.prototype.printReceipt = function (config, successCallback, errorCallb
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
- Handpoint.prototype.getTransactionsReport = function (config, successCallback, errorCallback) {
+Handpoint.prototype.getTransactionsReport = function (config, successCallback, errorCallback) {
   this.exec('getTransactionsReport', config, successCallback, errorCallback);
 };
 
@@ -696,8 +696,28 @@ Handpoint.prototype.setApn = function (config, successCallback, errorCallback) {
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
- Handpoint.prototype.reboot = function (config, successCallback, errorCallback) {
+Handpoint.prototype.reboot = function (config, successCallback, errorCallback) {
   this.exec('reboot', config, successCallback, errorCallback);
+};
+
+/**
+ * blocks UI bars on the device
+ * @param {Object} config 
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.blockUiBars = function (config, successCallback, errorCallback) {
+  this.exec('blockUiBars', config, successCallback, errorCallback);
+};
+
+/*
+* blocks UI bars on the device
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.unblockUiBars = function (config, successCallback, errorCallback) {
+  this.exec('unblockUiBars', config, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
