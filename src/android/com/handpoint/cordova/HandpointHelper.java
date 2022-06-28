@@ -123,7 +123,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")));
       }
 
-      if (result.getTransactionStarted()) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send sale operation to device");
@@ -145,7 +145,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
             Currency.parse(params.getInt("currency")));
       }
 
-      if (result.getTransactionStarted()) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleAndTokenizeCard operation to device");
@@ -167,7 +167,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
             Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
       }
 
-      if (result.getTransactionStarted()) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send saleReversal operation to device");
@@ -200,7 +200,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         }
       }
 
-      if (result.getTransactionStarted()) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send refund operation to device");
@@ -222,7 +222,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
             Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"));
       }
 
-      if (result.getTransactionStarted()) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send refundReversal operation to device");
@@ -234,7 +234,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void tokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      boolean result;
+      OperationStartResult result;
       Options options = this.getOptions(params, Options.class);
       if (options != null) {
         result = this.api.tokenizeCard(options);
@@ -242,7 +242,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         result = this.api.tokenizeCard();
       }
 
-      if (result) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send tokenizeCard operation to device");
@@ -255,7 +255,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
   /* MoTo operations */
   public void motoSale(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      boolean result;
+      OperationStartResult result;
       MoToOptions options = this.getOptions(params, MoToOptions.class);
       if (options != null) {
         result = this.api.motoSale(new BigInteger(params.getString("amount")),
@@ -266,7 +266,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
             Currency.parse(params.getInt("currency")));
       }
 
-      if (result) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send motoSale operation to the api");
@@ -278,7 +278,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void motoRefund(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      boolean result;
+      OperationStartResult result;
       MoToOptions options = this.getOptions(params, MoToOptions.class);
       String originalTxnid = params.getString("originalTransactionID");
       boolean hasAmount = params.has("amount");
@@ -299,7 +299,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
         }
       }
 
-      if (result) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send motoRefund operation to the api");
@@ -311,9 +311,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void motoReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      boolean result;
+      OperationStartResult result;
       result = this.api.motoReversal(params.getString("originalTransactionID"));
-      if (result) {
+      if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
         callbackContext.error("Can't send motoReversal operation to the api");
