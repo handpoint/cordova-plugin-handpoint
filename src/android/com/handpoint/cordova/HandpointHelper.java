@@ -34,7 +34,7 @@ import com.handpoint.api.shared.options.MoToOptions;
 import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
-import com.handpoint.api.shared.TransactionStartResult;
+import com.handpoint.api.shared.OperationStartResult;
 import com.handpoint.api.shared.options.RefundReversalOptions;
 import com.handpoint.api.shared.options.SaleReversalOptions;
 
@@ -114,7 +114,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      TransactionStartResult result;
+      OperationStartResult result;
       SaleOptions options = this.getOptions(params, SaleOptions.class);
       if (options != null) {
         result = this.api.sale(new BigInteger(params.getString("amount")), Currency.parse(params.getInt("currency")),
@@ -135,7 +135,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void saleAndTokenizeCard(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      TransactionStartResult result;
+      OperationStartResult result;
       SaleOptions options = this.getOptions(params, SaleOptions.class);
       if (options != null) {
         result = this.api.saleAndTokenizeCard(new BigInteger(params.getString("amount")),
@@ -157,7 +157,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      TransactionStartResult result;
+      OperationStartResult result;
       SaleReversalOptions options = new SaleReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
       if (options != null) {
         result = this.api.saleReversal(new BigInteger(params.getString("amount")),
@@ -179,7 +179,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void refund(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      TransactionStartResult result;
+      OperationStartResult result;
       RefundOptions options = this.getOptions(params, RefundOptions.class);
       String originalTxnid = params.getString("originalTransactionID");
       if (options != null) {
@@ -212,7 +212,7 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
 
   public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
-      TransactionStartResult result;
+      OperationStartResult result;
       RefundReversalOptions options = new RefundReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
       if (options != null) {
         result = this.api.refundReversal(new BigInteger(params.getString("amount")),
