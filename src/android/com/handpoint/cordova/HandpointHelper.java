@@ -731,9 +731,9 @@ public class HandpointHelper implements Events.Required, Events.Status, Events.L
     }
   }
 
-  public void deviceCapabilities(List<? extends CardBrands> supportedCardBrands) {
-    SDKEvent event = new SDKEvent("deviceCapabilities");
-    event.put("supportedCardBrands", ConverterUtil.convertToJSON(supportedCardBrands));
+  public void supportedCardBrands(List<? extends CardBrands> cardBrandsList) {
+    SDKEvent event = new SDKEvent("supportedCardBrands");
+    event.put("cardBrandsList", ConverterUtil.convertToJSON(cardBrandsList));
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
