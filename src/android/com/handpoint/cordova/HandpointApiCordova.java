@@ -28,6 +28,7 @@ public class HandpointApiCordova extends CordovaPlugin {
   public static final int ENABLE_LOCATION_CODE = 2000;
   public static final String ENABLE_LOCATION_ACTION = "enableLocation";
   public static final String DISABLE_BATTERY_OPTIMIZATIONS_ACTION = "disableBatteryOptimizations";
+  public static final String IS_BATTERY_OPTIMIZATION_ON_ACTION = "isBatteryOptimizationOn";
 
   Context context;
   CordovaInterface mCordova;
@@ -63,6 +64,8 @@ public class HandpointApiCordova extends CordovaPlugin {
             enableLocation(cbc, parameters);
           } else if (action.equals(DISABLE_BATTERY_OPTIMIZATIONS_ACTION)) {
             disableBatteryOptimizations(cbc, parameters);
+          } else if (action.equals(IS_BATTERY_OPTIMIZATION_ON_ACTION)) {
+            isBatteryOptimizationOn(cbc, parameters);
           } else {
             executeAction(action, cbc, parameters);
           }
@@ -78,13 +81,27 @@ public class HandpointApiCordova extends CordovaPlugin {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       Intent intent = new Intent();
       String packageName = context.getPackageName();
-      PowerManager pm = (PowerManager) cordova.getActivity().getApplicationContext().getSystemService(Context.POWER_SERVICE);
+      PowerManager pm = getPowerManager();
       if (!pm.isIgnoringBatteryOptimizations(packageName)) {
         intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
         intent.setData(Uri.parse("package:" + packageName));
         this.cordova.getActivity().startActivity(intent);
       }
     }
+  }
+
+  private void isBatteryOptimizationOn(CallbackContext callbackContext, JSONObject params) throws JSONException {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      String packageName = context.getPackageName();
+      PowerManager pm = getPowerManager();
+
+      PluginResult result = new PluginResult(PluginResult.Status.OK, !pm.isIgnoringBatteryOptimizations(packageName));
+      callbackContext.sendPluginResult(result);
+    }
+  }
+
+  private PowerManager getPowerManager() {
+    return (PowerManager) cordova.getActivity().getApplicationContext().getSystemService(Context.POWER_SERVICE);
   }
 
   public void enableLocation(CallbackContext callbackContext, JSONObject params) throws JSONException {

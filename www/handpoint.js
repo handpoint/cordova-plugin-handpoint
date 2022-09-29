@@ -651,6 +651,16 @@ Handpoint.prototype.disableBatteryOptimizations = function (config, successCallb
 };
 
 /**
+ * Check if battery optimization mode is enabled
+ * @param {*} config 
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+ Handpoint.prototype.isBatteryOptimizationOn = function (config, successCallback, errorCallback) {
+  this.exec('isBatteryOptimizationOn', config, successCallback, errorCallback);
+};
+
+/**
  * Authenticates MPOS device
  * @param {Object} config parameters for mposAuth operation
  * @param config.service Service to authenticate to
