@@ -653,9 +653,9 @@ Handpoint.prototype.enableLocation = function (config, successCallback, errorCal
 
 /**
  * Disable battery optimization mode
- * @param {*} config 
- * @param {*} successCallback 
- * @param {*} errorCallback 
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
  */
 Handpoint.prototype.disableBatteryOptimizations = function (config, successCallback, errorCallback) {
   this.exec('disableBatteryOptimizations', config, successCallback, errorCallback);
@@ -663,9 +663,9 @@ Handpoint.prototype.disableBatteryOptimizations = function (config, successCallb
 
 /**
  * Check if battery optimization mode is enabled
- * @param {*} config 
- * @param {*} successCallback 
- * @param {*} errorCallback 
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
  */
 Handpoint.prototype.isBatteryOptimizationOn = function (config, successCallback, errorCallback) {
   this.exec('isBatteryOptimizationOn', config, successCallback, errorCallback);
@@ -719,7 +719,7 @@ Handpoint.prototype.reboot = function (config, successCallback, errorCallback) {
 
 /**
  * blocks UI bars on the device
- * @param {Object} config 
+ * @param {Object} config
  * @param {Function} successCallback This function will be called if operation succeed
  * @param {Function} errorCallback This function will be called if an error happened
  */
@@ -729,7 +729,7 @@ Handpoint.prototype.blockUiBars = function (config, successCallback, errorCallba
 
 /*
 * blocks UI bars on the device
-* @param {Object} config 
+* @param {Object} config
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
@@ -739,7 +739,7 @@ Handpoint.prototype.unblockUiBars = function (config, successCallback, errorCall
 
 /*
 * checks if the device has a WiFi module
-* @param {Object} config 
+* @param {Object} config
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
@@ -749,7 +749,7 @@ Handpoint.prototype.hasWifiModule = function (config, successCallback, errorCall
 
 /*
 * checks if the device has a printer module
-* @param {Object} config 
+* @param {Object} config
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
@@ -759,7 +759,7 @@ Handpoint.prototype.hasPrinterModule = function (config, successCallback, errorC
 
 /*
 * checks if the device has physical keyboard
-* @param {Object} config 
+* @param {Object} config
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
@@ -768,8 +768,8 @@ Handpoint.prototype.hasPhysicalKeyboardModule = function (config, successCallbac
 };
 
 /*
-* gets the pax device serial number 
-* @param {Object} config 
+* gets the pax device serial number
+* @param {Object} config
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
@@ -778,8 +778,8 @@ Handpoint.prototype.getPaxSerialNumber = function (config, successCallback, erro
 };
 
 /*
-* gets the pax device model 
-* @param {Object} config 
+* gets the pax device model
+* @param {Object} config
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
@@ -790,7 +790,7 @@ Handpoint.prototype.getPaxModel = function (config, successCallback, errorCallba
 
 /*
 * Prints logs with System.err.println to appear on pax detailed logs
-* @param {Object} config 
+* @param {Object} config
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
