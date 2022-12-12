@@ -815,6 +815,42 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void hasWifiModule(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method hasWifiModuleMethod = sysManager.getDeclaredMethod("hasWifiModule");
+      Object result = hasWifiModuleMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("hasWifiModule Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("hasWifiModule Error -> " + e.getCause());
+    }
+  }
+
+  public void hasPrinterModule(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method hasPrinterModuleMethod = sysManager.getDeclaredMethod("hasPrinterModule");
+      Object result = hasPrinterModuleMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("hasPrinterModule Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("hasPrinterModule Error -> " + e.getCause());
+    }
+  }
+
+  public void hasPhysicalKeyboardModule(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method hasPhysicalKeyboardModuleMethod = sysManager.getDeclaredMethod("hasPhysicalKeyboardModule");
+      Object result = hasPhysicalKeyboardModuleMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("hasPhysicalKeyboardModule Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("hasPhysicalKeyboardModule Error -> " + e.getCause());
+    }
+  }
+
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
   }

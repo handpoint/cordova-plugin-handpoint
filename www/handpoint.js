@@ -726,6 +726,36 @@ Handpoint.prototype.unblockUiBars = function (config, successCallback, errorCall
   this.exec('unblockUiBars', config, successCallback, errorCallback);
 };
 
+/*
+* checks if the device has a WiFi module
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.hasWifiModule = function (config, successCallback, errorCallback) {
+  this.exec('hasWifiModule', config, successCallback, errorCallback);
+};
+
+/*
+* checks if the device has a printer module
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.hasPrinterModule = function (config, successCallback, errorCallback) {
+  this.exec('hasPrinterModule', config, successCallback, errorCallback);
+};
+
+/*
+* checks if the device has physical keyboard
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.hasPhysicalKeyboardModule = function (config, successCallback, errorCallback) {
+  this.exec('hasPhysicalKeyboardModule', config, successCallback, errorCallback);
+};
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
