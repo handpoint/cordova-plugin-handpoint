@@ -569,6 +569,17 @@ Handpoint.prototype.getTransactionsReport = function (config, successCallback, e
 };
 
 /**
+ * Gets the transaction status.
+ * @param {Object} config parameters
+ * @param config.transactionReference The id of the transaction
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.getTransactionStatus = function (config, successCallback, errorCallback) {
+  this.exec('getTransactionStatus', config, successCallback, errorCallback);
+};
+
+/**
  * Starts a connection monitoring service. The service listens to events sent by the operating system about
  * the connected hardware. If the service notices that a previously connected device suddenly disconnects
  * on the hardware layer it attempts to reconnect to that particular device. Since this is a service it

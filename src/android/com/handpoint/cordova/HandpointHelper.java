@@ -427,6 +427,15 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void getTransactionStatus(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.api.getTransactionStatus(params.getString("transactionReference"));
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute getTransactionStatus. Incorrect parameters");
+    }
+  }
+
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       Class auth = Class.forName("com.handpoint.api.privateops.HapiMposAuthentication");
