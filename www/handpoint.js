@@ -656,7 +656,7 @@ Handpoint.prototype.disableBatteryOptimizations = function (config, successCallb
  * @param {*} successCallback 
  * @param {*} errorCallback 
  */
- Handpoint.prototype.isBatteryOptimizationOn = function (config, successCallback, errorCallback) {
+Handpoint.prototype.isBatteryOptimizationOn = function (config, successCallback, errorCallback) {
   this.exec('isBatteryOptimizationOn', config, successCallback, errorCallback);
 };
 
@@ -754,6 +754,17 @@ Handpoint.prototype.hasPrinterModule = function (config, successCallback, errorC
 */
 Handpoint.prototype.hasPhysicalKeyboardModule = function (config, successCallback, errorCallback) {
   this.exec('hasPhysicalKeyboardModule', config, successCallback, errorCallback);
+};
+
+
+/*
+* Prints logs with System.err.println to appear on pax detailed logs
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.printLog = function (config, successCallback, errorCallback) {
+  this.exec('printLog', config, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
