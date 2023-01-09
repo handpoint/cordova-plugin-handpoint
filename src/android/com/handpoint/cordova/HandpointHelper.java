@@ -65,6 +65,17 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     this.context = context;
   }
 
+  public void printDetailedLog(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      String log = params.getString("log");
+      System.err.println("***[APP]: " + log);
+    } catch (Exception e) {
+      callbackContext.error("printDetailedLog Error Message ->  " + e.getMessage());
+      callbackContext.error("printDetailedLog Error Cause-> " + e.getCause());
+    }
+    callbackContext.success("ok");
+  }
+
   // An Android Context is required to be able to handle bluetooth
   public void setup(CallbackContext callbackContext, JSONObject params) throws Throwable {
     String sharedSecret = null;
