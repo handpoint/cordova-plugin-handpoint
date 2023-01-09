@@ -763,8 +763,8 @@ Handpoint.prototype.hasPhysicalKeyboardModule = function (config, successCallbac
 * @param {Function} successCallback This function will be called if operation succeed
 * @param {Function} errorCallback This function will be called if an error happened
 */
-Handpoint.prototype.printLog = function (config, successCallback, errorCallback) {
-  this.exec('printLog', config, successCallback, errorCallback);
+Handpoint.prototype.printDetailedLog = function (config, successCallback, errorCallback) {
+  this.exec('printDetailedLog', config, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
