@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
@@ -68,7 +69,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   public void printDetailedLog(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       String log = params.getString("log");
-      System.err.println("***[APP]: " + log);
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> " + log);
     } catch (Exception e) {
       callbackContext.error("printDetailedLog Error Message ->  " + e.getMessage());
       callbackContext.error("printDetailedLog Error Cause-> " + e.getCause());
