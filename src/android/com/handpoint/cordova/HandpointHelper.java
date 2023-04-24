@@ -863,6 +863,30 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void getPaxSerialNumber(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method getPaxSerialNumberMethod = sysManager.getDeclaredMethod("getPaxSerialNumber");
+      Object result = getPaxSerialNumberMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("getPaxSerialNumber Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("getPaxSerialNumber Error -> " + e.getCause());
+    }
+  }
+
+  public void getPaxModel(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method getPaxModelMethod = sysManager.getDeclaredMethod("getPaxModel");
+      Object result = getPaxModelMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("getPaxModel Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("getPaxModel Error -> " + e.getCause());
+    }
+  }
+
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
   }
