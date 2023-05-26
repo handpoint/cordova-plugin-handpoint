@@ -756,6 +756,26 @@ Handpoint.prototype.hasPhysicalKeyboardModule = function (config, successCallbac
   this.exec('hasPhysicalKeyboardModule', config, successCallback, errorCallback);
 };
 
+/*
+* gets the pax device serial number 
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.getPaxSerialNumber = function (config, successCallback, errorCallback) {
+  this.exec('getPaxSerialNumber', config, successCallback, errorCallback);
+};
+
+/*
+* gets the pax device model 
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.getPaxModel = function (config, successCallback, errorCallback) {
+  this.exec('getPaxModel', config, successCallback, errorCallback);
+};
+
 
 /*
 * Prints logs with System.err.println to appear on pax detailed logs
