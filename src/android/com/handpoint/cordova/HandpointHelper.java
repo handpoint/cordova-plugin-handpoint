@@ -1,8 +1,48 @@
 package com.handpoint.cordova;
 
 import android.content.Context;
+
+import com.handpoint.api.HandpointCredentials;
 import com.handpoint.api.Hapi;
+import com.handpoint.api.HapiFactory;
+import com.handpoint.api.HapiManager;
+import com.handpoint.api.Settings;
+import com.handpoint.api.shared.AuthenticationResponse;
+import com.handpoint.api.shared.CardBrands;
+import com.handpoint.api.shared.ConnectionMethod;
+import com.handpoint.api.shared.ConnectionStatus;
+import com.handpoint.api.shared.ConverterUtil;
+import com.handpoint.api.shared.Currency;
 import com.handpoint.api.shared.Device;
+import com.handpoint.api.shared.DeviceStatus;
+import com.handpoint.api.shared.EventHandler;
+import com.handpoint.api.shared.Events;
+import com.handpoint.api.shared.HardwareStatus;
+import com.handpoint.api.shared.LogLevel;
+import com.handpoint.api.shared.NetworkStatus;
+import com.handpoint.api.shared.PrintError;
+import com.handpoint.api.shared.ReportConfiguration;
+import com.handpoint.api.shared.SignatureRequest;
+import com.handpoint.api.shared.StatusInfo;
+import com.handpoint.api.shared.TransactionResult;
+import com.handpoint.api.shared.TransactionType;
+import com.handpoint.api.shared.TypeOfResult;
+import com.handpoint.api.shared.auth.HapiMPosAuthResponse;
+import com.handpoint.api.shared.i18n.SupportedLocales;
+import com.handpoint.api.shared.options.MerchantAuthOptions;
+import com.handpoint.api.shared.options.MoToOptions;
+import com.handpoint.api.shared.options.Options;
+import com.handpoint.api.shared.options.RefundOptions;
+import com.handpoint.api.shared.options.SaleOptions;
+import com.handpoint.api.shared.OperationStartResult;
+import com.handpoint.api.shared.options.RefundReversalOptions;
+import com.handpoint.api.shared.options.SaleReversalOptions;
+
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.PluginResult;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -10,11 +50,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.apache.cordova.CallbackContext;
-import org.json.JSONObject;
-
-
-
 
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
