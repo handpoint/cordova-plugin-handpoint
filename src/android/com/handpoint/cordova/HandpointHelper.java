@@ -495,12 +495,18 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   @Override
   public void endOfTransaction(TransactionResult transactionResult, Device device) {
     SDKEvent event = new SDKEvent("endOfTransaction");
-    event.put("transactionResult", transactionResult);
-    event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    if (this.callbackContext != null) {
-      this.callbackContext.sendPluginResult(result);
+    // print transaction result before serializing it
+    if (transactionResult != null) {
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: " + transactionResult.toJSON());
+      event.put("transactionResult", transactionResult);
+      event.put("device", device);
+      PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+      result.setKeepCallback(true);
+      if (this.callbackContext != null) {
+        this.callbackContext.sendPluginResult(result);
+      }
+    } else {
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: null");
     }
   }
 
@@ -887,6 +893,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  @Override
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
   }
