@@ -314,6 +314,101 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
   /* End MoTo operations */
 
+  public void preAuthorization(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      MerchantAuthOptions options = this.getOptions(params, MerchantAuthOptions.class);
+
+      if (options != null) {
+        result = this.api.preAuthorization(amount, currency, options);
+      } else {
+        result = this.api.preAuthorization(amount, currency);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send preAuthorization operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorization operation to the api. Incorrect parameters");
+    }
+  }
+
+  public void preAuthorizationReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      String originalTransactionID = params.getString("originalTransactionID");
+      Options options = new Options(this.getOptions(params, Options.class));
+
+      if (options != null) {
+        result = this.api.preAuthorizationReversal(originalTransactionID, options);
+      } else {
+        result = this.api.preAuthorizationReversal(originalTransactionID);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send preAuthorizationReversal operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorizationReversal operation to device. Incorrect parameters");
+    }
+  }
+
+  public void preAuthorizationIncrease(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      BigInteger tipAmount = params.has("tipAmount") ? new BigInteger(params.getString("tipAmount")) : null;
+      String originalTransactionID = params.getString("originalTransactionID");
+      Options options = this.getOptions(params, Options.class);
+
+      if (options != null) {
+        result = this.api.preAuthorizationIncrease(amount, currency, tipAmount, originalTransactionID, options);
+      } else {
+        result = this.api.preAuthorizationIncrease(amount, currency, tipAmount, originalTransactionID);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send preAuthorizationIncrease operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorizationIncrease operation to the api. Incorrect parameters");
+    }
+  }
+
+  public void preAuthorizationCapture(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      BigInteger tipAmount = params.has("tipAmount") ? new BigInteger(params.getString("tipAmount")) : null;
+      String originalTransactionID = params.getString("originalTransactionID");
+      Options options = this.getOptions(params, Options.class);
+
+      if (options != null) {
+        result = this.api.preAuthorizationCapture(amount, currency, tipAmount, originalTransactionID, options);
+      } else {
+        result = this.api.preAuthorizationCapture(amount, currency, tipAmount, originalTransactionID);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send preAuthorizationCapture operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorizationCapture operation to the api. Incorrect parameters");
+    }
+  }
+
   @Deprecated // This operation should be removed
   public void cancelRequest(CallbackContext callbackContext, JSONObject params) throws Throwable {
     callbackContext.error("Can't send cancelRequest operation to device");
