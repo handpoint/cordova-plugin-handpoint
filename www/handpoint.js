@@ -667,7 +667,7 @@ Handpoint.prototype.disableBatteryOptimizations = function (config, successCallb
  * @param {*} successCallback 
  * @param {*} errorCallback 
  */
- Handpoint.prototype.isBatteryOptimizationOn = function (config, successCallback, errorCallback) {
+Handpoint.prototype.isBatteryOptimizationOn = function (config, successCallback, errorCallback) {
   this.exec('isBatteryOptimizationOn', config, successCallback, errorCallback);
 };
 
@@ -735,6 +735,67 @@ Handpoint.prototype.blockUiBars = function (config, successCallback, errorCallba
 */
 Handpoint.prototype.unblockUiBars = function (config, successCallback, errorCallback) {
   this.exec('unblockUiBars', config, successCallback, errorCallback);
+};
+
+/*
+* checks if the device has a WiFi module
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.hasWifiModule = function (config, successCallback, errorCallback) {
+  this.exec('hasWifiModule', config, successCallback, errorCallback);
+};
+
+/*
+* checks if the device has a printer module
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.hasPrinterModule = function (config, successCallback, errorCallback) {
+  this.exec('hasPrinterModule', config, successCallback, errorCallback);
+};
+
+/*
+* checks if the device has physical keyboard
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.hasPhysicalKeyboardModule = function (config, successCallback, errorCallback) {
+  this.exec('hasPhysicalKeyboardModule', config, successCallback, errorCallback);
+};
+
+/*
+* gets the pax device serial number 
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.getPaxSerialNumber = function (config, successCallback, errorCallback) {
+  this.exec('getPaxSerialNumber', config, successCallback, errorCallback);
+};
+
+/*
+* gets the pax device model 
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.getPaxModel = function (config, successCallback, errorCallback) {
+  this.exec('getPaxModel', config, successCallback, errorCallback);
+};
+
+
+/*
+* Prints logs with System.err.println to appear on pax detailed logs
+* @param {Object} config 
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.printDetailedLog = function (config, successCallback, errorCallback) {
+  this.exec('printDetailedLog', config, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {

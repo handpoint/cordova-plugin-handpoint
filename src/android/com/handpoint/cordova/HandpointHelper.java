@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
@@ -63,6 +64,17 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
   public HandpointHelper(Context context) {
     this.context = context;
+  }
+
+  public void printDetailedLog(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      String log = params.getString("log");
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> " + log);
+    } catch (Exception e) {
+      callbackContext.error("printDetailedLog Error Message ->  " + e.getMessage());
+      callbackContext.error("printDetailedLog Error Cause-> " + e.getCause());
+    }
+    callbackContext.success("ok");
   }
 
   // An Android Context is required to be able to handle bluetooth
@@ -492,12 +504,18 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   @Override
   public void endOfTransaction(TransactionResult transactionResult, Device device) {
     SDKEvent event = new SDKEvent("endOfTransaction");
-    event.put("transactionResult", transactionResult);
-    event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    if (this.callbackContext != null) {
-      this.callbackContext.sendPluginResult(result);
+    // print transaction result before serializing it
+    if (transactionResult != null) {
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: " + transactionResult.toJSON());
+      event.put("transactionResult", transactionResult);
+      event.put("device", device);
+      PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+      result.setKeepCallback(true);
+      if (this.callbackContext != null) {
+        this.callbackContext.sendPluginResult(result);
+      }
+    } else {
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: null");
     }
   }
 
@@ -824,6 +842,67 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void hasWifiModule(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method hasWifiModuleMethod = sysManager.getDeclaredMethod("hasWifiModule");
+      Object result = hasWifiModuleMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("hasWifiModule Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("hasWifiModule Error -> " + e.getCause());
+    }
+  }
+
+  public void hasPrinterModule(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method hasPrinterModuleMethod = sysManager.getDeclaredMethod("hasPrinterModule");
+      Object result = hasPrinterModuleMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("hasPrinterModule Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("hasPrinterModule Error -> " + e.getCause());
+    }
+  }
+
+  public void hasPhysicalKeyboardModule(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method hasPhysicalKeyboardModuleMethod = sysManager.getDeclaredMethod("hasPhysicalKeyboardModule");
+      Object result = hasPhysicalKeyboardModuleMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("hasPhysicalKeyboardModule Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("hasPhysicalKeyboardModule Error -> " + e.getCause());
+    }
+  }
+
+  public void getPaxSerialNumber(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method getPaxSerialNumberMethod = sysManager.getDeclaredMethod("getPaxSerialNumber");
+      Object result = getPaxSerialNumberMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("getPaxSerialNumber Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("getPaxSerialNumber Error -> " + e.getCause());
+    }
+  }
+
+  public void getPaxModel(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method getPaxModelMethod = sysManager.getDeclaredMethod("getPaxModel");
+      Object result = getPaxModelMethod.invoke(sysManager);
+      callbackContext.success(String.valueOf(result));
+    } catch (Exception e) {
+      callbackContext.error("getPaxModel Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("getPaxModel Error -> " + e.getCause());
+    }
+  }
+
+  @Override
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
   }
