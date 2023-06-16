@@ -326,6 +326,65 @@ Handpoint.prototype.motoReversal = function (config, successCallback, errorCallb
 
 
 /**
+ * Initiates a preauthorization request. In it's simplest form you only have to pass the
+ * amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorization = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorization', config, successCallback, errorCallback);
+};
+
+/**
+ * Initiates a reversal of a preauthorization request. In it's simplest form you only have to pass the
+ * originalTransactionID but it also accepts a map with extra parameters.
+ * @param {Object} config parameters
+ * @param config.originalTransactionID Unique id of the original preAuthorization transaction as received from the card reader (EFTTransactionID)
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorizationReversal = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorizationReversal', config, successCallback, errorCallback);
+};
+
+/**
+ * Executes a modification to the previously preauthorized amount. In it's simplest form you only have to pass the
+ * amount, currency, [tipAmount] and originalTransactionID but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.tipAmount Tip amount added to the original (base) transaction amount - in the minor unit of currency
+ * @param config.originalTransactionID Unique id of the original preAuthorization transaction as received from the card reader (EFTTransactionID)
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorizationIncrease = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorizationIncrease', config, successCallback, errorCallback);
+};
+
+/**
+ * Launch the capture of the preauthorization. In it's simplest form you only have to pass the
+ * amount, currency, [tipAmount] and originalTransactionID but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.tipAmount Tip amount added to the original (base) transaction amount - in the minor unit of currency
+ * @param config.originalTransactionID Unique id of the original preAuthorization transaction as received from the card reader (EFTTransactionID)
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorizationCapture = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorizationCapture', config, successCallback, errorCallback);
+};
+
+/**
  * Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
  * It accepts certain configuration parameters, such as multiScan (boolean)
  * autoScan (boolean), resultsGrouped (boolean) and timeout (integer),
