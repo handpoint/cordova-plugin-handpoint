@@ -136,7 +136,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
 
       if (result.getOperationStarted()) {
-        callbackContext.success("ok");
+        callbackContext.success(result.getTransactionReference());
       } else {
         callbackContext.error("Can't send sale operation to device");
       }
@@ -191,7 +191,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
 
       if (result.getOperationStarted()) {
-        callbackContext.success("ok");
+        callbackContext.success(result.getTransactionReference());
       } else {
         callbackContext.error("Can't send refund operation to device");
       }
@@ -623,6 +623,20 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     event.put("type", type.toString());
     event.put("amount", amount.toString());
     event.put("currency", currency.getAlpha());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
+  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency, String transactionReference) {
+    SDKEvent event = new SDKEvent("transactionStarted");
+    event.put("type", type.toString());
+    event.put("amount", amount.toString());
+    event.put("currency", currency.getAlpha());
+    event.put("transactionReference", transactionReference);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
