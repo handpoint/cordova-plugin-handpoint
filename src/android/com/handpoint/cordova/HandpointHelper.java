@@ -618,19 +618,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
-  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency) {
-    SDKEvent event = new SDKEvent("transactionStarted");
-    event.put("type", type.toString());
-    event.put("amount", amount.toString());
-    event.put("currency", currency.getAlpha());
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    if (this.callbackContext != null) {
-      this.callbackContext.sendPluginResult(result);
-    }
-  }
-
-  @Override
   public void transactionStarted(TransactionType type, BigInteger amount, Currency currency, String transactionReference) {
     SDKEvent event = new SDKEvent("transactionStarted");
     event.put("type", type.toString());
