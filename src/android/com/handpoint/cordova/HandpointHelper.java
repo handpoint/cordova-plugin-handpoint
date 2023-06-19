@@ -136,7 +136,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
 
       if (result.getOperationStarted()) {
-        callbackContext.success(result.transactionReference);
+        callbackContext.success(result.getTransactionReference());
       } else {
         callbackContext.error("Can't send sale operation to device");
       }
@@ -191,7 +191,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
 
       if (result.getOperationStarted()) {
-        callbackContext.success(result.transactionReference);
+        callbackContext.success(result.getTransactionReference());
       } else {
         callbackContext.error("Can't send refund operation to device");
       }
