@@ -70,11 +70,11 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     try {
       String log = params.getString("log");
       Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> " + log);
+      callbackContext.success("ok");
     } catch (Exception e) {
       callbackContext.error("printDetailedLog Error Message ->  " + e.getMessage());
       callbackContext.error("printDetailedLog Error Cause-> " + e.getCause());
     }
-    callbackContext.success("ok");
   }
 
   // An Android Context is required to be able to handle bluetooth
@@ -456,6 +456,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       HapiMPosAuthResponse authenticationResponseHandler = new HapiMPosAuthResponse() {
         @Override
         public void setAuthenticationResult(AuthenticationResponse oneThing) {
+          callbackContext.success("ok");
           authStatus(oneThing);
         }
       };
