@@ -679,12 +679,13 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   protected <T> T getOptions(JSONObject params, Class<T> tClass) throws JSONException {
+    JSONObject object = null;
     if (params.has("options")) {
-      JSONObject object = (JSONObject) params.get("options");
-      return ConverterUtil.getModelObjectFromJSON(object.toString(), tClass);
+      object = (JSONObject) params.get("options");
     } else {
-      return null;
+      object = new JSONObject();
     }
+    return ConverterUtil.getModelObjectFromJSON(object.toString(), tClass);
   }
 
   protected static Map<String, String> jsonToMap(JSONObject json) throws JSONException {
