@@ -70,11 +70,11 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     try {
       String log = params.getString("log");
       Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> " + log);
+      callbackContext.success("ok");
     } catch (Exception e) {
       callbackContext.error("printDetailedLog Error Message ->  " + e.getMessage());
       callbackContext.error("printDetailedLog Error Cause-> " + e.getCause());
     }
-    callbackContext.success("ok");
   }
 
   // An Android Context is required to be able to handle bluetooth
@@ -136,7 +136,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
 
       if (result.getOperationStarted()) {
-        callbackContext.success("ok");
+        callbackContext.success(result.getTransactionReference());
       } else {
         callbackContext.error("Can't send sale operation to device");
       }
@@ -191,7 +191,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
 
       if (result.getOperationStarted()) {
-        callbackContext.success("ok");
+        callbackContext.success(result.getTransactionReference());
       } else {
         callbackContext.error("Can't send refund operation to device");
       }
@@ -534,6 +534,15 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void getTransactionStatus(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.api.getTransactionStatus(params.getString("transactionReference"));
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute getTransactionStatus. Incorrect parameters");
+    }
+  }
+
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       Class auth = Class.forName("com.handpoint.api.privateops.HapiMposAuthentication");
@@ -542,6 +551,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       HapiMPosAuthResponse authenticationResponseHandler = new HapiMPosAuthResponse() {
         @Override
         public void setAuthenticationResult(AuthenticationResponse oneThing) {
+          callbackContext.success("ok");
           authStatus(oneThing);
         }
       };
@@ -590,12 +600,18 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   @Override
   public void endOfTransaction(TransactionResult transactionResult, Device device) {
     SDKEvent event = new SDKEvent("endOfTransaction");
-    event.put("transactionResult", transactionResult);
-    event.put("device", device);
-    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
-    result.setKeepCallback(true);
-    if (this.callbackContext != null) {
-      this.callbackContext.sendPluginResult(result);
+    // print transaction result before serializing it
+    if (transactionResult != null) {
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: " + transactionResult.toJSON());
+      event.put("transactionResult", transactionResult);
+      event.put("device", device);
+      PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+      result.setKeepCallback(true);
+      if (this.callbackContext != null) {
+        this.callbackContext.sendPluginResult(result);
+      }
+    } else {
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: null");
     }
   }
 
@@ -698,11 +714,12 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
-  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency) {
+  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency, String transactionReference) {
     SDKEvent event = new SDKEvent("transactionStarted");
     event.put("type", type.toString());
     event.put("amount", amount.toString());
     event.put("currency", currency.getAlpha());
+    event.put("transactionReference", transactionReference);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
@@ -757,12 +774,13 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   protected <T> T getOptions(JSONObject params, Class<T> tClass) throws JSONException {
+    JSONObject object = null;
     if (params.has("options")) {
-      JSONObject object = (JSONObject) params.get("options");
-      return ConverterUtil.getModelObjectFromJSON(object.toString(), tClass);
+      object = (JSONObject) params.get("options");
     } else {
-      return null;
+      object = new JSONObject();
     }
+    return ConverterUtil.getModelObjectFromJSON(object.toString(), tClass);
   }
 
   protected static Map<String, String> jsonToMap(JSONObject json) throws JSONException {
@@ -982,6 +1000,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  @Override
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
   }
