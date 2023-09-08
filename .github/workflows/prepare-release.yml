@@ -1,0 +1,33 @@
+name:     Prepare Release
+run-name: ${{ github.actor }} executing workflow ${{ github.workflow }}
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        type: choice
+        description: Select release type
+        options:
+        - patch
+        - minor
+        - MAJOR
+
+jobs:
+  prepare-release-hipos-app:
+    uses: handpoint/handpoint-gha/.github/workflows/prepare-release.yml@main
+    with:
+      release_type:     ${{ inputs.release_type }}
+      retrieval_method: 'branch'
+      repository:       'handpoint/hipos-app'
+    secrets:
+      repo_token:       ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+      npmrc:            ${{ secrets.HANDPOINT_NEXUS_DOT_NPMRC }}
+
+  prepare-release-cordova-plugin:
+    uses: handpoint/handpoint-gha/.github/workflows/prepare-release.yml@main
+    with:
+      release_type:     ${{ inputs.release_type }}
+      retrieval_method: 'branch'
+      repository:       'handpoint/cordova-plugin-handpoint'
+    secrets:
+      repo_token:       ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+      npmrc:            ${{ secrets.HANDPOINT_NEXUS_DOT_NPMRC }}
