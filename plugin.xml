@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint" version="3.0.0">
+  xmlns:tools="http://schemas.android.com/tools"
+  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-handpoint"
+  version="3.0.0">
   <name>Payments</name>
   <description>Cordova Handpoint SDK Plugin</description>
   <license>Apache 2.0</license>
   <keywords>cordova,handpoint</keywords>
   <engines>
-    <engine name="cordova" version=">=3.0.0"/>
+    <engine name="cordova" version=">=3.0.0" />
   </engines>
   <js-module src="www/handpoint.js" name="Handpoint">
-    <clobbers target="cordova.plugins.Handpoint"/>
+    <clobbers target="cordova.plugins.Handpoint" />
   </js-module>
   <platform name="android">
-    <source-file src="src/android/com/handpoint/cordova/GsonUTCDateAdapter.java" target-dir="src/com/handpoint/cordova"/>
-    <source-file src="src/android/com/handpoint/cordova/HandpointApiCordova.java" target-dir="src/com/handpoint/cordova"/>
-    <source-file src="src/android/com/handpoint/cordova/HandpointHelper.java" target-dir="src/com/handpoint/cordova"/>
-    <source-file src="src/android/com/handpoint/cordova/SDKEvent.java" target-dir="src/com/handpoint/cordova"/>
-    <source-file src="src/android/com/handpoint/cordova/GsonPaymentScenarioAdapter.java" target-dir="src/com/handpoint/cordova"/>
-    <source-file src="src/android/com/handpoint/cordova/GsonTenderTypeAdapter.java" target-dir="src/com/handpoint/cordova"/>
+    <source-file src="src/android/com/handpoint/cordova/GsonUTCDateAdapter.java"
+      target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/HandpointApiCordova.java"
+      target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/HandpointHelper.java"
+      target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/SDKEvent.java"
+      target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/GsonPaymentScenarioAdapter.java"
+      target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/GsonTenderTypeAdapter.java"
+      target-dir="src/com/handpoint/cordova" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="HandpointApiCordova">
-        <param name="android-package" value="com.handpoint.cordova.HandpointApiCordova"/>
+        <param name="android-package" value="com.handpoint.cordova.HandpointApiCordova" />
       </feature>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.BLUETOOTH"/>
-      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-      <uses-permission android:name="android.permission.INTERNET"/>
-      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-      <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+      <!-- Request legacy Bluetooth permissions on older devices. -->
+      <uses-permission android:name="android.permission.BLUETOOTH" tools:remove="android:maxSdkVersion" />
+      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" tools:remove="android:maxSdkVersion" />
+      <!-- Request BT Scan and Connect permissions on newer devices. -->
+      <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+      <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+      <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     </config-file>
     <config-file parent="/manifest/application" target="AndroidManifest.xml">
@@ -41,8 +53,8 @@
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
       <feature name="HandpointApiCordova">
-        <param name="ios-package" value="HandpointApiCordova"/>
-        <param name="onload" value="false"/>
+        <param name="ios-package" value="HandpointApiCordova" />
+        <param name="onload" value="false" />
       </feature>
     </config-file>
     <config-file target="*-Info.plist" parent="UISupportedExternalAccessoryProtocols">
@@ -60,48 +72,48 @@
         <string>Handpoint mPOS needs access to Bluetooth to connect to Handpoint payment devices</string>
       </array>
     </config-file>
-    <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h"/>
-    <header-file src="src/ios/ConnectionStatus.h"/>
-    <header-file src="src/ios/HandpointApiCordova.h"/>
-    <header-file src="src/ios/HeftRemoteDevice+SendableDevice.h"/>
-    <header-file src="src/ios/include/BaseModel.h"/>
-    <header-file src="src/ios/include/CmdIds.h"/>
-    <header-file src="src/ios/include/Currency.h"/>
-    <header-file src="src/ios/include/DeviceStatus.h"/>
-    <header-file src="src/ios/include/FinanceResponseInfo.h"/>
-    <header-file src="src/ios/include/HandpointAll.h"/>
-    <header-file src="src/ios/include/HapiRemoteService.h"/>
-    <header-file src="src/ios/include/HeftClient.h"/>
-    <header-file src="src/ios/include/HeftDiscovery.h"/>
-    <header-file src="src/ios/include/HeftDiscoveryDelegate.h"/>
-    <header-file src="src/ios/include/HeftManager.h"/>
-    <header-file src="src/ios/include/HeftRemoteDevice.h"/>
-    <header-file src="src/ios/include/HeftStatusReportDelegate.h"/>
-    <header-file src="src/ios/include/LogInfo.h"/>
-    <header-file src="src/ios/include/ResponseInfo.h"/>
-    <header-file src="src/ios/include/ScannerDisabledResponseInfo.h"/>
-    <header-file src="src/ios/include/ScannerEventResponseInfo.h"/>
-    <header-file src="src/ios/include/StatusInfo.h"/>
-    <header-file src="src/ios/include/MerchantAuth.h"/>
-    <header-file src="src/ios/include/SaleOptions.h"/>
-    <header-file src="src/ios/include/MerchantAuthOptions.h"/>
-    <header-file src="src/ios/include/Options.h"/>
-    <header-file src="src/ios/include/Credential.h"/>
-    <header-file src="src/ios/include/toXML.h"/>
-    <header-file src="src/ios/NSString+Sanitize.h"/>
-    <header-file src="src/ios/SDKEvent.h"/>
-    <header-file src="src/ios/HandpointApiManager.h"/>
-    <header-file src="src/ios/HandpointSampleBasicEvents.h"/>
-    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m"/>
-    <source-file src="src/ios/HandpointApiCordova.m"/>
-    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m"/>
-    <source-file src="src/ios/lib/libheft.a" framework="true"/>
-    <source-file src="src/ios/NSString+Sanitize.m"/>
-    <source-file src="src/ios/SDKEvent.m"/>
-    <source-file src="src/ios/HandpointApiManager.m"/>
-    <framework src="ExternalAccessory.framework"/>
-    <framework src="Security.framework"/>
-    <framework src="libc++.dylib"/>
-    <lib-file src="src/ios/com/handpoint/lib/libheft.a"/>
+    <header-file src="src/ios/CDVInvokedUrlCommand+Arguments.h" />
+    <header-file src="src/ios/ConnectionStatus.h" />
+    <header-file src="src/ios/HandpointApiCordova.h" />
+    <header-file src="src/ios/HeftRemoteDevice+SendableDevice.h" />
+    <header-file src="src/ios/include/BaseModel.h" />
+    <header-file src="src/ios/include/CmdIds.h" />
+    <header-file src="src/ios/include/Currency.h" />
+    <header-file src="src/ios/include/DeviceStatus.h" />
+    <header-file src="src/ios/include/FinanceResponseInfo.h" />
+    <header-file src="src/ios/include/HandpointAll.h" />
+    <header-file src="src/ios/include/HapiRemoteService.h" />
+    <header-file src="src/ios/include/HeftClient.h" />
+    <header-file src="src/ios/include/HeftDiscovery.h" />
+    <header-file src="src/ios/include/HeftDiscoveryDelegate.h" />
+    <header-file src="src/ios/include/HeftManager.h" />
+    <header-file src="src/ios/include/HeftRemoteDevice.h" />
+    <header-file src="src/ios/include/HeftStatusReportDelegate.h" />
+    <header-file src="src/ios/include/LogInfo.h" />
+    <header-file src="src/ios/include/ResponseInfo.h" />
+    <header-file src="src/ios/include/ScannerDisabledResponseInfo.h" />
+    <header-file src="src/ios/include/ScannerEventResponseInfo.h" />
+    <header-file src="src/ios/include/StatusInfo.h" />
+    <header-file src="src/ios/include/MerchantAuth.h" />
+    <header-file src="src/ios/include/SaleOptions.h" />
+    <header-file src="src/ios/include/MerchantAuthOptions.h" />
+    <header-file src="src/ios/include/Options.h" />
+    <header-file src="src/ios/include/Credential.h" />
+    <header-file src="src/ios/include/toXML.h" />
+    <header-file src="src/ios/NSString+Sanitize.h" />
+    <header-file src="src/ios/SDKEvent.h" />
+    <header-file src="src/ios/HandpointApiManager.h" />
+    <header-file src="src/ios/HandpointSampleBasicEvents.h" />
+    <source-file src="src/ios/CDVInvokedUrlCommand+Arguments.m" />
+    <source-file src="src/ios/HandpointApiCordova.m" />
+    <source-file src="src/ios/HeftRemoteDevice+SendableDevice.m" />
+    <source-file src="src/ios/lib/libheft.a" framework="true" />
+    <source-file src="src/ios/NSString+Sanitize.m" />
+    <source-file src="src/ios/SDKEvent.m" />
+    <source-file src="src/ios/HandpointApiManager.m" />
+    <framework src="ExternalAccessory.framework" />
+    <framework src="Security.framework" />
+    <framework src="libc++.dylib" />
+    <lib-file src="src/ios/com/handpoint/lib/libheft.a" />
   </platform>
 </plugin>
