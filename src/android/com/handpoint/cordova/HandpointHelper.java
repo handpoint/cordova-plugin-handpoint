@@ -369,9 +369,9 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       Options options = this.getOptions(params, Options.class);
 
       if (options != null) {
-        result = this.api.preAuthorizationIncrease(amount, currency, tipAmount, originalTransactionID, options);
+        result = this.api.preAuthorizationIncrease(amount, currency, originalTransactionID, options);
       } else {
-        result = this.api.preAuthorizationIncrease(amount, currency, tipAmount, originalTransactionID);
+        result = this.api.preAuthorizationIncrease(amount, currency, originalTransactionID);
       }
 
       if (result.getOperationStarted()) {
@@ -394,9 +394,9 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       Options options = this.getOptions(params, Options.class);
 
       if (options != null) {
-        result = this.api.preAuthorizationCapture(amount, currency, tipAmount, originalTransactionID, options);
+        result = this.api.preAuthorizationCapture(amount, currency, originalTransactionID, options);
       } else {
-        result = this.api.preAuthorizationCapture(amount, currency, tipAmount, originalTransactionID);
+        result = this.api.preAuthorizationCapture(amount, currency, originalTransactionID);
       }
 
       if (result.getOperationStarted()) {
