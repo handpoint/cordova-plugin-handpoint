@@ -341,7 +341,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     try {
       OperationStartResult result;
       String originalTransactionID = params.getString("originalTransactionID");
-      Options options = new Options(this.getOptions(params, Options.class));
+      Options options = this.getOptions(params, Options.class);
 
       if (options != null) {
         result = this.api.preAuthorizationReversal(originalTransactionID, options);
