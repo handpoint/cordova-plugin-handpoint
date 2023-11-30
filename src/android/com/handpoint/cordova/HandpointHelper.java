@@ -312,6 +312,30 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       callbackContext.error("Can't send motoReversal operation to the api. Incorrect parameters");
     }
   }
+
+  public void motoPreauthorization(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+
+      MoToOptions options = this.getOptions(params, MoToOptions.class);
+
+      if (options != null) {
+        result = this.api.motoPreauthorization(amount, currency, options);
+      } else {
+        result = this.api.motoPreauthorization(amount, currency);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send manual entry preAuthorization operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send manual entry preAuthorization operation to the api. Incorrect parameters");
+    }
+  }
   /* End MoTo operations */
 
   public void preAuthorization(CallbackContext callbackContext, JSONObject params) throws Throwable {

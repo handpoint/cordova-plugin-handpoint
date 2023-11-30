@@ -385,6 +385,20 @@ Handpoint.prototype.preAuthorizationCapture = function (config, successCallback,
 };
 
 /**
+ * Initiates a manual entry preauthorization request. In it's simplest form you only have to pass the
+ * amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.motoPreauthorization = function (config, successCallback, errorCallback) {
+  this.exec('motoPreauthorization', config, successCallback, errorCallback);
+};
+
+/**
  * Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
  * It accepts certain configuration parameters, such as multiScan (boolean)
  * autoScan (boolean), resultsGrouped (boolean) and timeout (integer),
