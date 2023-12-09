@@ -352,9 +352,9 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
 
       if (result.getOperationStarted()) {
-        callbackContext.success("ok");
+        callbackContext.success(result.getTransactionReference());
       } else {
-        callbackContext.error("Can't send preAuthorization operation to the api");
+        callbackContext.error("Can't send sale operation to device");
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send preAuthorization operation to the api. Incorrect parameters");
