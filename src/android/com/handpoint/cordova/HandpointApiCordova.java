@@ -12,6 +12,9 @@ import java.lang.reflect.*;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -20,10 +23,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.content.pm.PackageManager;
 
 import com.handpoint.api.applicationprovider.ApplicationProvider;
+import com.handpoint.cordova.sim.RequestSimReadPermissionOperation;
+import com.handpoint.cordova.sim.SimOperation;
+import com.handpoint.cordova.sim.SimOperationFactory;
 
 public class HandpointApiCordova extends CordovaPlugin {
+
+  private final List<PermissionResultObserver> permissionObservers = Collections.synchronizedList(new ArrayList<>());
 
   public static final int ENABLE_LOCATION_CODE = 2000;
   public static final String ENABLE_LOCATION_ACTION = "enableLocation";
@@ -35,6 +44,7 @@ public class HandpointApiCordova extends CordovaPlugin {
   HandpointHelper handpointHelper;
   String error;
   CallbackContext callbackContextActivityResult;
+  SimOperation operation;
 
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -54,13 +64,19 @@ public class HandpointApiCordova extends CordovaPlugin {
     final String action = ac;
     final JSONArray args = arguments;
     final CallbackContext callbackContext = cbc;
+    final CordovaInterface cordova = this.mCordova;
+    final CordovaPlugin cordovaPlugin = this;
 
     cordova.getActivity().runOnUiThread(new Runnable() {
       public void run() {
         JSONObject parameters;
         try {
           parameters = args.getJSONObject(0);
-          if (action.equals(ENABLE_LOCATION_ACTION)) {
+          operation = SimOperationFactory.createOperation(action, arguments, callbackContext,
+              cordova, cordovaPlugin);
+          if (operation != null) {
+            operation.execute();
+          } else if (action.equals(ENABLE_LOCATION_ACTION)) {
             enableLocation(cbc, parameters);
           } else if (action.equals(DISABLE_BATTERY_OPTIMIZATIONS_ACTION)) {
             disableBatteryOptimizations(cbc, parameters);
@@ -106,15 +122,17 @@ public class HandpointApiCordova extends CordovaPlugin {
 
   public void enableLocation(CallbackContext callbackContext, JSONObject params) throws JSONException {
     final LocationManager manager = (LocationManager) ApplicationProvider
-      .getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        .getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
     if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
       callbackContextActivityResult = callbackContext;
       final AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setMessage(params.getString("text"))
-        .setCancelable(false)
-        .setPositiveButton(params.getString("okBtnText"), (dialog, id) -> cordova.startActivityForResult(this, new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_LOCATION_CODE))
-        .setNegativeButton(params.getString("cancelBtnText"), (dialog, id) -> dialog.cancel());
+          .setCancelable(false)
+          .setPositiveButton(params.getString("okBtnText"),
+              (dialog, id) -> cordova.startActivityForResult(this,
+                  new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), ENABLE_LOCATION_CODE))
+          .setNegativeButton(params.getString("cancelBtnText"), (dialog, id) -> dialog.cancel());
       final AlertDialog alert = builder.create();
       alert.show();
     } else {
@@ -177,11 +195,29 @@ public class HandpointApiCordova extends CordovaPlugin {
     } catch (InvocationTargetException e) {
       e.getTargetException().printStackTrace(pw);
       callbackContext
-        .error("Handpoint SDK method " + action + " invocation error: " + e.getTargetException().toString());
+          .error("Handpoint SDK method " + action + " invocation error: " + e.getTargetException().toString());
     } catch (Throwable thr) {
       thr.printStackTrace(pw);
       callbackContext.error("Handpoint SDK method error: " + pw.toString());
     }
+  }
+
+  @Override
+  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
+      throws JSONException {
+
+    final boolean permissionGranted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    for (PermissionResultObserver observer : permissionObservers) {
+      observer.onPermissionResult(requestCode, permissionGranted);
+    }
+  }
+
+  public void addPermissionObserver(PermissionResultObserver observer) {
+    permissionObservers.add(observer);
+  }
+
+  public void removePermissionObserver(PermissionResultObserver observer) {
+    permissionObservers.remove(observer);
   }
 
 }
