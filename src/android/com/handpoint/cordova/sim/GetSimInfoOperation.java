@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import android.content.Context;
 import android.Manifest;
+import android.os.Build;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
@@ -34,13 +35,35 @@ public class GetSimInfoOperation extends BaseSimOperation {
   private TelephonyManager manager;
   private Context context;
 
+  private String getSimSerialNumber() throws Exception {
+    // Use reflection to call SysManager.getSimSerialNumber()
+    Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+    Method getSIMInfoMethod = sysManagerClass.getDeclaredMethod("getSIMInfo");
+    String[] simInfo = (String[]) getSIMInfoMethod.invoke(null);
+    return simInfo[2];
+  }
+
+  private String getSimSerialNumberWithFallback() throws Exception {
+    try {
+      String serialNumber = manager.getSimSerialNumber();
+      if (serialNumber != null && !serialNumber.isEmpty()) {
+        return serialNumber;
+      }
+    } catch (Exception ex) {
+      this.logger.warning("Error getting SIM serial number: " + ex.getMessage());
+    }
+    return this.getSimSerialNumber();
+  }
+
   private void addSimInformation(JSONObject result) throws JSONException {
-    if (simPermissionGranted()) {
+    try {
+      result.put(SIM_SERIAL_NUMBER_KEY, getSimSerialNumberWithFallback());
       result.put(PHONE_NUMBER_KEY, manager.getLine1Number());
-      result.put(DEVICE_ID_KEY, manager.getDeviceId());
       result.put(DEVICE_SOFTWARE_VERSION_KEY, manager.getDeviceSoftwareVersion());
-      result.put(SIM_SERIAL_NUMBER_KEY, manager.getSimSerialNumber());
+      result.put(DEVICE_ID_KEY, manager.getDeviceId());
       result.put(SUBSCRIBER_ID_KEY, manager.getSubscriberId());
+    } catch (Exception ex) {
+      this.logger.warning("Error getting Sim Information :" + ex.getMessage());
     }
   }
 
