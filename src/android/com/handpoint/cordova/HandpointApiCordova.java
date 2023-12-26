@@ -27,10 +27,15 @@ import android.provider.Settings;
 import android.content.pm.PackageManager;
 
 import com.handpoint.api.applicationprovider.ApplicationProvider;
+import com.handpoint.cordova.sim.RequestSimReadPermissionOperation;
+import com.handpoint.cordova.sim.SimOperation;
+import com.handpoint.cordova.sim.SimOperationFactory;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
   private final List<PermissionResultObserver> permissionObservers = Collections.synchronizedList(new ArrayList<>());
+  private final List<ActivityResultObserver> activityResultObserverObservers = Collections
+      .synchronizedList(new ArrayList<>());
 
   public static final int ENABLE_LOCATION_CODE = 2000;
   public static final int ENABLE_OVERLAY_PERMISSION_CODE = 2100;

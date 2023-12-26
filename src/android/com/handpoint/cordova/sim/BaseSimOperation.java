@@ -7,9 +7,7 @@ import org.apache.cordova.*;
 import org.json.JSONArray;
 
 import com.handpoint.cordova.Operation;
-
 import java.util.logging.Logger;
-
 import org.apache.cordova.CordovaInterface;
 
 public abstract class BaseSimOperation implements Operation {
