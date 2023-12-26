@@ -27,7 +27,6 @@ import android.provider.Settings;
 import android.content.pm.PackageManager;
 
 import com.handpoint.api.applicationprovider.ApplicationProvider;
-import com.handpoint.cordova.sim.RequestSimReadPermissionOperation;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
