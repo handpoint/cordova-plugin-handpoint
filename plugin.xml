@@ -14,6 +14,23 @@
     <clobbers target="cordova.plugins.Handpoint" />
   </js-module>
   <platform name="android">
+    <source-file src="src/android/com/handpoint/cordova/autostart/AppStarter.java"
+      target-dir="src/com/handpoint/cordova/autostart" />
+    <source-file src="src/android/com/handpoint/cordova/autostart/AutostartOperation.java"
+      target-dir="src/com/handpoint/cordova/autostart" />
+    <source-file src="src/android/com/handpoint/cordova/autostart/EnableAutostartOperation.java"
+      target-dir="src/com/handpoint/cordova/autostart" />
+    <source-file src="src/android/com/handpoint/cordova/autostart/DisableAutostartOperation.java"
+      target-dir="src/com/handpoint/cordova/autostart" />
+    <source-file
+      src="src/android/com/handpoint/cordova/autostart/receivers/BootCompletedReceiver.java"
+      target-dir="src/com/handpoint/cordova/autostart/receivers" />
+    <source-file
+      src="src/android/com/handpoint/cordova/autostart/receivers/PackageReplacedReceiver.java"
+      target-dir="src/com/handpoint/cordova/autostart/receivers" />
+    <source-file
+      src="src/android/com/handpoint/cordova/autostart/receivers/UserPresentReceiver.java"
+      target-dir="src/com/handpoint/cordova/autostart/receivers" />
     <source-file src="src/android/com/handpoint/cordova/sim/GetSimInfoOperation.java"
       target-dir="src/com/handpoint/cordova/sim" />
     <source-file src="src/android/com/handpoint/cordova/sim/HasSimReadPermissionOperation.java"
@@ -22,10 +39,10 @@
       target-dir="src/com/handpoint/cordova/sim" />
     <source-file src="src/android/com/handpoint/cordova/sim/BaseSimOperation.java"
       target-dir="src/com/handpoint/cordova/sim" />
-    <source-file src="src/android/com/handpoint/cordova/sim/SimOperation.java"
-      target-dir="src/com/handpoint/cordova/sim" />
-    <source-file src="src/android/com/handpoint/cordova/sim/SimOperationFactory.java"
-      target-dir="src/com/handpoint/cordova/sim" />
+    <source-file src="src/android/com/handpoint/cordova/Operation.java"
+      target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/sim/OperationFactory.java"
+      target-dir="src/com/handpoint/cordova" />
     <source-file src="src/android/com/handpoint/cordova/GsonUTCDateAdapter.java"
       target-dir="src/com/handpoint/cordova" />
     <source-file src="src/android/com/handpoint/cordova/HandpointApiCordova.java"
@@ -60,9 +77,32 @@
       <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
       <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+      <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+      <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     </config-file>
     <config-file parent="/manifest/application" target="AndroidManifest.xml">
       <service android:enabled="true" android:name=".RestartService" />
+      <!-- Autostart receivers -->
+      <receiver android:name="com.handpoint.cordova.autostart.receiver.BootCompletedReceiver"
+        android:enabled="false" android:exported="false">
+        <intent-filter>
+          <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </intent-filter>
+      </receiver>
+      <receiver
+        android:name="com.handpoint.cordova.autostart.receiver.UserPresentReceiver"
+        android:enabled="false" android:exported="false">
+        <intent-filter>
+          <action android:name="android.intent.action.USER_PRESENT" />
+        </intent-filter>
+      </receiver>
+      <receiver
+        android:name="com.handpoint.cordova.autostart.receiver.PackageReplacedReceiver"
+        android:enabled="true" android:exported="true">
+        <intent-filter>
+          <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+        </intent-filter>
+      </receiver>
     </config-file>
     <framework src="src/android/pax.gradle" custom="true" type="gradleReference" />
   </platform>

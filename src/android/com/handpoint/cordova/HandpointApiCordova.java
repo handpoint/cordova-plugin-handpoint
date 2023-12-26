@@ -28,7 +28,7 @@ import android.content.pm.PackageManager;
 import com.handpoint.api.applicationprovider.ApplicationProvider;
 import com.handpoint.cordova.sim.RequestSimReadPermissionOperation;
 import com.handpoint.cordova.sim.SimOperation;
-import com.handpoint.cordova.sim.SimOperationFactory;
+import com.handpoint.cordova.sim.OperationFactory;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
@@ -72,7 +72,7 @@ public class HandpointApiCordova extends CordovaPlugin {
         JSONObject parameters;
         try {
           parameters = args.getJSONObject(0);
-          operation = SimOperationFactory.createOperation(action, arguments, callbackContext,
+          operation = OperationFactory.createOperation(action, arguments, callbackContext,
               cordova, cordovaPlugin);
           if (operation != null) {
             operation.execute();
