@@ -28,13 +28,11 @@ import android.content.pm.PackageManager;
 
 import com.handpoint.api.applicationprovider.ApplicationProvider;
 import com.handpoint.cordova.sim.RequestSimReadPermissionOperation;
-import com.handpoint.cordova.sim.SimOperation;
-import com.handpoint.cordova.sim.SimOperationFactory;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
   private final List<PermissionResultObserver> permissionObservers = Collections.synchronizedList(new ArrayList<>());
-  private final List<ActivityResultObserver> activityResultObserverObservers = Collections
+  private final List<ActivityResultObserver> activityResultObservers = Collections
       .synchronizedList(new ArrayList<>());
 
   public static final int ENABLE_LOCATION_CODE = 2000;
@@ -100,37 +98,6 @@ public class HandpointApiCordova extends CordovaPlugin {
     return true;
   }
 
-  private void disableBatteryOptimizations(CallbackContext callbackContext, JSONObject params) throws JSONException {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      Intent intent = new Intent();
-      String packageName = context.getPackageName();
-      PowerManager pm = getPowerManager();
-      if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-        intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-        intent.setData(Uri.parse("package:" + packageName));
-        this.cordova.getActivity().startActivity(intent);
-      }
-    }
-  }
-
-  private void isBatteryOptimizationOn(CallbackContext callbackContext, JSONObject params) throws JSONException {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      String packageName = context.getPackageName();
-      PowerManager pm = getPowerManager();
-
-      PluginResult result = new PluginResult(PluginResult.Status.OK, !pm.isIgnoringBatteryOptimizations(packageName));
-      callbackContext.sendPluginResult(result);
-    }
-  }
-
-  private PowerManager getPowerManager() {
-    return (PowerManager) cordova.getActivity().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-  }
-
-  public boolean isOverlayPermissionGranted() {
-    return Settings.canDrawOverlays(this.cordova.getActivity());
-  }
-
   public void enableLocation(CallbackContext callbackContext, JSONObject params) throws JSONException {
     final LocationManager manager = (LocationManager) ApplicationProvider
         .getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
@@ -156,16 +123,39 @@ public class HandpointApiCordova extends CordovaPlugin {
   public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
     if (requestCode == ENABLE_LOCATION_CODE) {
       enableLocationActivityResult(resultCode, data);
-    } else if (requestCode == ENABLE_OVERLAY_PERMISSION_CODE) {
-      // Check again if permission has been granted
-      if (this.isOverlayPermissionGranted()) {
-        this.logger.info("ACTION_MANAGE_OVERLAY_PERMISSION allowed");
-      } else {
-        this.logger.warning("ACTION_MANAGE_OVERLAY_PERMISSION not allowed");
+    } else {
+      for (ActivityResultObserver observer : activityResultObservers) {
+        observer.onPermissionResult(requestCode, resultCode, data);
       }
     }
     // Handle other results if exists.
     super.onActivityResult(requestCode, resultCode, data);
+  }
+
+  public void addActivityResultObserver(ActivityResultObserver observer) {
+    activityResultObservers.add(observer);
+  }
+
+  public void removeActivityResultObserver(ActivityResultObserver observer) {
+    activityResultObservers.remove(observer);
+  }
+
+  @Override
+  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
+      throws JSONException {
+
+    final boolean permissionGranted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    for (PermissionResultObserver observer : permissionObservers) {
+      observer.onPermissionResult(requestCode, permissionGranted);
+    }
+  }
+
+  public void addPermissionObserver(PermissionResultObserver observer) {
+    permissionObservers.add(observer);
+  }
+
+  public void removePermissionObserver(PermissionResultObserver observer) {
+    permissionObservers.remove(observer);
   }
 
   private void enableLocationActivityResult(final int resultCode, final Intent data) {
@@ -220,22 +210,35 @@ public class HandpointApiCordova extends CordovaPlugin {
     }
   }
 
-  @Override
-  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
-      throws JSONException {
-
-    final boolean permissionGranted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-    for (PermissionResultObserver observer : permissionObservers) {
-      observer.onPermissionResult(requestCode, permissionGranted);
+  private void disableBatteryOptimizations(CallbackContext callbackContext, JSONObject params) throws JSONException {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      Intent intent = new Intent();
+      String packageName = context.getPackageName();
+      PowerManager pm = getPowerManager();
+      if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+        intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+        intent.setData(Uri.parse("package:" + packageName));
+        this.cordova.getActivity().startActivity(intent);
+      }
     }
   }
 
-  public void addPermissionObserver(PermissionResultObserver observer) {
-    permissionObservers.add(observer);
+  private void isBatteryOptimizationOn(CallbackContext callbackContext, JSONObject params) throws JSONException {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      String packageName = context.getPackageName();
+      PowerManager pm = getPowerManager();
+
+      PluginResult result = new PluginResult(PluginResult.Status.OK, !pm.isIgnoringBatteryOptimizations(packageName));
+      callbackContext.sendPluginResult(result);
+    }
   }
 
-  public void removePermissionObserver(PermissionResultObserver observer) {
-    permissionObservers.remove(observer);
+  private PowerManager getPowerManager() {
+    return (PowerManager) cordova.getActivity().getApplicationContext().getSystemService(Context.POWER_SERVICE);
+  }
+
+  public boolean isOverlayPermissionGranted() {
+    return Settings.canDrawOverlays(this.cordova.getActivity());
   }
 
 }
