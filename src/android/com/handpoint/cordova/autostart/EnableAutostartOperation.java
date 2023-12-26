@@ -10,6 +10,7 @@ import android.provider.Settings;
 import com.handpoint.cordova.HandpointApiCordova;
 import com.handpoint.cordova.ActivityResultObserver;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class EnableAutostartOperation extends AutostartOperation implements ActivityResultObserver {
 
@@ -23,13 +24,14 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
     try {
       // If ACTION_MANAGE_OVERLAY_PERMISSION is disabled and Android >= 10
       // then request the user to enable it in settings
+      JSONObject params = args.getJSONObject(0);
       if (!((HandpointApiCordova) this.cordovaPlugin).isOverlayPermissionGranted() && Build.VERSION.SDK_INT >= 29) {
-        String title = this.args.getString(EnableAutostartOperation.TITLE_PARAM) == null
+        String title = params.getString(EnableAutostartOperation.TITLE_PARAM) == null
             ? EnableAutostartOperation.TITLE_DEFAULT
-            : this.args.getString(EnableAutostartOperation.TITLE_PARAM);
-        String message = this.args.getString(EnableAutostartOperation.MESSAGE_PARAM) == null
+            : params.getString(EnableAutostartOperation.TITLE_PARAM);
+        String message = params.getString(EnableAutostartOperation.MESSAGE_PARAM) == null
             ? EnableAutostartOperation.MESSAGE_DEFAULT
-            : this.args.getString(EnableAutostartOperation.MESSAGE_PARAM);
+            : params.getString(EnableAutostartOperation.MESSAGE_PARAM);
         this.showInformationDialog(title, message);
       }
       this.setAutoStart(cordova.getActivity().getLocalClassName(), true);
