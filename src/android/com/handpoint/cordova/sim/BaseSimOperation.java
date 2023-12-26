@@ -20,8 +20,6 @@ public abstract class BaseSimOperation implements Operation {
   protected CordovaPlugin cordovaPlugin;
   protected Logger logger;
 
-  abstract void onRequestPermissionResult(boolean granted);
-
   @Override
   public void initialize(JSONArray args, CallbackContext callbackContext, CordovaInterface cordova,
       CordovaPlugin cordovaPlugin) {
@@ -32,7 +30,6 @@ public abstract class BaseSimOperation implements Operation {
     this.logger = Logger.getLogger(this.getClass().getSimpleName());
   }
 
-  @Override
   public void onRequestPermissionResult(boolean granted) {
     if (granted) {
       callbackContext.success();

@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -26,30 +27,31 @@ import android.provider.Settings;
 import android.content.pm.PackageManager;
 
 import com.handpoint.api.applicationprovider.ApplicationProvider;
-import com.handpoint.cordova.sim.RequestSimReadPermissionOperation;
-import com.handpoint.cordova.sim.SimOperation;
-import com.handpoint.cordova.sim.OperationFactory;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
   private final List<PermissionResultObserver> permissionObservers = Collections.synchronizedList(new ArrayList<>());
 
   public static final int ENABLE_LOCATION_CODE = 2000;
+  public static final int ENABLE_OVERLAY_PERMISSION_CODE = 2100;
   public static final String ENABLE_LOCATION_ACTION = "enableLocation";
   public static final String DISABLE_BATTERY_OPTIMIZATIONS_ACTION = "disableBatteryOptimizations";
   public static final String IS_BATTERY_OPTIMIZATION_ON_ACTION = "isBatteryOptimizationOn";
+
+  protected Logger logger;
 
   Context context;
   CordovaInterface mCordova;
   HandpointHelper handpointHelper;
   String error;
   CallbackContext callbackContextActivityResult;
-  SimOperation operation;
+  Operation operation;
 
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     try {
       super.initialize(cordova, webView);
+      this.logger = Logger.getLogger(this.getClass().getSimpleName());
       this.mCordova = cordova;
       this.context = this.mCordova.getActivity();
       this.handpointHelper = new HandpointHelper(this.context);
@@ -120,6 +122,10 @@ public class HandpointApiCordova extends CordovaPlugin {
     return (PowerManager) cordova.getActivity().getApplicationContext().getSystemService(Context.POWER_SERVICE);
   }
 
+  public boolean isOverlayPermissionGranted() {
+    return Settings.canDrawOverlays(this.cordova.getActivity());
+  }
+
   public void enableLocation(CallbackContext callbackContext, JSONObject params) throws JSONException {
     final LocationManager manager = (LocationManager) ApplicationProvider
         .getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
@@ -145,6 +151,13 @@ public class HandpointApiCordova extends CordovaPlugin {
   public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
     if (requestCode == ENABLE_LOCATION_CODE) {
       enableLocationActivityResult(resultCode, data);
+    } else if (requestCode == ENABLE_OVERLAY_PERMISSION_CODE) {
+      // Check again if permission has been granted
+      if (this.isOverlayPermissionGranted()) {
+        this.logger.info("ACTION_MANAGE_OVERLAY_PERMISSION allowed");
+      } else {
+        this.logger.warning("ACTION_MANAGE_OVERLAY_PERMISSION not allowed");
+      }
     }
     // Handle other results if exists.
     super.onActivityResult(requestCode, resultCode, data);

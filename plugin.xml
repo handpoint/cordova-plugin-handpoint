@@ -41,7 +41,7 @@
       target-dir="src/com/handpoint/cordova/sim" />
     <source-file src="src/android/com/handpoint/cordova/Operation.java"
       target-dir="src/com/handpoint/cordova" />
-    <source-file src="src/android/com/handpoint/cordova/sim/OperationFactory.java"
+    <source-file src="src/android/com/handpoint/cordova/OperationFactory.java"
       target-dir="src/com/handpoint/cordova" />
     <source-file src="src/android/com/handpoint/cordova/GsonUTCDateAdapter.java"
       target-dir="src/com/handpoint/cordova" />
@@ -56,6 +56,8 @@
     <source-file src="src/android/com/handpoint/cordova/GsonTenderTypeAdapter.java"
       target-dir="src/com/handpoint/cordova" />
     <source-file src="src/android/com/handpoint/cordova/PermissionResultObserver.java"
+      target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/ActivityResultObserver.java"
       target-dir="src/com/handpoint/cordova" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="HandpointApiCordova">

@@ -5,7 +5,8 @@ import android.content.pm.PackageManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.handpoint.cordova.services.autostart.AutoStart;
+
+import com.handpoint.cordova.autostart.receivers.UserPresentReceiver;
 
 public class AppStarter {
 
@@ -28,9 +29,9 @@ public class AppStarter {
 
     // Starting your app...
     // Log.d("Cordova AppStarter", "STARTING APP...");
-    SharedPreferences sp = context.getSharedPreferences(AutoStart.PREFS, Context.MODE_PRIVATE);
+    SharedPreferences sp = context.getSharedPreferences(AutostartOperation.PREFS, Context.MODE_PRIVATE);
     String packageName = context.getPackageName();
-    String activityClassName = sp.getString(AutoStart.ACTIVITY_CLASS_NAME, "");
+    String activityClassName = sp.getString(AutostartOperation.ACTIVITY_CLASS_NAME, "");
     if (!activityClassName.equals("")) {
       // Log.d("Cordova AppStarter", className);
       Intent activityIntent = new Intent();

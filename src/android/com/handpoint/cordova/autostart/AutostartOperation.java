@@ -2,15 +2,11 @@ package com.handpoint.cordova.autostart;
 
 import java.util.logging.Logger;
 
-import com.handpoint.cordova.CallbackContext;
-import com.handpoint.cordova.CordovaInterface;
-import com.handpoint.cordova.CordovaPlugin;
-import com.handpoint.cordova.JSONArray;
-import com.handpoint.cordova.JSONException;
+import org.json.JSONArray;
+import org.apache.cordova.*;
 import com.handpoint.cordova.Operation;
 import com.handpoint.cordova.autostart.receivers.BootCompletedReceiver;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
