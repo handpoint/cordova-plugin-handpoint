@@ -900,6 +900,26 @@ Handpoint.prototype.requestSimReadPermission = function (config, successCallback
   this.exec('requestSimReadPermission', config, successCallback, errorCallback);
 };
 
+/**
+ * Enables the auto start of the app on boot
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.enableAutoStart = function (config, successCallback, errorCallback) {
+  this.exec('enableAutoStart', config, successCallback, errorCallback);
+};
+
+/**
+ * Disables the auto start of the app on boot
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.disableAutoStart = function (config, successCallback, errorCallback) {
+  this.exec('disableAutoStart', config, successCallback, errorCallback);
+};
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
