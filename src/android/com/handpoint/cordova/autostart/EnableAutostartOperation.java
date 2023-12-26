@@ -1,5 +1,7 @@
 package com.handpoint.cordova.autostart;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -26,11 +28,11 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
   }
 
   @Override
-  void onActivityResult(int requestCode, final int resultCode, final Intent data) {
+  public void onActivityResult(int requestCode, final int resultCode, final Intent data) {
     if (requestCode == ((HandpointApiCordova) this.cordovaPlugin).ENABLE_OVERLAY_PERMISSION_CODE) {
       ((HandpointApiCordova) this.cordovaPlugin).removeActivityResultObserver(this);
       // Check again if permission has been granted
-      if (this.isOverlayPermissionGranted()) {
+      if (!((HandpointApiCordova) this.cordovaPlugin).isOverlayPermissionGranted()) {
         this.logger.info("ACTION_MANAGE_OVERLAY_PERMISSION allowed");
       } else {
         this.logger.warning("ACTION_MANAGE_OVERLAY_PERMISSION not allowed");
@@ -39,6 +41,7 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
   }
 
   private void showInformationDialog() {
+    EnableAutostartOperation enableAutostartOperation = this;
     AlertDialog.Builder builder = new AlertDialog.Builder(this.cordova.getActivity());
     builder.setTitle("Important Permission Required");
     builder.setMessage(
@@ -47,7 +50,7 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
     builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int id) {
         // User clicked Accept button
-        this.requestOverlayPermission();
+        enableAutostartOperation.requestOverlayPermission();
       }
     });
 
