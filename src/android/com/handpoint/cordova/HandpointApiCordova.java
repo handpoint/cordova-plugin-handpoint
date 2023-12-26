@@ -124,7 +124,7 @@ public class HandpointApiCordova extends CordovaPlugin {
       enableLocationActivityResult(resultCode, data);
     } else {
       for (ActivityResultObserver observer : activityResultObservers) {
-        observer.onPermissionResult(requestCode, resultCode, data);
+        observer.onActivityResult(requestCode, resultCode, data);
       }
     }
     // Handle other results if exists.
