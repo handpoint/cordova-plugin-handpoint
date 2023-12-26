@@ -871,6 +871,35 @@ Handpoint.prototype.printDetailedLog = function (config, successCallback, errorC
   this.exec('printDetailedLog', config, successCallback, errorCallback);
 };
 
+/**
+ * Gets device SIM info
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.getSimInfo = function (config, successCallback, errorCallback) {
+  this.exec('getSimInfo', config, successCallback, errorCallback);
+};
+
+/**
+ * It checks if the app has permission to read the SIM card
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.hasSimReadPermission = function (config, successCallback, errorCallback) {
+  this.exec('hasSimReadPermission', config, successCallback, errorCallback);
+};
+
+/**
+ * It requests permission to read the SIM card
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.requestSimReadPermission = function (config, successCallback, errorCallback) {
+  this.exec('requestSimReadPermission', config, successCallback, errorCallback);
+};
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
