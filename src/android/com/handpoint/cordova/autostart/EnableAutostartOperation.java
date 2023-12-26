@@ -25,7 +25,7 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
       // If ACTION_MANAGE_OVERLAY_PERMISSION is disabled and Android >= 10
       // then request the user to enable it in settings
       JSONObject params = args.getJSONObject(0);
-      if (!((HandpointApiCordova) this.cordovaPlugin).isOverlayPermissionGranted() && Build.VERSION.SDK_INT >= 29) {
+      if (Build.VERSION.SDK_INT >= 29 && !((HandpointApiCordova) this.cordovaPlugin).isOverlayPermissionGranted()) {
         String title = params.getString(EnableAutostartOperation.TITLE_PARAM) == null
             ? EnableAutostartOperation.TITLE_DEFAULT
             : params.getString(EnableAutostartOperation.TITLE_PARAM);
