@@ -13,13 +13,22 @@ import org.json.JSONException;
 
 public class EnableAutostartOperation extends AutostartOperation implements ActivityResultObserver {
 
+  public static final String TITLE_PARAM = "title";
+  public static final String MESSAGE_PARAM = "message";
+  public static final String TITLE_DEFAULT = "Enable automatic start";
+  public static final String MESSAGE_DEFAULT = "To continue, the app needs permission to display over other apps. This is essential for enabling the app to start automatically when your device boots. Please tap 'Accept' to proceed to the settings menu. After adjusting this setting, please return to the app to continue with the setup process.";
+
   @Override
   public void execute() throws JSONException {
     try {
       // If ACTION_MANAGE_OVERLAY_PERMISSION is disabled and Android >= 10
       // then request the user to enable it in settings
       if (!((HandpointApiCordova) this.cordovaPlugin).isOverlayPermissionGranted() && Build.VERSION.SDK_INT >= 29) {
-        this.showInformationDialog();
+        String title = this.args.getString(TITLE_PARAM) == null ? TITLE_DEFAULT
+            : this.args.getString(TITLE_PARAM);
+        String message = this.args.getString(MESSAGE_PARAM) == null ? MESSAGE_DEFAULT
+            : this.args.getString(MESSAGE_PARAM);
+        this.showInformationDialog(title, message);
       }
       this.setAutoStart(cordova.getActivity().getLocalClassName(), true);
     } catch (Exception e) {
@@ -40,13 +49,11 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
     }
   }
 
-  private void showInformationDialog() {
+  private void showInformationDialog(String title, String message) {
     EnableAutostartOperation enableAutostartOperation = this;
     AlertDialog.Builder builder = new AlertDialog.Builder(this.cordova.getActivity());
-    builder.setTitle("Important Permission Required");
-    builder.setMessage(
-        "To continue, the app needs permission to display over other apps. This is essential for [Explain why your app needs this permission]. Please tap 'Accept' to proceed to the settings.");
-
+    builder.setTitle(title);
+    builder.setMessage(message);
     builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int id) {
         // User clicked Accept button
