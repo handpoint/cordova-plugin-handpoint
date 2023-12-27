@@ -6,11 +6,11 @@ import android.os.Build;
 import org.apache.cordova.*;
 import org.json.JSONArray;
 
+import com.handpoint.cordova.Operation;
 import java.util.logging.Logger;
-
 import org.apache.cordova.CordovaInterface;
 
-public abstract class BaseSimOperation implements SimOperation {
+public abstract class BaseSimOperation implements Operation {
 
   protected JSONArray args;
   protected CallbackContext callbackContext;
@@ -28,7 +28,6 @@ public abstract class BaseSimOperation implements SimOperation {
     this.logger = Logger.getLogger(this.getClass().getSimpleName());
   }
 
-  @Override
   public void onRequestPermissionResult(boolean granted) {
     if (granted) {
       callbackContext.success();

@@ -35,12 +35,18 @@ public class GetSimInfoOperation extends BaseSimOperation {
   private TelephonyManager manager;
   private Context context;
 
-  private String getSimSerialNumber() throws Exception {
-    // Use reflection to call SysManager.getSimSerialNumber()
-    Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
-    Method getSIMInfoMethod = sysManagerClass.getDeclaredMethod("getSIMInfo");
-    String[] simInfo = (String[]) getSIMInfoMethod.invoke(null);
-    return simInfo[2];
+  private String getSimSerialNumber() {
+    try {
+      Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method getSIMInfoMethod = sysManagerClass.getDeclaredMethod("getSIMInfo");
+      String[] simInfo = (String[]) getSIMInfoMethod.invoke(null);
+      return simInfo[2];
+    } catch (Exception ex) {
+      this.logger.warning(
+          "Error getting SIM serial number from NeptuneLite. This warning can be ignored when NeptuneLite < V3.29.00: "
+              + ex.getMessage());
+    }
+    return "";
   }
 
   private String getSimSerialNumberWithFallback() throws Exception {
