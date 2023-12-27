@@ -19,21 +19,16 @@ public class AppStarter {
 
   public void run(Context context, Intent intent, int componentState, boolean onAutostart) {
     // Enable or Disable UserPresentReceiver (or bypass the modification)
-    // Log.d("Cordova AppStarter", "UserPresentReceiver component, new state:" +
-    // String.valueOf(componentState));
     if (componentState != BYPASS_USERPRESENT_MODIFICATION) {
       ComponentName receiver = new ComponentName(context, UserPresentReceiver.class);
       PackageManager pm = context.getPackageManager();
       pm.setComponentEnabledSetting(receiver, componentState, PackageManager.DONT_KILL_APP);
     }
 
-    // Starting your app...
-    // Log.d("Cordova AppStarter", "STARTING APP...");
     SharedPreferences sp = context.getSharedPreferences(AutostartOperation.PREFS, Context.MODE_PRIVATE);
     String packageName = context.getPackageName();
     String activityClassName = sp.getString(AutostartOperation.ACTIVITY_CLASS_NAME, "");
     if (!activityClassName.equals("")) {
-      // Log.d("Cordova AppStarter", className);
       Intent activityIntent = new Intent();
       activityIntent.setClassName(
           context, String.format("%s.%s", packageName, activityClassName));
