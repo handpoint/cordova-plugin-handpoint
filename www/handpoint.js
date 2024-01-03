@@ -252,6 +252,21 @@ Handpoint.prototype.refund = function (config, successCallback, errorCallback) {
 };
 
 /**
+ * An automatic refund initiates a refund operation to the card reader. This operation moves funds from
+ * the merchant account to the cardholder´s credit card. In it's simplest form you only have
+ * to pass the amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.automaticRefund = function (config, successCallback, errorCallback) {
+  this.exec('automaticRefund', config, successCallback, errorCallback);
+};
+
+/**
  * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the
  * amount and currency but it also accepts a map with extra parameters.
  * @param {Object} config parameters
