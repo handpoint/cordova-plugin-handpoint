@@ -200,6 +200,29 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void automaticRefund(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      MoToOptions options = this.getOptions(params, MoToOptions.class);
+      String originalTxnid = params.getString("originalTransactionID");
+      if (options != null) {
+        result = this.api.automaticRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid, options);
+      } else {
+        result = this.api.automaticRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success(result.getTransactionReference());
+      } else {
+        callbackContext.error("Can't send refund operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send refund operation to device. Incorrect parameters");
+    }
+  }
+
   public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       OperationStartResult result;
@@ -274,19 +297,11 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       boolean hasAmount = params.has("amount");
       // will always bring the originalTransactionID
       if (options != null) {
-        if (hasAmount) {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), originalTxnid, options);
-        } else {
-          result = this.api.motoRefund(originalTxnid, options);
-        }
+        result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid, options);
       } else {
-        if (hasAmount) {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), originalTxnid);
-        } else {
-          result = this.api.motoRefund(originalTxnid);
-        }
+        result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid);
       }
 
       if (result.getOperationStarted()) {
@@ -626,7 +641,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     SDKEvent event = new SDKEvent("endOfTransaction");
     // print transaction result before serializing it
     if (transactionResult != null) {
-      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: " + transactionResult.toJSON());
+      Logger.getLogger("App-Detailed-Logger")
+          .warning("***[APP] -> endOfTransaction received: " + transactionResult.toJSON());
       event.put("transactionResult", transactionResult);
       event.put("device", device);
       PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
@@ -738,7 +754,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
-  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency, String transactionReference) {
+  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency,
+      String transactionReference) {
     SDKEvent event = new SDKEvent("transactionStarted");
     event.put("type", type.toString());
     event.put("amount", amount.toString());
