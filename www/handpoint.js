@@ -252,6 +252,21 @@ Handpoint.prototype.refund = function (config, successCallback, errorCallback) {
 };
 
 /**
+ * An automatic refund initiates a refund operation to the card reader. This operation moves funds from
+ * the merchant account to the cardholder´s credit card. In it's simplest form you only have
+ * to pass the amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.automaticRefund = function (config, successCallback, errorCallback) {
+  this.exec('automaticRefund', config, successCallback, errorCallback);
+};
+
+/**
  * A sale initiates a payment operation to the card reader. In it's simplest form you only have to pass the
  * amount and currency but it also accepts a map with extra parameters.
  * @param {Object} config parameters
@@ -324,6 +339,79 @@ Handpoint.prototype.motoReversal = function (config, successCallback, errorCallb
   this.exec('motoReversal', config, successCallback, errorCallback);
 };
 
+
+/**
+ * Initiates a preauthorization request. In it's simplest form you only have to pass the
+ * amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorization = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorization', config, successCallback, errorCallback);
+};
+
+/**
+ * Initiates a reversal of a preauthorization request. In it's simplest form you only have to pass the
+ * originalTransactionID but it also accepts a map with extra parameters.
+ * @param {Object} config parameters
+ * @param config.originalTransactionID Unique id of the original preAuthorization transaction as received from the card reader (EFTTransactionID)
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorizationReversal = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorizationReversal', config, successCallback, errorCallback);
+};
+
+/**
+ * Executes a modification to the previously preauthorized amount. In it's simplest form you only have to pass the
+ * amount, currency, [tipAmount] and originalTransactionID but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.tipAmount Tip amount added to the original (base) transaction amount - in the minor unit of currency
+ * @param config.originalTransactionID Unique id of the original preAuthorization transaction as received from the card reader (EFTTransactionID)
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorizationIncrease = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorizationIncrease', config, successCallback, errorCallback);
+};
+
+/**
+ * Launch the capture of the preauthorization. In it's simplest form you only have to pass the
+ * amount, currency, [tipAmount] and originalTransactionID but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.tipAmount Tip amount added to the original (base) transaction amount - in the minor unit of currency
+ * @param config.originalTransactionID Unique id of the original preAuthorization transaction as received from the card reader (EFTTransactionID)
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.preAuthorizationCapture = function (config, successCallback, errorCallback) {
+  this.exec('preAuthorizationCapture', config, successCallback, errorCallback);
+};
+
+/**
+ * Initiates a manual entry preauthorization request. In it's simplest form you only have to pass the
+ * amount and currency but it also accepts a map with extra parameters.
+ * @param {Object} config parameters for sale transaction
+ * @param config.amount Amount of funds to charge - in the minor unit of currency (f.ex. 1000 cents is 10.00 GBP)
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.motoPreauthorization = function (config, successCallback, errorCallback) {
+  this.exec('motoPreauthorization', config, successCallback, errorCallback);
+};
 
 /**
  * Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
@@ -796,6 +884,55 @@ Handpoint.prototype.getPaxModel = function (config, successCallback, errorCallba
 */
 Handpoint.prototype.printDetailedLog = function (config, successCallback, errorCallback) {
   this.exec('printDetailedLog', config, successCallback, errorCallback);
+};
+
+/**
+ * Gets device SIM info
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.getSimInfo = function (config, successCallback, errorCallback) {
+  this.exec('getSimInfo', config, successCallback, errorCallback);
+};
+
+/**
+ * It checks if the app has permission to read the SIM card
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.hasSimReadPermission = function (config, successCallback, errorCallback) {
+  this.exec('hasSimReadPermission', config, successCallback, errorCallback);
+};
+
+/**
+ * It requests permission to read the SIM card
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.requestSimReadPermission = function (config, successCallback, errorCallback) {
+  this.exec('requestSimReadPermission', config, successCallback, errorCallback);
+};
+
+/**
+ * Enables the auto start of the app on boot
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.enableAutoStart = function (config, successCallback, errorCallback) {
+  this.exec('enableAutoStart', config, successCallback, errorCallback);
+};
+
+/**
+ * Disables the auto start of the app on boot
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.disableAutoStart = function (config, successCallback, errorCallback) {
+  this.exec('disableAutoStart', config, successCallback, errorCallback);
 };
 
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
