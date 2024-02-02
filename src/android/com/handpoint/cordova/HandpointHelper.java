@@ -66,7 +66,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     this.context = context;
   }
 
-  public void printDetailedLog(CallbackContext callbackContext, JSONObject params) throws Throwable {
+  public void printDetailedLog(CallbackContext callbackContext, JSONObject params) {
     try {
       String log = params.getString("log");
       Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> " + log);

@@ -39,6 +39,7 @@ public class HandpointApiCordova extends CordovaPlugin {
   public static final String ENABLE_LOCATION_ACTION = "enableLocation";
   public static final String DISABLE_BATTERY_OPTIMIZATIONS_ACTION = "disableBatteryOptimizations";
   public static final String IS_BATTERY_OPTIMIZATION_ON_ACTION = "isBatteryOptimizationOn";
+  public static final String PRINT_DETAILED_LOG_ACTION = "printDetailedLog";
 
   protected Logger logger;
 
@@ -64,37 +65,21 @@ public class HandpointApiCordova extends CordovaPlugin {
 
   @Override
   public boolean execute(String ac, JSONArray arguments, CallbackContext cbc) throws JSONException {
-
     final String action = ac;
     final JSONArray args = arguments;
     final CallbackContext callbackContext = cbc;
     final CordovaInterface cordova = this.mCordova;
     final CordovaPlugin cordovaPlugin = this;
 
-    cordova.getActivity().runOnUiThread(new Runnable() {
-      public void run() {
-        JSONObject parameters;
-        try {
-          parameters = args.getJSONObject(0);
-          operation = OperationFactory.createOperation(action, arguments, callbackContext,
-              cordova, cordovaPlugin);
-          if (operation != null) {
-            operation.execute();
-          } else if (action.equals(ENABLE_LOCATION_ACTION)) {
-            enableLocation(cbc, parameters);
-          } else if (action.equals(DISABLE_BATTERY_OPTIMIZATIONS_ACTION)) {
-            disableBatteryOptimizations(cbc, parameters);
-          } else if (action.equals(IS_BATTERY_OPTIMIZATION_ON_ACTION)) {
-            isBatteryOptimizationOn(cbc, parameters);
-          } else {
-            executeAction(action, cbc, parameters);
-          }
-        } catch (JSONException jse) {
-          callbackContext.error("Handpoint SDK error getting parameters: " + jse.toString());
-        }
-      }
-    });
-    return true;
+    // Do not create a thread for printing detailed log
+    if (action.equals(PRINT_DETAILED_LOG_ACTION) && this.handpointHelper != null) {
+      this.handpointHelper.printDetailedLog(callbackContext, args.getJSONObject(0));
+      return true;
+    } else {
+      // Run the action in a separate thread so that the UI thread is not blocked
+      this.runActionInThread(action, args, callbackContext);
+      return true;
+    }
   }
 
   public void enableLocation(CallbackContext callbackContext, JSONObject params) throws JSONException {
@@ -155,6 +140,38 @@ public class HandpointApiCordova extends CordovaPlugin {
 
   public void removePermissionObserver(PermissionResultObserver observer) {
     permissionObservers.remove(observer);
+  }
+
+  private void runActionInThread(final String ac, final JSONArray arguments, final CallbackContext cbc) {
+
+    final String action = ac;
+    final JSONArray args = arguments;
+    final CallbackContext callbackContext = cbc;
+    final CordovaInterface cordova = this.mCordova;
+    final CordovaPlugin cordovaPlugin = this;
+    cordova.getActivity().runOnUiThread(new Runnable() {
+      public void run() {
+        JSONObject parameters;
+        try {
+          parameters = args.getJSONObject(0);
+          operation = OperationFactory.createOperation(action, arguments, callbackContext,
+              cordova, cordovaPlugin);
+          if (operation != null) {
+            operation.execute();
+          } else if (action.equals(ENABLE_LOCATION_ACTION)) {
+            enableLocation(cbc, parameters);
+          } else if (action.equals(DISABLE_BATTERY_OPTIMIZATIONS_ACTION)) {
+            disableBatteryOptimizations(cbc, parameters);
+          } else if (action.equals(IS_BATTERY_OPTIMIZATION_ON_ACTION)) {
+            isBatteryOptimizationOn(cbc, parameters);
+          } else {
+            executeAction(action, cbc, parameters);
+          }
+        } catch (JSONException jse) {
+          callbackContext.error("Handpoint SDK error getting parameters: " + jse.toString());
+        }
+      }
+    });
   }
 
   private void enableLocationActivityResult(final int resultCode, final Intent data) {
