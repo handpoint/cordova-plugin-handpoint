@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 
 import android.app.AlertDialog;
@@ -25,11 +26,15 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.content.pm.PackageManager;
+import android.util.Log;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.handpoint.api.applicationprovider.ApplicationProvider;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
+  private ExecutorService executorService;
   private final List<PermissionResultObserver> permissionObservers = Collections.synchronizedList(new ArrayList<>());
   private final List<ActivityResultObserver> activityResultObservers = Collections
       .synchronizedList(new ArrayList<>());
@@ -58,6 +63,7 @@ public class HandpointApiCordova extends CordovaPlugin {
       this.mCordova = cordova;
       this.context = this.mCordova.getActivity();
       this.handpointHelper = new HandpointHelper(this.context);
+      this.executorService = Executors.newSingleThreadExecutor();
     } catch (Throwable thr) {
       this.error = thr.toString();
     }
@@ -71,9 +77,21 @@ public class HandpointApiCordova extends CordovaPlugin {
     final CordovaInterface cordova = this.mCordova;
     final CordovaPlugin cordovaPlugin = this;
 
-    // Do not create a thread for printing detailed log
     if (action.equals(PRINT_DETAILED_LOG_ACTION) && this.handpointHelper != null) {
-      this.handpointHelper.printDetailedLog(callbackContext, args.getJSONObject(0));
+      // Use the executor service to run the printDetailedLog method in a background
+      // thread to avoid blocking the UI thread
+      executorService.submit(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            // Attempt to retrieve the JSONObject and execute printDetailedLog
+            JSONObject params = args.getJSONObject(0);
+            handpointHelper.printDetailedLog(callbackContext, params);
+          } catch (JSONException e) {
+            Log.e("HandpointApiCordova", "Error processing JSON arguments for printDetailedLog: " + e.getMessage());
+          }
+        }
+      });
       return true;
     } else {
       // Run the action in a separate thread so that the UI thread is not blocked
@@ -258,6 +276,14 @@ public class HandpointApiCordova extends CordovaPlugin {
       return Settings.canDrawOverlays(this.cordova.getActivity());
     } else {
       return true;
+    }
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    if (executorService != null && !executorService.isShutdown()) {
+      executorService.shutdown();
     }
   }
 
