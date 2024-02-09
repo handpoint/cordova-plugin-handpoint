@@ -66,7 +66,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     this.context = context;
   }
 
-  public void printDetailedLog(CallbackContext callbackContext, JSONObject params) throws Throwable {
+  public void printDetailedLog(CallbackContext callbackContext, JSONObject params) {
     try {
       String log = params.getString("log");
       Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> " + log);
@@ -200,6 +200,29 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void automaticRefund(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      MoToOptions options = this.getOptions(params, MoToOptions.class);
+      String originalTxnid = params.getString("originalTransactionID");
+      if (options != null) {
+        result = this.api.automaticRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid, options);
+      } else {
+        result = this.api.automaticRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success(result.getTransactionReference());
+      } else {
+        callbackContext.error("Can't send refund operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send refund operation to device. Incorrect parameters");
+    }
+  }
+
   public void refundReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       OperationStartResult result;
@@ -274,19 +297,11 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       boolean hasAmount = params.has("amount");
       // will always bring the originalTransactionID
       if (options != null) {
-        if (hasAmount) {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), originalTxnid, options);
-        } else {
-          result = this.api.motoRefund(originalTxnid, options);
-        }
+        result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid, options);
       } else {
-        if (hasAmount) {
-          result = this.api.motoRefund(new BigInteger(params.getString("amount")),
-              Currency.parse(params.getInt("currency")), originalTxnid);
-        } else {
-          result = this.api.motoRefund(originalTxnid);
-        }
+        result = this.api.motoRefund(new BigInteger(params.getString("amount")),
+            Currency.parse(params.getInt("currency")), originalTxnid);
       }
 
       if (result.getOperationStarted()) {
@@ -312,7 +327,126 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       callbackContext.error("Can't send motoReversal operation to the api. Incorrect parameters");
     }
   }
+
+  public void motoPreauthorization(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+
+      MoToOptions options = this.getOptions(params, MoToOptions.class);
+
+      if (options != null) {
+        result = this.api.motoPreauthorization(amount, currency, options);
+      } else {
+        result = this.api.motoPreauthorization(amount, currency);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send manual entry preAuthorization operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send manual entry preAuthorization operation to the api. Incorrect parameters");
+    }
+  }
   /* End MoTo operations */
+
+  public void preAuthorization(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      MerchantAuthOptions options = this.getOptions(params, MerchantAuthOptions.class);
+
+      if (options != null) {
+        result = this.api.preAuthorization(amount, currency, options);
+      } else {
+        result = this.api.preAuthorization(amount, currency);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success(result.getTransactionReference());
+      } else {
+        callbackContext.error("Can't send sale operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorization operation to the api. Incorrect parameters");
+    }
+  }
+
+  public void preAuthorizationReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      String originalTransactionID = params.getString("originalTransactionID");
+      Options options = this.getOptions(params, Options.class);
+
+      if (options != null) {
+        result = this.api.preAuthorizationReversal(originalTransactionID, options);
+      } else {
+        result = this.api.preAuthorizationReversal(originalTransactionID);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send preAuthorizationReversal operation to device");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorizationReversal operation to device. Incorrect parameters");
+    }
+  }
+
+  public void preAuthorizationIncrease(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      BigInteger tipAmount = params.has("tipAmount") ? new BigInteger(params.getString("tipAmount")) : null;
+      String originalTransactionID = params.getString("originalTransactionID");
+      Options options = this.getOptions(params, Options.class);
+
+      if (options != null) {
+        result = this.api.preAuthorizationIncrease(amount, currency, originalTransactionID, options);
+      } else {
+        result = this.api.preAuthorizationIncrease(amount, currency, originalTransactionID);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send preAuthorizationIncrease operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorizationIncrease operation to the api. Incorrect parameters");
+    }
+  }
+
+  public void preAuthorizationCapture(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      BigInteger tipAmount = params.has("tipAmount") ? new BigInteger(params.getString("tipAmount")) : null;
+      String originalTransactionID = params.getString("originalTransactionID");
+      Options options = this.getOptions(params, Options.class);
+
+      if (options != null) {
+        result = this.api.preAuthorizationCapture(amount, currency, originalTransactionID, options);
+      } else {
+        result = this.api.preAuthorizationCapture(amount, currency, originalTransactionID);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send preAuthorizationCapture operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send preAuthorizationCapture operation to the api. Incorrect parameters");
+    }
+  }
 
   @Deprecated // This operation should be removed
   public void cancelRequest(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -507,7 +641,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     SDKEvent event = new SDKEvent("endOfTransaction");
     // print transaction result before serializing it
     if (transactionResult != null) {
-      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: " + transactionResult.toJSON());
+      Logger.getLogger("App-Detailed-Logger")
+          .warning("***[APP] -> endOfTransaction received: " + transactionResult.toJSON());
       event.put("transactionResult", transactionResult);
       event.put("device", device);
       PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
@@ -619,7 +754,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
-  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency, String transactionReference) {
+  public void transactionStarted(TransactionType type, BigInteger amount, Currency currency,
+      String transactionReference) {
     SDKEvent event = new SDKEvent("transactionStarted");
     event.put("type", type.toString());
     event.put("amount", amount.toString());
