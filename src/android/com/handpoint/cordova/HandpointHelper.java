@@ -816,7 +816,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
   protected <T> T getOptions(JSONObject params, Class<T> tClass) throws JSONException {
     JSONObject object = null;
-    if (params.has("options")) {
+    if (params.has("options") && params.get("options") instanceof JSONObject) {
       object = (JSONObject) params.get("options");
     } else {
       object = new JSONObject();
