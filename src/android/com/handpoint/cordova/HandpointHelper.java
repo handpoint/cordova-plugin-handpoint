@@ -804,10 +804,10 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
-  public void transactionResultReady(TransactionResult transactionResult, Device device) {
-    SDKEvent event = new SDKEvent("transactionResultReady");
-    event.put("transactionResult", transactionResult);
-    event.put("device", device);
+  public void receiptIsReady(String merchantReceipt, String customerReceipt) {
+    SDKEvent event = new SDKEvent("receiptsReady");
+    event.put("merchantReceipt", merchantReceipt);
+    event.put("customerReceipt", customerReceipt);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
