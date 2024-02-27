@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
-    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc {
+    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.ReceiptEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -796,6 +796,18 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   public void hideMessage(String message) {
     SDKEvent event = new SDKEvent("hideMessage");
     event.put("message", message);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
+  public void receiptIsReady(String merchantReceipt, String customerReceipt) {
+    SDKEvent event = new SDKEvent("receiptsReady");
+    event.put("merchantReceipt", merchantReceipt);
+    event.put("customerReceipt", customerReceipt);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
