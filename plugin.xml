@@ -83,23 +83,22 @@
       <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     </config-file>
     <config-file parent="/manifest/application" target="AndroidManifest.xml">
-      <service android:enabled="true" android:name=".RestartService" />
       <!-- Autostart receivers -->
-      <receiver android:name="com.handpoint.cordova.autostart.receiver.BootCompletedReceiver"
+      <receiver android:name="com.handpoint.cordova.autostart.receivers.BootCompletedReceiver"
         android:enabled="false" android:exported="false">
         <intent-filter>
           <action android:name="android.intent.action.BOOT_COMPLETED" />
         </intent-filter>
       </receiver>
       <receiver
-        android:name="com.handpoint.cordova.autostart.receiver.UserPresentReceiver"
+        android:name="com.handpoint.cordova.autostart.receivers.UserPresentReceiver"
         android:enabled="false" android:exported="false">
         <intent-filter>
           <action android:name="android.intent.action.USER_PRESENT" />
         </intent-filter>
       </receiver>
       <receiver
-        android:name="com.handpoint.cordova.autostart.receiver.PackageReplacedReceiver"
+        android:name="com.handpoint.cordova.autostart.receivers.PackageReplacedReceiver"
         android:enabled="true" android:exported="true">
         <intent-filter>
           <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
