@@ -491,6 +491,22 @@ Handpoint.prototype.signatureResult = function (config, successCallback, errorCa
 };
 
 /**
+ * A tokenize and modify operation allows you to start a financial operation for an initial amount,
+ * tokenize the card being dipped/tapped/swiped and modify the amount before the transaction is sent
+ * for processing. This operation is very useful for loyalty scenarios, a unique token for the card
+ * is delivered to your application in the middle of the transaction so you can lookup in your own
+ * loyalty engine if the cardholder qualifies for a discount.
+ * If the cardholder does qualify for a discount then the amount of the transaction can be modified
+ * (decreased) before the transaction is sent for processing.
+ * @param {Object} config parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.tokenizedOperation = function (config, successCallback, errorCallback) {
+  this.exec('tokenizedOperation', config, successCallback, errorCallback);
+}
+
+/**
  * Configures the device as the preferred device and tries to connect to it. Everytime a
  * new connection is started the SDK will make 3 attempts to reestablish the connection.
  * If those attempts fail, the connection is considered dead.

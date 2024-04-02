@@ -465,6 +465,28 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     // TODO
   }
 
+  public void tokenizedOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      Currency currency = Currency.parse(params.getInt("currency"));
+      Options options = this.getOptions(params, Options.class);
+
+      if (options != null) {
+        result = this.api.tokenizedOperation(currency, options);
+      } else {
+        result = this.api.tokenizedOperation(currency);
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send tokenizedOperation operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send tokenizedOperation operation to the api. Incorrect parameters");
+    }
+  }
+
   public void signatureResult(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.api.signatureResult(params.getBoolean("accepted"))) {
