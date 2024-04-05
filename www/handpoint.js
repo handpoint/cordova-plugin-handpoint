@@ -414,6 +414,18 @@ Handpoint.prototype.motoPreauthorization = function (config, successCallback, er
 };
 
 /**
+ * TODO(cmg): Add description
+ * @param {Object} config parameters for sale transaction
+ * @param config.currency Currency of the charge @see Handpoint.Currency
+ * @param config.map A map including extra optional transaction parameters
+ * @param {Function} successCallback This function will be called if operation succeed
+ * @param {Function} errorCallback This function will be called if an error happened
+ */
+Handpoint.prototype.tokenizedOperation = function (config, successCallback, errorCallback) {
+  this.exec('tokenizedOperation', config, successCallback, errorCallback);
+};
+
+/**
  * Enable Scanner allows the merchant to use the QR / Barcode scanner (where available)
  * It accepts certain configuration parameters, such as multiScan (boolean)
  * autoScan (boolean), resultsGrouped (boolean) and timeout (integer),

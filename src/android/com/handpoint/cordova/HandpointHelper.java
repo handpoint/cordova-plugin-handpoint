@@ -9,6 +9,7 @@ import com.handpoint.api.HapiManager;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.AuthenticationResponse;
 import com.handpoint.api.shared.CardBrands;
+import com.handpoint.api.shared.CardTokenizationData;
 import com.handpoint.api.shared.ConnectionMethod;
 import com.handpoint.api.shared.ConnectionStatus;
 import com.handpoint.api.shared.ConverterUtil;
@@ -29,6 +30,7 @@ import com.handpoint.api.shared.TransactionType;
 import com.handpoint.api.shared.TypeOfResult;
 import com.handpoint.api.shared.auth.HapiMPosAuthResponse;
 import com.handpoint.api.shared.i18n.SupportedLocales;
+import com.handpoint.api.shared.operations.OperationDto;
 import com.handpoint.api.shared.options.MerchantAuthOptions;
 import com.handpoint.api.shared.options.MoToOptions;
 import com.handpoint.api.shared.options.Options;
@@ -37,6 +39,7 @@ import com.handpoint.api.shared.options.SaleOptions;
 import com.handpoint.api.shared.OperationStartResult;
 import com.handpoint.api.shared.options.RefundReversalOptions;
 import com.handpoint.api.shared.options.SaleReversalOptions;
+import com.handpoint.api.shared.resumeoperation.ResumeCallback;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -53,7 +56,7 @@ import java.util.logging.Logger;
 
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
-    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.ReceiptEvent {
+    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.ReceiptEvent, Events.CardTokenization {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -61,6 +64,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   Device device;
   CallbackContext callbackContext;
   Context context;
+  ResumeCallback resumeTokenizedOperationCallback = null;
 
   public HandpointHelper(Context context) {
     this.context = context;
@@ -448,6 +452,51 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void tokenizedOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      OperationStartResult result;
+      Currency currency = Currency.parse(params.getInt("currency"));
+      Options options = this.getOptions(params, Options.class);
+
+      this.resumeTokenizedOperationCallback = null; // reset the callback //TODO(cmg): check!
+
+      if (options != null) {
+        result = this.api.tokenizedOperation(currency, options);
+      } else {
+        result = this.api.tokenizedOperation(currency); //TODO(cmg): not sure if this is supported
+      }
+
+      if (result.getOperationStarted()) {
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't send tokenizedOperation operation to the api");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't send tokenizedOperation operation to the api. Incorrect parameters");
+    }
+  }
+
+  public resumeTokenizedSale(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      Options options = this.getOptions(params, Options.class);
+
+      if (this.resumeTokenizedOperationCallback != null) {
+        OperationDto.Sale sale = new OperationDto.Sale(amount, currency, options);
+
+        this.resumeTokenizedOperationCallback.resume(sale);
+        this.resumeTokenizedOperationCallback = null; // reset the callback //TODO(cmg): check!
+
+        callbackContext.success("ok");
+      } else {
+        callbackContext.error("Can't resume tokenized operation. No operation to resume");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't resume tokenized operation. Incorrect parameters");
+    }
+  }
+
   @Deprecated // This operation should be removed
   public void cancelRequest(CallbackContext callbackContext, JSONObject params) throws Throwable {
     callbackContext.error("Can't send cancelRequest operation to device");
@@ -699,6 +748,21 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       this.callbackContext.sendPluginResult(result);
     }
   }
+
+  @Override
+  public void cardTokenized(ResumeCallback callback, CardTokenizationData cardTokenizationData) {
+    this.resumeTokenizedOperationCallback = callback; // save the callback to resume the operation (in "resumeTokenizedSale" method)
+
+    SDKEvent event = new SDKEvent("cardTokenized");
+    event.put("callback", callback);
+    event.put("cardTokenizationData", cardTokenizationData);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
 
   /**
    * Status Events
