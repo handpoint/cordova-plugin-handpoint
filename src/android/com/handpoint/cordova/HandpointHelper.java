@@ -471,17 +471,18 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     try {
       BigInteger amount = new BigInteger(params.getString("amount"));
       Currency currency = Currency.parse(params.getInt("currency"));
-      Options options = this.getOptions(params, Options.class);
 
       if (this.resumeTokenizedOperationCallback != null) {
         OperationDto operation = null;
         switch (currentOperationState.type) {
           case sale:
-            operation = new OperationDto.Sale(amount, currency, (SaleOptions) options);
+            SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
+            operation = new OperationDto.Sale(amount, currency, saleOptions);
             break;
           case refund:
+            RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
             operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
-                (RefundOptions) options);
+                (RefundOptions) refundOptions);
             break;
           default:
             throw new UnsupportedOperationException("Resume not supported for operation: ");
