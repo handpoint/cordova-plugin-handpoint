@@ -139,8 +139,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       Currency currency = Currency.parse(params.getInt("currency"));
       this.currentOperationState = new OperationState(Operations.sale, amount, currency, options);
 
-      // Simplifica la asignación de 'result' usando operadores ternarios y
-      // aprovechando el polimorfismo.
       OperationStartResult result = tokenize
           ? (options != null ? this.api.tokenizedOperation(currency, options) : this.api.tokenizedOperation(currency))
           : (options != null ? this.api.sale(amount, currency, options) : this.api.sale(amount, currency));
