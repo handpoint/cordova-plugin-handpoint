@@ -134,25 +134,16 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   public void sale(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       boolean tokenize = params.optString("tokenize", "false").equalsIgnoreCase("true");
-      OperationStartResult result;
       SaleOptions options = this.getOptions(params, SaleOptions.class);
       BigInteger amount = new BigInteger(params.getString("amount"));
       Currency currency = Currency.parse(params.getInt("currency"));
       this.currentOperationState = new OperationState(Operations.sale, amount, currency, options);
 
-      if (options != null) {
-        if (tokenize) {
-          result = this.api.tokenizedOperation(currency, options);
-        } else {
-          result = this.api.sale(amount, currency, options);
-        }
-      } else {
-        if (tokenize) {
-          result = this.api.tokenizedOperation(currency);
-        } else {
-          result = this.api.sale(amount, currency);
-        }
-      }
+      // Simplifica la asignación de 'result' usando operadores ternarios y
+      // aprovechando el polimorfismo.
+      OperationStartResult result = tokenize
+          ? (options != null ? this.api.tokenizedOperation(currency, options) : this.api.tokenizedOperation(currency))
+          : (options != null ? this.api.sale(amount, currency, options) : this.api.sale(amount, currency));
 
       if (result.getOperationStarted()) {
         callbackContext.success(result.getTransactionReference());
