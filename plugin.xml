@@ -41,6 +41,8 @@
       target-dir="src/com/handpoint/cordova/sim" />
     <source-file src="src/android/com/handpoint/cordova/Operation.java"
       target-dir="src/com/handpoint/cordova" />
+    <source-file src="src/android/com/handpoint/cordova/OperationState.java"
+      target-dir="src/com/handpoint/cordova" />
     <source-file src="src/android/com/handpoint/cordova/OperationFactory.java"
       target-dir="src/com/handpoint/cordova" />
     <source-file src="src/android/com/handpoint/cordova/GsonUTCDateAdapter.java"
