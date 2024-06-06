@@ -935,6 +935,16 @@ Handpoint.prototype.disableAutoStart = function (config, successCallback, errorC
   this.exec('disableAutoStart', config, successCallback, errorCallback);
 };
 
+/**
+ *
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.resumeTokenizedOperation = function (config, successCallback, errorCallback) {
+  this.exec('resumeTokenizedOperation', config, successCallback, errorCallback);
+}
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
