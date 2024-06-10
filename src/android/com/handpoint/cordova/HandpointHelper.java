@@ -140,7 +140,9 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       this.currentOperationState = new OperationState(Operations.sale, amount, currency, options);
 
       OperationStartResult result = tokenize
-          ? (options != null ? this.api.tokenizedOperation(currency, options) : this.api.tokenizedOperation(currency))
+          ? (this.api.tokenizedOperation(amount, currency, options))
+          // ? (options != null ? this.api.tokenizedOperation(amount, currency, options) :
+          // this.api.tokenizedOperation(amount, currency))
           : (options != null ? this.api.sale(amount, currency, options) : this.api.sale(amount, currency));
 
       if (result.getOperationStarted()) {
@@ -485,6 +487,16 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't resume tokenized operation. Incorrect parameters");
+    }
+    this.resumeTokenizedOperationCallback = null;
+  }
+
+  public void cancelTokenizedOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.resumeTokenizedOperationCallback != null) {
+      this.resumeTokenizedOperationCallback.cancel();
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't cancel tokenized operation. No operation to cancel");
     }
     this.resumeTokenizedOperationCallback = null;
   }

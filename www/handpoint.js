@@ -945,6 +945,18 @@ Handpoint.prototype.resumeTokenizedOperation = function (config, successCallback
   this.exec('resumeTokenizedOperation', config, successCallback, errorCallback);
 }
 
+/**
+ * Cancels the tokenized operation. In case of a tokenized operation, the card reader will
+ * wait for a tokenized operation to be resumed. If the operation is not resumed within a
+ * certain time frame, the card reader will cancel the operation.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.cancelTokenizedOperation = function (successCallback, errorCallback) {
+  this.exec('cancelTokenizedOperation', {}, successCallback, errorCallback);
+}
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
