@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import android.app.AlertDialog;
@@ -32,6 +33,9 @@ public class HandpointApiCordova extends CordovaPlugin {
 
   private final List<PermissionResultObserver> permissionObservers = Collections.synchronizedList(new ArrayList<>());
   private final List<ActivityResultObserver> activityResultObservers = Collections
+
+  public static final int ENABLE_LOCATION_CODE = 2000;
+  public static final int ENABLE_OVERLAY_PERMISSION_CODE = 2100;
   public static final String ENABLE_LOCATION_ACTION = "enableLocation";
   public static final String DISABLE_BATTERY_OPTIMIZATIONS_ACTION = "disableBatteryOptimizations";
   public static final String IS_BATTERY_OPTIMIZATION_ON_ACTION = "isBatteryOptimizationOn";
