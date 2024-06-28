@@ -30,12 +30,10 @@ import com.handpoint.api.applicationprovider.ApplicationProvider;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
+  <<<<<<<HEAD=======
+  private ExecutorService executorService;>>>>>>>main
   private final List<PermissionResultObserver> permissionObservers = Collections.synchronizedList(new ArrayList<>());
   private final List<ActivityResultObserver> activityResultObservers = Collections
-      .synchronizedList(new ArrayList<>());
-
-  public static final int ENABLE_LOCATION_CODE = 2000;
-  public static final int ENABLE_OVERLAY_PERMISSION_CODE = 2100;
   public static final String ENABLE_LOCATION_ACTION = "enableLocation";
   public static final String DISABLE_BATTERY_OPTIMIZATIONS_ACTION = "disableBatteryOptimizations";
   public static final String IS_BATTERY_OPTIMIZATION_ON_ACTION = "isBatteryOptimizationOn";
