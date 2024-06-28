@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
-    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc {
+    Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.ReceiptEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
 
@@ -803,6 +803,18 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  @Override
+  public void receiptIsReady(String merchantReceipt, String customerReceipt) {
+    SDKEvent event = new SDKEvent("receiptsReady");
+    event.put("merchantReceipt", merchantReceipt);
+    event.put("customerReceipt", customerReceipt);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
   public void hardwareStatusChanged(HardwareStatus status, ConnectionMethod hardware) {
     SDKEvent event = new SDKEvent("hardwareStatusChanged");
     event.put("status", status);
@@ -816,7 +828,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
   protected <T> T getOptions(JSONObject params, Class<T> tClass) throws JSONException {
     JSONObject object = null;
-    if (params.has("options")) {
+    if (params.has("options") && params.get("options") instanceof JSONObject) {
       object = (JSONObject) params.get("options");
     } else {
       object = new JSONObject();
