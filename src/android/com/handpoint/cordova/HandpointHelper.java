@@ -691,6 +691,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
   @Override
   public void endOfTransaction(TransactionResult transactionResult, Device device) {
+    this.logger.info("***[APP] -> [perf-event] EndOfTransaction Serialization start");
     SDKEvent event = new SDKEvent("endOfTransaction");
     // print transaction result before serializing it
     if (transactionResult != null) {
@@ -703,6 +704,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (this.callbackContext != null) {
         this.callbackContext.sendPluginResult(result);
       }
+      this.logger.info("***[APP] -> [perf-event] EndOfTransaction Serialization end");
     } else {
       Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> endOfTransaction received: null");
     }
@@ -735,7 +737,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   public void cardTokenized(ResumeCallback callback, CardTokenizationData cardTokenizationData) {
     this.resumeTokenizedOperationCallback = callback; // save the callback to resume the operation (in
     // "resumeTokenizedSale" method)
-
+    this.logger.info("***[APP] -> [perf-event] Card Tokenization Serialization start");
     SDKEvent event = new SDKEvent("cardTokenized");
     event.put("callback", callback);
     event.put("cardTokenizationData", cardTokenizationData);
@@ -744,6 +746,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     if (this.callbackContext != null) {
       this.callbackContext.sendPluginResult(result);
     }
+    this.logger.info("***[APP] -> [perf-event] Card Tokenization Serialization end");
   }
 
   /**
