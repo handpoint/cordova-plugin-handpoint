@@ -67,10 +67,12 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   Context context;
   ResumeCallback resumeTokenizedOperationCallback;
   private OperationState currentOperationState;
+  private Logger logger;
 
   public HandpointHelper(Context context) {
     this.context = context;
     this.resumeTokenizedOperationCallback = null;
+    this.logger = Logger.getLogger("App-Detailed-Logger");
   }
 
   public void printDetailedLog(CallbackContext callbackContext, JSONObject params) {
