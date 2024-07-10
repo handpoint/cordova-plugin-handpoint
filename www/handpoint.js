@@ -12,10 +12,8 @@ function Handpoint() {
    */
   this.ConnectionMethod = {
     "BLUETOOTH": 0,
-    "HTTPS": 1,
-    "SIMULATOR": 2,
-    "ANDROID_PAYMENT": 3,
-    "CLOUD": 4
+    "USB": 1,
+    "ANDROID_PAYMENT": 2
   };
 
   /**
