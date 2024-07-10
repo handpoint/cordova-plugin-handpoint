@@ -58,9 +58,14 @@ import java.util.logging.Logger;
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
-    Events.ReceiptUploadingEvent {
+    Events.ReceiptUploadingEvent , Events.KioskModeEvent,
+    Events.RebootEvent, Events.PasswordProtectionEvent, Events.LocaleEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
+  private final String SET_KIOSK_MODE_COMMAND = "setKioskMode";
+  private final String SET_LOCALE_COMMAND = "setLocale";
+  private final String SET_PASSWORD_PROTECTION_COMMAND = "setPasswordProtection";
+  private final String REBOOT_COMMAND = "reboot";
 
   Hapi api;
   Device device;
@@ -502,6 +507,14 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       callbackContext.error("Can't cancel tokenized operation. No operation to cancel");
     }
     this.resumeTokenizedOperationCallback = null;
+  }
+
+  public void disableNavigationBar(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    this.setNavigationBarStatus(callbackContext, false);
+  }
+
+  public void enableNavigationBar(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    this.setNavigationBarStatus(callbackContext, true);
   }
 
   @Deprecated // This operation should be removed
@@ -978,6 +991,26 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  @Override
+  public void kioskModeStatusUpdate(boolean b) {
+    this.sendControlCommand(this.SET_KIOSK_MODE_COMMAND, Boolean.toString(b));
+  }
+
+  @Override
+  public void localeStatusUpdate(String s) {
+    this.sendControlCommand(this.SET_LOCALE_COMMAND, s);
+  }
+
+  @Override
+  public void passwordProtectionStatusUpdate(boolean b) {
+    this.sendControlCommand(this.SET_PASSWORD_PROTECTION_COMMAND, Boolean.toString(b));
+  }
+
+  @Override
+  public void reboot() {
+    this.sendControlCommand(this.REBOOT_COMMAND, "");
+  }
+
   public void cardLanguage(SupportedLocales locale) {
     SDKEvent event = new SDKEvent("cardLanguage");
     event.put("locale", locale);
@@ -1150,6 +1183,31 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   private void setEventsHandler() {
     // Register class as listener for all events
     this.api.registerEventsDelegate(this);
+  }
+
+  private void sendControlCommand(String commandName, Object payload) {
+    SDKEvent event = new SDKEvent("controlCommand");
+    Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> controlCommand received: " + commandName);
+    event.put("command", commandName);
+    event.put("payload", payload);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  private void setNavigationBarStatus(CallbackContext callbackContext, boolean status) {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      String methodName = status ? "showNavigationBar": "hideNavigationBar";
+      Method method = sysManager.getDeclaredMethod(methodName);
+      Object result = method.invoke(sysManager);
+      callbackContext.success("ok");
+    } catch (Exception e) {
+      callbackContext.error("setNavigationBarStatus Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("setNavigationBarStatus Error -> " + e.getCause());
+    }
   }
 
 }
