@@ -9,6 +9,7 @@ import com.handpoint.api.HapiManager;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.AuthenticationResponse;
 import com.handpoint.api.shared.CardBrands;
+import com.handpoint.api.shared.CardTokenizationData;
 import com.handpoint.api.shared.ConnectionMethod;
 import com.handpoint.api.shared.ConnectionStatus;
 import com.handpoint.api.shared.ConverterUtil;
@@ -37,6 +38,7 @@ import com.handpoint.api.shared.options.SaleOptions;
 import com.handpoint.api.shared.OperationStartResult;
 import com.handpoint.api.shared.options.RefundReversalOptions;
 import com.handpoint.api.shared.options.SaleReversalOptions;
+import com.handpoint.api.shared.resumeoperation.ResumeCallback;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -62,9 +64,11 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   Device device;
   CallbackContext callbackContext;
   Context context;
+  ResumeCallback resumeTokenizedOperationCallback;
 
   public HandpointHelper(Context context) {
     this.context = context;
+    this.resumeTokenizedOperationCallback = null;
   }
 
   public void printDetailedLog(CallbackContext callbackContext, JSONObject params) {
@@ -677,6 +681,22 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     if (this.callbackContext != null) {
       this.callbackContext.sendPluginResult(result);
     }
+  }
+
+  @Override
+  public void cardTokenized(ResumeCallback callback, CardTokenizationData cardTokenizationData) {
+    this.resumeTokenizedOperationCallback = callback; // save the callback to resume the operation (in
+    // "resumeTokenizedSale" method)
+    this.logger.info("***[APP] -> [perf-event] Card Tokenization Serialization start");
+    SDKEvent event = new SDKEvent("cardTokenized");
+    event.put("callback", callback);
+    event.put("cardTokenizationData", cardTokenizationData);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+    this.logger.info("***[APP] -> [perf-event] Card Tokenization Serialization end");
   }
 
   /**
