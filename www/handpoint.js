@@ -794,6 +794,26 @@ Handpoint.prototype.setApn = function (config, successCallback, errorCallback) {
 };
 
 /**
+ * Enable the Navigation bar on a smartPOS device
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.enableNavigationBar = function (config, successCallback, errorCallback) {
+  this.exec('enableNavigationBar', config, successCallback, errorCallback);
+};
+
+/**
+ * Disable the Navigation bar on a smartPOS device
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.disableNavigationBar = function (config, successCallback, errorCallback) {
+  this.exec('disableNavigationBar', config, successCallback, errorCallback);
+};
+
+/**
  * Reboots the device
  * @param {Object} config parameters for reboot operation
  * @param {Function} successCallback This function will be called if operation succeed
