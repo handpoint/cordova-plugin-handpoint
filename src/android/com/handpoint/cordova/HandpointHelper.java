@@ -679,6 +679,22 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  @Override
+  public void cardTokenized(ResumeCallback callback, CardTokenizationData cardTokenizationData) {
+    this.resumeTokenizedOperationCallback = callback; // save the callback to resume the operation (in
+    // "resumeTokenizedSale" method)
+    this.logger.info("***[APP] -> [perf-event] Card Tokenization Serialization start");
+    SDKEvent event = new SDKEvent("cardTokenized");
+    event.put("callback", callback);
+    event.put("cardTokenizationData", cardTokenizationData);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+    this.logger.info("***[APP] -> [perf-event] Card Tokenization Serialization end");
+  }
+
   /**
    * Status Events
    */
