@@ -536,8 +536,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   public void connect(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       JSONObject device = params.getJSONObject("device");
-      // note: UsbDevice? is not used in this version
-      this.device = new Device(device.getString("name"), device.getString("address"), null,
+      this.device = new Device(device.getString("name"), device.getString("address"), device.getString("port"),
           ConnectionMethod.values()[device.getInt("connectionMethod")]);
 
       try {
