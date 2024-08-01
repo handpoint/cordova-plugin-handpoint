@@ -1,4 +1,16 @@
-repositories{
+ext {
+    // Define the base version number
+    sdkBaseVersion = '7.1006.0-RC.66'
+    // Set a flag to determine if it's a production build or not
+    //isProd = project.hasProperty('prod') ? project.prod.toBoolean() : false
+    isProd = false
+    // Determine the final version based on the isProd flag
+    sdkPackageName = isProd ? sdkBaseVersion : "$sdkBaseVersion-SNAPSHOT"
+}
+
+println "Final version is: $sdkPackageName"
+
+repositories {
   maven {
     credentials {
       username getCredentialsMavenUsername()
@@ -16,10 +28,24 @@ repositories{
 }
 
 dependencies {
-   implementation 'com.google.code.gson:gson:2.8.5'
-   implementation 'org.slf4j:slf4j-android:1.7.25'
-   implementation ('com.handpoint.api:private-sdk:7.1006.0-RC.39-SNAPSHOT') { changing = true }
-   implementation ('com.handpoint.api:applicationprovider:7.1006.0-RC.39-SNAPSHOT') { changing = true }
+  implementation 'com.google.code.gson:gson:2.8.5'
+  implementation 'org.slf4j:slf4j-android:1.7.25'
+  files('private-sdk-7.1006.0-RC.66-20240729.131620-1-sources.jar')
+
+  implementation "com.handpoint.api:applicationprovider:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.shared:objects:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.shared:internal:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.shared:internal-objects:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.shared:networking:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.shared:repo:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.transactionfeed:analytics:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.transactionfeed:transactions:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.txnfeed:handpoint-txnfeed-client:2.4.4-RC.1" { changing = true }
+  implementation "com.handpoint.api:privateops:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api:paymentsdk:$sdkPackageName" { changing = true }
+  implementation "com.handpoint.api.cloud:client:2.3.2-RC.3" { changing = true }
+  implementation "com.handpoint.api.cloud:ops-client:2.3.2-RC.3" { changing = true }
+  implementation "com.handpoint.api:sdk:$sdkPackageName" { changing = true }
 }
 
 android {

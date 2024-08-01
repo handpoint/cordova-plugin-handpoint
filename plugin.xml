@@ -108,6 +108,7 @@
       </receiver>
     </config-file>
     <framework src="src/android/pax.gradle" custom="true" type="gradleReference" />
+    <framework src="src/android/libs/private-sdk-7.1006.0-RC.66-20240729.131620-1-sources.jar" custom="true" type="gradleReference" />
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
