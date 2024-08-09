@@ -16,6 +16,9 @@
   <platform name="android">
     <source-file src="src/android/com/handpoint/cordova/autostart/AppStarter.java"
       target-dir="src/com/handpoint/cordova/autostart" />
+    <source-file
+      src="src/android/com/handpoint/cordova/receivers/KeyEventReceiver.java"
+      target-dir="src/com/handpoint/cordova/receivers" />
     <source-file src="src/android/com/handpoint/cordova/autostart/AutostartOperation.java"
       target-dir="src/com/handpoint/cordova/autostart" />
     <source-file src="src/android/com/handpoint/cordova/autostart/EnableAutostartOperation.java"

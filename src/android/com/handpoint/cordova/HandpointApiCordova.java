@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +28,7 @@ import android.provider.Settings;
 import android.content.pm.PackageManager;
 
 import com.handpoint.api.applicationprovider.ApplicationProvider;
+import com.handpoint.cordova.receivers.KeyEventReceiver;
 
 public class HandpointApiCordova extends CordovaPlugin {
 
@@ -48,6 +50,7 @@ public class HandpointApiCordova extends CordovaPlugin {
   String error;
   CallbackContext callbackContextActivityResult;
   Operation operation;
+  KeyEventReceiver keyEventReceiver;
 
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -57,6 +60,10 @@ public class HandpointApiCordova extends CordovaPlugin {
       this.mCordova = cordova;
       this.context = this.mCordova.getActivity();
       this.handpointHelper = new HandpointHelper(this.context);
+      // Register the KeyEventReceiver
+      keyEventReceiver = new KeyEventReceiver(webView);
+      IntentFilter filter = new IntentFilter("com.handpoint.cordova.KEY_EVENT");
+      context.registerReceiver(keyEventReceiver, filter);
     } catch (Throwable thr) {
       this.error = thr.toString();
     }
