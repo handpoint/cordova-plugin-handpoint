@@ -23,7 +23,7 @@ public class KeyEventReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     int keyCode = intent.getIntExtra("keyCode", -1);
     if (keyCode != -1) {
-      sendJavascript("javascript:cordova.fireDocumentEvent('keydown', {'key': '" + keyCode + "'});");
+      sendJavascript("javascript:cordova.fireDocumentEvent('keydown', { 'detail': { 'key': '" + keyCode + "'}});");
     }
   }
 
