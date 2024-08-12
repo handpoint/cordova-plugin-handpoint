@@ -67,12 +67,14 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   CallbackContext callbackContext;
   Context context;
   ResumeCallback resumeTokenizedOperationCallback;
+  SysManagerWrapper sysManagerWrapper;
   private OperationState currentOperationState;
   private Logger logger;
 
   public HandpointHelper(Context context) {
     this.context = context;
     this.resumeTokenizedOperationCallback = null;
+    this.sysManagerWrapper = new SysManagerWrapper();
     this.logger = Logger.getLogger("App-Detailed-Logger");
   }
 
@@ -607,6 +609,16 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
   public void getSDKVersion(CallbackContext callbackContext, JSONObject params) throws Throwable {
     callbackContext.success(HapiManager.getSdkVersion());
+  }
+
+  public void getDeviceInfo(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      DeviceInfoBean deviceInfo = sysManagerWrapper.getDeviceInfo();
+      String jsonString = deviceInfo.toJson().toString();
+      callbackContext.success(jsonString);
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute getDeviceInfo. Error: " + ex.getMessage());
+    }
   }
 
   public void printReceipt(CallbackContext callbackContext, JSONObject params) throws Throwable {

@@ -725,6 +725,10 @@ Handpoint.prototype.getSDKVersion = function (successCallback, errorCallback) {
   this.exec('getSDKVersion', {}, successCallback, errorCallback);
 };
 
+Handpoint.prototype.getDeviceInfo = function (successCallback, errorCallback) {
+  this.exec('getDeviceInfo', {}, successCallback, errorCallback);
+};
+
 /**
  * Show location setting dialog
  * @param config.text Text to be shown
