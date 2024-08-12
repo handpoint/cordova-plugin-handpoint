@@ -616,7 +616,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       DeviceInfoBean deviceInfo = sysManagerWrapper.getDeviceInfo();
       String jsonString = deviceInfo.toJson().toString();
       callbackContext.success(jsonString);
-    } catch (JSONException ex) {
+    } catch (Exception ex) {
       callbackContext.error("Can't execute getDeviceInfo. Error: " + ex.getMessage());
     }
   }
