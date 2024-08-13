@@ -58,7 +58,7 @@ import java.util.logging.Logger;
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
-    Events.ReceiptUploadingEvent , Events.KioskModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent {
+    Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
   private final String SET_KIOSK_MODE_COMMAND = "setKioskMode";
@@ -1204,7 +1204,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   private void setNavigationBarStatus(CallbackContext callbackContext, boolean status) {
     try {
       Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
-      String methodName = status ? "showNavigationBar": "hideNavigationBar";
+      String methodName = status ? "showNavigationBar" : "hideNavigationBar";
       Method method = sysManager.getDeclaredMethod(methodName);
       Object result = method.invoke(sysManager);
       callbackContext.success("ok");
