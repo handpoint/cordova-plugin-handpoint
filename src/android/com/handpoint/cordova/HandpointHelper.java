@@ -1001,7 +1001,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
-  public void kioskModeStatusUpdate(boolean b) {
+  public void unattendedModeStatusUpdate(boolean b) {
     this.sendControlCommand(this.SET_KIOSK_MODE_COMMAND, Boolean.toString(b));
   }
 
