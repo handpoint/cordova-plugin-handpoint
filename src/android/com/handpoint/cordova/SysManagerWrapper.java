@@ -34,6 +34,20 @@ public class SysManagerWrapper {
     return deviceInfoBean;
   }
 
+  public void setBrightness(int brightness) {
+    try {
+      // Cargar la clase SysManager dinámicamente
+      Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+
+      // Obtener el método setBrightness
+      Method setBrightnessMethod = sysManagerClass.getDeclaredMethod("setBrightness", int.class);
+      setBrightnessMethod.setAccessible(true);
+      setBrightnessMethod.invoke(null, brightness);
+    } catch (Exception e) {
+      Log.e(TAG, "Error setting brightness via reflection: " + e.getMessage(), e);
+    }
+  }
+
   private CardReaderCapabilitiesBean getCardReaderCapabilities(Class<?> sysManagerClass) {
     try {
       // Obtener el método getCardReaderCapabilities

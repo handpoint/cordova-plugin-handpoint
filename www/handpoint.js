@@ -730,6 +730,17 @@ Handpoint.prototype.getDeviceInfo = function (successCallback, errorCallback) {
 };
 
 /**
+ * Set the brightness of the device
+ * @param {*} config Config object with the brightness value
+ *  - config.brightness The brightness value to set
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.setBrightness = function (config, successCallback, errorCallback) {
+  this.exec('setBrightness', config, successCallback, errorCallback);
+};
+
+/**
  * Show location setting dialog
  * @param config.text Text to be shown
  * @param config.okBtnText Accept button text

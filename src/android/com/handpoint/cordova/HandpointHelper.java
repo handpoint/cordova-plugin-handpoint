@@ -1179,6 +1179,15 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void setBrightness(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.sysManagerWrapper.setBrightness(params.getInt("brightness"));
+      callbackContext.success("ok");
+    } catch (Exception ex) {
+      callbackContext.error("Can't execute getDeviceInfo. Error: " + ex.getMessage());
+    }
+  }
+
   @Override
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
