@@ -11,18 +11,14 @@ public class SysManagerWrapper {
     DeviceInfoBean deviceInfoBean = new DeviceInfoBean();
 
     try {
-      // Cargar la clase SysManager dinámicamente
       Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
 
-      // Obtener el número de serie y modelo
       deviceInfoBean.setSerialNumber(invokeStringMethod(sysManagerClass, "getPaxSerialNumber"));
       deviceInfoBean.setModel(invokeStringMethod(sysManagerClass, "getPaxModel"));
 
-      // Obtener las capacidades del lector de tarjetas usando CardReaderCapabilities
       CardReaderCapabilitiesBean cardReaderCapabilitiesBean = getCardReaderCapabilities(sysManagerClass);
       deviceInfoBean.setCardReaderCapabilities(cardReaderCapabilitiesBean);
 
-      // Obtener información adicional desde SysManager
       deviceInfoBean.setSimInfo(invokeStringArrayMethod(sysManagerClass, "getSIMInfo"));
       deviceInfoBean.setDualSIM(invokeBooleanMethod(sysManagerClass, "isDualSIM"));
       deviceInfoBean.setSdkVersion(invokeStringMethod(sysManagerClass, "getSdkVersion"));
@@ -34,9 +30,32 @@ public class SysManagerWrapper {
     return deviceInfoBean;
   }
 
+  public void setBrightness(int brightness) {
+    try {
+      Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+
+      Method setBrightnessMethod = sysManagerClass.getDeclaredMethod("setBrightness", int.class);
+      setBrightnessMethod.setAccessible(true);
+      setBrightnessMethod.invoke(null, brightness);
+    } catch (Exception e) {
+      Log.e(TAG, "Error setting brightness via reflection: " + e.getMessage(), e);
+    }
+  }
+
+  public void turnOffScreen() {
+    try {
+      Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+
+      Method turnOffScreenMethod = sysManagerClass.getDeclaredMethod("turnOffScreen");
+      turnOffScreenMethod.setAccessible(true);
+      turnOffScreenMethod.invoke(null);
+    } catch (Exception e) {
+      Log.e(TAG, "Error turning off screen via reflection: " + e.getMessage(), e);
+    }
+  }
+
   private CardReaderCapabilitiesBean getCardReaderCapabilities(Class<?> sysManagerClass) {
     try {
-      // Obtener el método getCardReaderCapabilities
       Method getCardReaderCapabilitiesMethod = sysManagerClass.getDeclaredMethod("getCardReaderCapabilities");
       getCardReaderCapabilitiesMethod.setAccessible(true);
       Object capabilities = getCardReaderCapabilitiesMethod.invoke(null);
@@ -44,7 +63,6 @@ public class SysManagerWrapper {
       if (capabilities != null) {
         CardReaderCapabilitiesBean cardReaderCapabilitiesBean = new CardReaderCapabilitiesBean();
 
-        // Usar reflexión para invocar los métodos de CardReaderCapabilities
         Class<?> capabilitiesClass = capabilities.getClass();
 
         cardReaderCapabilitiesBean
