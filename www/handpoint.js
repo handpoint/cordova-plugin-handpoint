@@ -741,6 +741,15 @@ Handpoint.prototype.setBrightness = function (config, successCallback, errorCall
 };
 
 /**
+ * Turn off the screen of the device
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.turnOffScreen = function (successCallback, errorCallback) {
+  this.exec('turnOffScreen', {}, successCallback, errorCallback);
+};
+
+/**
  * Show location setting dialog
  * @param config.text Text to be shown
  * @param config.okBtnText Accept button text
