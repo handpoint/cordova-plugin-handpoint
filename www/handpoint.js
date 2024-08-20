@@ -750,6 +750,15 @@ Handpoint.prototype.turnOffScreen = function (successCallback, errorCallback) {
 };
 
 /**
+ * Turn on the screen of the device
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.turnOnScreen = function (successCallback, errorCallback) {
+  this.exec('turnOnScreen', {}, successCallback, errorCallback);
+}
+
+/**
  * Show location setting dialog
  * @param config.text Text to be shown
  * @param config.okBtnText Accept button text

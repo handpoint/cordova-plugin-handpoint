@@ -54,6 +54,18 @@ public class SysManagerWrapper {
     }
   }
 
+  public void turnOnScreen() {
+    try {
+      Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+
+      Method turnOnScreenMethod = sysManagerClass.getDeclaredMethod("turnOnScreen");
+      turnOnScreenMethod.setAccessible(true);
+      turnOnScreenMethod.invoke(null);
+    } catch (Exception e) {
+      Log.e(TAG, "Error turning on screen via reflection: " + e.getMessage(), e);
+    }
+  }
+
   private CardReaderCapabilitiesBean getCardReaderCapabilities(Class<?> sysManagerClass) {
     try {
       Method getCardReaderCapabilitiesMethod = sysManagerClass.getDeclaredMethod("getCardReaderCapabilities");
