@@ -1197,6 +1197,15 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void turnOnScreen(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.sysManagerWrapper.turnOnScreen();
+      callbackContext.success("ok");
+    } catch (Exception ex) {
+      callbackContext.error("Can't execute turnOnScreen. Error: " + ex.getMessage());
+    }
+  }
+
   @Override
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
