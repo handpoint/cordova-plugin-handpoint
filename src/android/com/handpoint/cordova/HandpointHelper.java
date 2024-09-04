@@ -58,12 +58,13 @@ import java.util.logging.Logger;
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
-    Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent {
+    Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent, Events.ScreenBrightnessEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
   private final String SET_KIOSK_MODE_COMMAND = "setKioskMode";
   private final String SET_LOCALE_COMMAND = "setLocale";
   private final String SET_PASSWORD_PROTECTION_COMMAND = "setPasswordProtection";
+  private final String SET_SCREEN_BRIGHTNESS_COMMAND = "setScreenBrightness";
 
   Hapi api;
   Device device;
@@ -1013,6 +1014,11 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   @Override
   public void passwordProtectionStatusUpdate(boolean b) {
     this.sendControlCommand(this.SET_PASSWORD_PROTECTION_COMMAND, Boolean.toString(b));
+  }
+
+  @Override
+  public void screenBrightnessChanged(int maximum, int minimum) {
+    this.sendControlCommand(this.SET_SCREEN_BRIGHTNESS_COMMAND, maximum + "," + minimum);
   }
 
   public void cardLanguage(SupportedLocales locale) {
