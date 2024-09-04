@@ -759,6 +759,24 @@ Handpoint.prototype.turnOnScreen = function (successCallback, errorCallback) {
 }
 
 /**
+ * Turn off the screen saver of the device
+ * @param {*} successCallback 
+ * @param {*} errorCallback 
+ */
+Handpoint.prototype.turnOffScreenSaver = function (successCallback, errorCallback) {
+  this.exec('turnOffScreenSaver', {}, successCallback, errorCallback);
+}
+
+/**
+ * Turn on the screen saver of the device
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.turnOnScreenSaver = function (successCallback, errorCallback) {
+  this.exec('turnOnScreenSaver', {}, successCallback, errorCallback);
+}
+
+/**
  * Show location setting dialog
  * @param config.text Text to be shown
  * @param config.okBtnText Accept button text
