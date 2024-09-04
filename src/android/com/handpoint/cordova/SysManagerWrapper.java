@@ -66,6 +66,30 @@ public class SysManagerWrapper {
     }
   }
 
+  public void turnOffScreenSaver() {
+    try {
+      Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+
+      Method turnOffScreenSaverMethod = sysManagerClass.getDeclaredMethod("turnOffScreenSaver");
+      turnOffScreenSaverMethod.setAccessible(true);
+      turnOffScreenSaverMethod.invoke(null);
+    } catch (Exception e) {
+      Log.e(TAG, "Error turning off screen saver via reflection: " + e.getMessage(), e);
+    }
+  }
+
+  public void turnOnScreenSaver() {
+    try {
+      Class<?> sysManagerClass = Class.forName("com.handpoint.api.privateops.SysManager");
+
+      Method turnOnScreenSaverMethod = sysManagerClass.getDeclaredMethod("turnOnScreenSaver");
+      turnOnScreenSaverMethod.setAccessible(true);
+      turnOnScreenSaverMethod.invoke(null);
+    } catch (Exception e) {
+      Log.e(TAG, "Error turning on screen saver via reflection: " + e.getMessage(), e);
+    }
+  }
+
   private CardReaderCapabilitiesBean getCardReaderCapabilities(Class<?> sysManagerClass) {
     try {
       Method getCardReaderCapabilitiesMethod = sysManagerClass.getDeclaredMethod("getCardReaderCapabilities");

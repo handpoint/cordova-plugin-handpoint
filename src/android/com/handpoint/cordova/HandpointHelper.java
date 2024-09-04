@@ -1206,6 +1206,24 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void turnOffScreenSaver(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.sysManagerWrapper.turnOffScreenSaver();
+      callbackContext.success("ok");
+    } catch (Exception ex) {
+      callbackContext.error("Can't execute turnOffScreenSaver. Error: " + ex.getMessage());
+    }
+  }
+
+  public void turnOnScreenSaver(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.sysManagerWrapper.turnOnScreenSaver();
+      callbackContext.success("ok");
+    } catch (Exception ex) {
+      callbackContext.error("Can't execute turnOnScreenSaver. Error: " + ex.getMessage());
+    }
+  }
+
   @Override
   protected void finalize() {
     this.api.unregisterEventsDelegate(this);
