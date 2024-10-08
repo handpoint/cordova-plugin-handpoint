@@ -1125,6 +1125,30 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void enableVolumeKeys(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method enableVolumeKeysMethod = sysManager.getDeclaredMethod("enableVolumeKeys");
+      enableVolumeKeysMethod.invoke(sysManager);
+      callbackContext.success("ok");
+    } catch (Exception e) {
+      callbackContext.error("enableVolumeKeys Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("enableVolumeKeys Error -> " + e.getCause());
+    }
+  }
+  
+  public void disableVolumeKeys(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");
+      Method disableVolumeKeysMethod = sysManager.getDeclaredMethod("disableVolumeKeys");
+      disableVolumeKeysMethod.invoke(sysManager);
+      callbackContext.success("ok");
+    } catch (Exception e) {
+      callbackContext.error("disableVolumeKeys Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("disableVolumeKeys Error -> " + e.getCause());
+    }
+  }
+
   public void hasWifiModule(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       Class sysManager = Class.forName("com.handpoint.api.privateops.SysManager");

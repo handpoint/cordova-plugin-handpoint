@@ -894,6 +894,27 @@ Handpoint.prototype.unblockUiBars = function (config, successCallback, errorCall
   this.exec('unblockUiBars', config, successCallback, errorCallback);
 };
 
+
+/*
+* enable the volume keys on the device
+* @param {Object} config
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.enableVolumeKeys = function (config, successCallback, errorCallback) {
+  this.exec('enableVolumeKeys', config, successCallback, errorCallback);
+}
+
+/*
+* disable the volume keys on the device
+* @param {Object} config
+* @param {Function} successCallback This function will be called if operation succeed
+* @param {Function} errorCallback This function will be called if an error happened
+*/
+Handpoint.prototype.disableVolumeKeys = function (config, successCallback, errorCallback) {
+  this.exec('disableVolumeKeys', config, successCallback, errorCallback);
+}
+
 /*
 * checks if the device has a WiFi module
 * @param {Object} config
