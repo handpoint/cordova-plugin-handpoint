@@ -1047,6 +1047,16 @@ Handpoint.prototype.cancelTokenizedOperation = function (successCallback, errorC
   this.exec('cancelTokenizedOperation', {}, successCallback, errorCallback);
 }
 
+/**
+ *
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.resumeEnrichOperation = function (config, successCallback, errorCallback) {
+  this.exec('resumeEnrichOperation', config, successCallback, errorCallback);
+}
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
