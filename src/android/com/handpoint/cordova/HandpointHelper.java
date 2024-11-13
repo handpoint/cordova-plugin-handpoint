@@ -41,6 +41,7 @@ import com.handpoint.api.shared.OperationStartResult;
 import com.handpoint.api.shared.options.RefundReversalOptions;
 import com.handpoint.api.shared.options.SaleReversalOptions;
 import com.handpoint.api.shared.resumeoperation.ResumeCallback;
+import com.handpoint.api.shared.CustomData;
 import com.handpoint.api.shared.CustomDataCallback;
 
 import org.apache.cordova.CallbackContext;
@@ -102,6 +103,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     String sharedSecret = null;
     String cloudApiKey = null;
     boolean supportsMoto = false;
+    boolean enrichTransactionResult = false;
     HandpointCredentials handpointCredentials;
     Settings settings = new Settings();
 
@@ -138,7 +140,17 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       handpointCredentials = new HandpointCredentials(sharedSecret);
     }
 
-    this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
+    try {
+      enrichTransactionResult = params.getBoolean("enrichTransactionResult");
+    } catch (JSONException ex) {
+    }
+
+    if (enrichTransactionResult) {
+      // register the implementation of the enrichTransactionResult interface
+      this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings, this);
+    } else {
+      this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
+    }
 
     this.setEventsHandler();
     callbackContext.success("ok");
@@ -475,21 +487,31 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     try {
       BigInteger amount = new BigInteger(params.getString("amount"));
       Currency currency = Currency.parse(params.getInt("currency"));
+      String plmCloudOperation = params.getString("plmCloudOperation");
 
+      OperationDto operation = null;
       if (this.resumeTokenizedOperationCallback != null) {
-        OperationDto operation = null;
-        switch (currentOperationState.type) {
-          case sale:
-            SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
-            operation = new OperationDto.Sale(amount, currency, saleOptions);
-            break;
-          case refund:
-            RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
-            operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
-                (RefundOptions) refundOptions);
-            break;
-          default:
-            throw new UnsupportedOperationException("Resume not supported for operation: ");
+        if (plmCloudOperation != null) { // cloud operation ->
+          //TODO(cmg): implement other operations
+          this.logger.info("hey!2 [resumeTokenizedOperation] cloud operation; params:" + params.toString());
+          SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
+          operation = new OperationDto.Sale(amount, currency, saleOptions);
+        } else {
+          if (currentOperationState != null) {
+            switch (currentOperationState.type) {
+              case sale:
+                SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
+                operation = new OperationDto.Sale(amount, currency, saleOptions);
+                break;
+              case refund:
+                RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
+                operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
+                  (RefundOptions) refundOptions);
+                break;
+              default:
+                throw new UnsupportedOperationException("Resume not supported for operation: ");
+            }
+          }
         }
         if (operation != null) {
           this.resumeTokenizedOperationCallback.resume(operation);
@@ -1262,7 +1284,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     try {
       if (this.resumeEnrichOperationCallback != null) {
         String loyaltyData = params.getString("loyaltyData");
-        this.resumeEnrichOperationCallback.resume(loyaltyData);
+        CustomData customData = CustomData.create(loyaltyData);
+        this.resumeEnrichOperationCallback.resume(customData);
       } else {
         callbackContext.error("Can't resume enrich operation. No enrich operation to resume");
       }
@@ -1277,7 +1300,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     this.resumeEnrichOperationCallback = customDataCallback; // save the callback to resume the enrich operation (in "resumeEnrichOperation" method)
     this.logger.info("***[APP] -> Received enrich transaction result event");
     SDKEvent event = new SDKEvent("enrich");
-    event.put("customDataCallback", customDataCallback);
     event.put("transactionResult", transactionResult);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
