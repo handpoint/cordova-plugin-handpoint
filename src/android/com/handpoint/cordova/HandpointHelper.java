@@ -147,7 +147,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
     if (enrichTransactionResult) {
       // register the implementation of the enrichTransactionResult interface
-      this.logger.log("[HandpointHelperSetup] the implementation of the enrichTransactionResult interface is registered");
       this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings, this);
     } else {
       this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
