@@ -147,6 +147,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
     if (enrichTransactionResult) {
       // register the implementation of the enrichTransactionResult interface
+      this.logger.log("[HandpointHelperSetup] the implementation of the enrichTransactionResult interface is registered");
       this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings, this);
     } else {
       this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
@@ -492,8 +493,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       OperationDto operation = null;
       if (this.resumeTokenizedOperationCallback != null) {
         if (plmCloudOperation != null) { // cloud operation ->
-          //TODO(cmg): implement other operations
-          this.logger.info("hey!2 [resumeTokenizedOperation] cloud operation; params:" + params.toString());
+          // For cloud operations we only receive the cardTokenized with sale operations
+          this.logger.info("[resumeTokenizedOperation] cloud operation; params:" + params.toString());
           SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
           operation = new OperationDto.Sale(amount, currency, saleOptions);
         } else {
@@ -1280,6 +1281,15 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  /**
+   * Resumes a previously interrupted enrich operation by providing the required custom data.
+   * 
+   * @param callbackContext - The context for sending results or errors back to the caller.
+   * @param params - A JSON object containing the necessary parameters for resuming the operation, 
+   *                 including "loyaltyData" used to create the custom data object.
+   * 
+   * @throws Throwable - May throw exceptions during the execution of the enrichment process.
+   */
   public void resumeEnrichOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       if (this.resumeEnrichOperationCallback != null) {
@@ -1295,6 +1305,13 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     this.resumeEnrichOperationCallback = null;
   }
 
+  /**
+   * Handles the enrichment of a transaction result by processing the provided transaction data
+   * and preparing it for custom enrichment via a callback.
+   * 
+   * @param transactionResult  - The transaction result data to be enriched.
+   * @param customDataCallback - Callback to handle the enrichment process, allowing customization of the data.
+   */
   @Override
   public void enrich(TransactionResult transactionResult, CustomDataCallback customDataCallback) {
     this.resumeEnrichOperationCallback = customDataCallback; // save the callback to resume the enrich operation (in "resumeEnrichOperation" method)

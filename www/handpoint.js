@@ -1048,7 +1048,7 @@ Handpoint.prototype.cancelTokenizedOperation = function (successCallback, errorC
 }
 
 /**
- *
+ * Resumes an enrich transaction result operation.
  * @param {*} config
  * @param {*} successCallback
  * @param {*} errorCallback
