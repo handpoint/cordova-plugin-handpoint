@@ -1057,6 +1057,36 @@ Handpoint.prototype.resumeEnrichOperation = function (config, successCallback, e
   this.exec('resumeEnrichOperation', config, successCallback, errorCallback);
 }
 
+/**
+ * Executes (resume) a dependant operation.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.executeDependantOperation = function (config, successCallback, errorCallback) {
+  this.exec('executeDependantOperation', config, successCallback, errorCallback);
+}
+
+/**
+ * Finishes a dependant operation without a card.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.finishDependantOperationWithoutCardOperation = function (config, successCallback, errorCallback) {
+  this.exec('finishDependantOperationWithoutCardOperation', config, successCallback, errorCallback);
+}
+
+/**
+ * Cancels the current dependant operation.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.cancelDependantOperation = function (config, successCallback, errorCallback) {
+  this.exec('cancelDependantOperation', config, successCallback, errorCallback);
+}
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
