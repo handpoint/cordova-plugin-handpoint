@@ -81,7 +81,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   ResumeDependantOperation resumeDependantOperationCallback;
   SysManagerWrapper sysManagerWrapper;
   private OperationState currentOperationState;
-  private DependantOperationDTO currentOperationDTO;
   private Logger logger;
 
   public HandpointHelper(Context context) {
@@ -848,32 +847,30 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       Currency currency = Currency.parse(params.getInt("currency"));
       String originalTransactionId = params.getString("originalTransactionId");
 
-      OperationDto operation = null;
+      DependantOperationDTO operation = null;
       if (this.resumeDependantOperationCallback != null) {
         if (currentOperationState != null) {
           switch (currentOperationState.type) {
             case refund:
-              RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
-              operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
-                (RefundOptions) refundOptions);
+              operation = new DependantOperationDTO.Refund(amount, currency, currentOperationState.originalTransactionId);
               break;
             case saleReversal: //TODO(cmg): nombre así?
-              SaleReversalOptions saleReversalOptions = this.getOptions(params, SaleReversalOptions.class);
-              operation = new OperationDto.Reversal(amount, currency, currentOperationState.originalTransactionId,
-                (SaleReversalOptions) saleReversalOptions);
+            case refundReversal:
+              operation = new DependantOperationDto.Reversal(amount, currency, currentOperationState.originalTransactionId);
               break;
-            case refundReversal: //TODO(cmg): nombre así?
+            /*case refundReversal: //TODO(cmg): nombre así?
               RefundReversalOptions refundReversalOptions = this.getOptions(params, RefundReversalOptions.class);
-              operation = new OperationDto.Reversal(amount, currency, currentOperationState.originalTransactionId,
+              operation = new OperationDto.RefundReversal(amount, currency, currentOperationState.originalTransactionId,
                 (RefundReversalOptions) refundReversalOptions);
               break;
+            */
             default:
               throw new UnsupportedOperationException("Execute not supported for operation: ");
           }
         }
           
         if (operation != null) {
-          this.resumeDependantOperationCallback.resume(operation);
+          this.resumeDependantOperationCallback.executeDependantOperation(operation);
           callbackContext.success("ok");
       }
       } else {
