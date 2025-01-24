@@ -847,16 +847,20 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       Currency currency = Currency.parse(params.getInt("currency"));
       String originalTransactionId = params.getString("originalTransactionId");
 
-      DependantOperationDTO operation = null;
+      //DependantOperationDTO operation = null;
       if (this.resumeDependantOperationCallback != null) {
         if (currentOperationState != null) {
           switch (currentOperationState.type) {
             case refund:
-              operation = new DependantOperationDTO.Refund(amount, currency, currentOperationState.originalTransactionId);
+              DependantOperationDTO.Refund operation = new DependantOperationDTO.Refund(amount, currency, currentOperationState.originalTransactionId);
+              this.resumeDependantOperationCallback.executeDependantOperation(operation);
+              callbackContext.success("ok");
               break;
             case saleReversal: //TODO(cmg): nombre así?
             case refundReversal:
-              operation = new DependantOperationDto.Reversal(amount, currency, currentOperationState.originalTransactionId);
+              DependantOperationDTO.Reversal operation = new DependantOperationDto.Reversal(amount, currency, currentOperationState.originalTransactionId);
+              this.resumeDependantOperationCallback.executeDependantOperation(operation);
+              callbackContext.success("ok");
               break;
             /*case refundReversal: //TODO(cmg): nombre así?
               RefundReversalOptions refundReversalOptions = this.getOptions(params, RefundReversalOptions.class);
@@ -869,10 +873,10 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
           }
         }
           
-        if (operation != null) {
+        /*if (operation != null) {
           this.resumeDependantOperationCallback.executeDependantOperation(operation);
           callbackContext.success("ok");
-      }
+        }*/
       } else {
         callbackContext.error("Can't execute dependant operation. No dependant operation to resume");
       }
