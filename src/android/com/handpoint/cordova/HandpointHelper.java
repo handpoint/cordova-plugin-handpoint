@@ -852,14 +852,14 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
         if (currentOperationState != null) {
           switch (currentOperationState.type) {
             case refund:
-              DependantOperationDTO.Refund operation = DependantOperationDTO.Refund.Companion.create(amount, currency, currentOperationState.originalTransactionId);
-              this.resumeDependantOperationCallback.executeDependantOperation(operation);
+              DependantOperationDTO.Refund operationRefund = DependantOperationDTO.Refund.Companion.create(amount, currency, currentOperationState.originalTransactionId);
+              this.resumeDependantOperationCallback.executeDependantOperation(operationRefund);
               callbackContext.success("ok");
               break;
             case saleReversal: //TODO(cmg): nombre así?
             case refundReversal:
-              DependantOperationDTO.Reversal operation = DependantOperationDTO.Reversal.Companion.create(amount, currency, currentOperationState.originalTransactionId);
-              this.resumeDependantOperationCallback.executeDependantOperation(operation);
+              DependantOperationDTO.Reversal operationReversal = DependantOperationDTO.Reversal.Companion.create(amount, currency, currentOperationState.originalTransactionId);
+              this.resumeDependantOperationCallback.executeDependantOperation(operationReversal);
               callbackContext.success("ok");
               break;
             /*case refundReversal: //TODO(cmg): nombre así?
