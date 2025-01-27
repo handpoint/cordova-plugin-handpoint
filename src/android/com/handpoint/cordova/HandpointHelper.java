@@ -813,7 +813,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     this.currentOperationState = new OperationState(Operations.refund, amount, currency, originalTransactionId); //TODO(cmg): check
     this.logger.info("***[APP] -> Dependant Refund Serialization start");
     SDKEvent event = new SDKEvent("dependantRefundReceived");
-    event.put("amount", amount);
+    event.put("amount", amount.toString());
     event.put("currency", currency);
     event.put("originalTransactionId", originalTransactionId);
     event.put("resumeDependantOperation", resumeDependantOperation);
