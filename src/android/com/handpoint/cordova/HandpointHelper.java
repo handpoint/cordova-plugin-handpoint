@@ -45,6 +45,7 @@ import com.handpoint.api.shared.CustomData;
 import com.handpoint.api.shared.CustomDataCallback;
 import com.handpoint.api.shared.dependantoperations.ResumeDependantOperation;
 import com.handpoint.api.shared.dependantoperations.DependantOperationDTO;
+import com.handpoint.api.shared.dependantoperations.DependantOperationAmount;
 
 
 import org.apache.cordova.CallbackContext;
@@ -852,13 +853,13 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
         if (currentOperationState != null) {
           switch (currentOperationState.type) {
             case refund:
-              DependantOperationDTO.Refund operationRefund = DependantOperationDTO.Refund.Companion.create(amount, currency, currentOperationState.originalTransactionId);
+              DependantOperationDTO.Refund operationRefund = new DependantOperationDTO.Refund(new DependantOperationAmount(amount), currency, currentOperationState.originalTransactionId);
               this.resumeDependantOperationCallback.executeDependantOperation(operationRefund);
               callbackContext.success("ok");
               break;
             case saleReversal: //TODO(cmg): nombre así?
             case refundReversal:
-              DependantOperationDTO.Reversal operationReversal = DependantOperationDTO.Reversal.Companion.create(amount, currency, currentOperationState.originalTransactionId);
+              DependantOperationDTO.Reversal operationReversal = new DependantOperationDTO.Reversal(new DependantOperationAmount(amount), currency, currentOperationState.originalTransactionId);
               this.resumeDependantOperationCallback.executeDependantOperation(operationReversal);
               callbackContext.success("ok");
               break;
