@@ -493,31 +493,29 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     try {
       BigInteger amount = new BigInteger(params.getString("amount"));
       Currency currency = Currency.parse(params.getInt("currency"));
-      String plmCloudOperation = params.getString("plmCloudOperation");
 
-      OperationDto operation = null;
       if (this.resumeTokenizedOperationCallback != null) {
-        if (plmCloudOperation != null) { // cloud operation ->
+        OperationDto operation = null;
+        if (currentOperationState != null) {
+          switch (currentOperationState.type) {
+            case sale:
+              SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
+              operation = new OperationDto.Sale(amount, currency, saleOptions);
+              break;
+            case refund:
+              RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
+              operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
+                  (RefundOptions) refundOptions);
+              break;
+            default:
+              throw new UnsupportedOperationException("Resume not supported for operation: ");
+          }
+        } else {
           // For cloud operations we only receive the cardTokenized with sale operations
+          // currentOperationState is null because sale() or refund method() are not executed previously
           this.logger.info("[resumeTokenizedOperation] cloud operation; params:" + params.toString());
           SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
           operation = new OperationDto.Sale(amount, currency, saleOptions);
-        } else {
-          if (currentOperationState != null) {
-            switch (currentOperationState.type) {
-              case sale:
-                SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
-                operation = new OperationDto.Sale(amount, currency, saleOptions);
-                break;
-              case refund:
-                RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
-                operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
-                  (RefundOptions) refundOptions);
-                break;
-              default:
-                throw new UnsupportedOperationException("Resume not supported for operation: ");
-            }
-          }
         }
         if (operation != null) {
           this.resumeTokenizedOperationCallback.resume(operation);
