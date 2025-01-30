@@ -543,6 +543,17 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     this.resumeTokenizedOperationCallback = null;
   }
 
+  public void finishTokenizedWithoutCardOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.resumeTokenizedOperationCallback != null) {
+      this.resumeTokenizedOperationCallback.finishWithoutCardOperation();
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't finish tokenized operation. No operation to cancel");
+    }
+    this.currentOperationState = null;
+    this.resumeTokenizedOperationCallback = null;
+  }
+
   public void disableNavigationBar(CallbackContext callbackContext, JSONObject params) throws Throwable {
     this.setNavigationBarStatus(callbackContext, false);
   }

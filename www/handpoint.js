@@ -1048,6 +1048,18 @@ Handpoint.prototype.cancelTokenizedOperation = function (successCallback, errorC
 }
 
 /**
+ * Finish the tokenized operation. In case of a tokenized operation, the user could finish
+ * the operation without a card. This is useful in case the user wants to stop the operation
+ * but not cancel it.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.finishTokenizedWithoutCardOperation = function (successCallback, errorCallback) {
+  this.exec('finishTokenizedWithoutCardOperation', {}, successCallback, errorCallback);
+}
+
+/**
  * Resumes an enrich transaction result operation.
  * @param {*} config
  * @param {*} successCallback
