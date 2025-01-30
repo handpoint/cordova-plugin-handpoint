@@ -526,8 +526,10 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't resume tokenized operation. Incorrect parameters");
+    } finally {
+      this.currentOperationState = null;
+      this.resumeTokenizedOperationCallback = null;
     }
-    this.resumeTokenizedOperationCallback = null;
   }
 
   public void cancelTokenizedOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -537,6 +539,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     } else {
       callbackContext.error("Can't cancel tokenized operation. No operation to cancel");
     }
+    this.currentOperationState = null;
     this.resumeTokenizedOperationCallback = null;
   }
 
@@ -809,7 +812,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   @Override
   public void dependantRefundReceived(BigInteger amount, Currency currency, String originalTransactionId, ResumeDependantOperation resumeDependantOperation) {
     this.resumeDependantOperationCallback = resumeDependantOperation;
-    this.currentOperationState = new OperationState(Operations.refund, amount, currency, originalTransactionId);
     this.logger.info("***[APP] -> Dependant Refund Serialization start");
     SDKEvent event = new SDKEvent("dependantRefundReceived");
     event.put("amount", amount.toString());
@@ -827,7 +829,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   @Override
   public void dependantReversalReceived(String originalTransactionId, ResumeDependantOperation resumeDependantOperation) {
     this.resumeDependantOperationCallback = resumeDependantOperation;
-    this.currentOperationState = new OperationState(Operations.saleReversal, originalTransactionId);
     this.logger.info("***[APP] -> Dependant Reversal Serialization start");
     SDKEvent event = new SDKEvent("dependantReversalReceived");
     event.put("originalTransactionId", originalTransactionId);
@@ -845,18 +846,19 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       BigInteger amount = new BigInteger(params.getString("amount"));
       Currency currency = Currency.parse(params.getInt("currency"));
       String originalTransactionId = params.getString("originalTransactionId");
+      String operation = params.getString("operation");
 
       if (this.resumeDependantOperationCallback != null) {
-        if (currentOperationState != null) {
-          switch (currentOperationState.type) {
-            case refund:
-              DependantOperationDTO.Refund operationRefund = new DependantOperationDTO.Refund(new DependantOperationAmount(amount), currency, currentOperationState.originalTransactionId);
+        if (operation != null) {
+          switch (operation) {
+            case "refund":
+              DependantOperationDTO.Refund operationRefund = new DependantOperationDTO.Refund(new DependantOperationAmount(amount), currency, originalTransactionId);
               this.resumeDependantOperationCallback.executeDependantOperation(operationRefund);
               callbackContext.success("ok");
               break;
-            case saleReversal:
-            case refundReversal:
-              DependantOperationDTO.Reversal operationReversal = new DependantOperationDTO.Reversal(new DependantOperationAmount(amount), currency, currentOperationState.originalTransactionId);
+            case "saleReversal":
+            case "refundReversal":
+              DependantOperationDTO.Reversal operationReversal = new DependantOperationDTO.Reversal(new DependantOperationAmount(amount), currency, originalTransactionId);
               this.resumeDependantOperationCallback.executeDependantOperation(operationReversal);
               callbackContext.success("ok");
               break;
@@ -882,7 +884,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     } else {
       callbackContext.error("Can't finish without card. No operation to finish");
     }
-    this.currentOperationState = null;
     this.resumeDependantOperationCallback = null;
   }
 
@@ -893,7 +894,6 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     } else {
       callbackContext.error("Can't cancel dependant operation. No operation to cancel");
     }
-    this.currentOperationState = null;
     this.resumeDependantOperationCallback = null;
   }
 
