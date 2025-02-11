@@ -41,6 +41,12 @@ import com.handpoint.api.shared.OperationStartResult;
 import com.handpoint.api.shared.options.RefundReversalOptions;
 import com.handpoint.api.shared.options.SaleReversalOptions;
 import com.handpoint.api.shared.resumeoperation.ResumeCallback;
+import com.handpoint.api.shared.CustomData;
+import com.handpoint.api.shared.CustomDataCallback;
+import com.handpoint.api.shared.dependantoperations.ResumeDependantOperation;
+import com.handpoint.api.shared.dependantoperations.DependantOperationDTO;
+import com.handpoint.api.shared.dependantoperations.DependantOperationAmount;
+
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -58,7 +64,8 @@ import java.util.logging.Logger;
 public class HandpointHelper implements Events.PosRequired, Events.Status, Events.Log, Events.TransactionStarted,
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
-    Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent, Events.ScreenBrightnessEvent {
+    Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent,
+    Events.ScreenBrightnessEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
   private final String SET_KIOSK_MODE_COMMAND = "setKioskMode";
@@ -71,6 +78,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   CallbackContext callbackContext;
   Context context;
   ResumeCallback resumeTokenizedOperationCallback;
+  CustomDataCallback resumeEnrichOperationCallback;
+  ResumeDependantOperation resumeDependantOperationCallback;
   SysManagerWrapper sysManagerWrapper;
   private OperationState currentOperationState;
   private Logger logger;
@@ -78,6 +87,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   public HandpointHelper(Context context) {
     this.context = context;
     this.resumeTokenizedOperationCallback = null;
+    this.resumeEnrichOperationCallback = null;
+    this.resumeDependantOperationCallback = null;
     this.sysManagerWrapper = new SysManagerWrapper();
     this.logger = Logger.getLogger("App-Detailed-Logger");
   }
@@ -98,6 +109,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     String sharedSecret = null;
     String cloudApiKey = null;
     boolean supportsMoto = false;
+    boolean enrichTransactionResult = false;
     HandpointCredentials handpointCredentials;
     Settings settings = new Settings();
 
@@ -134,7 +146,17 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       handpointCredentials = new HandpointCredentials(sharedSecret);
     }
 
-    this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
+    try {
+      enrichTransactionResult = params.getBoolean("enrichTransactionResult");
+    } catch (JSONException ex) {
+    }
+
+    if (enrichTransactionResult) {
+      // register the implementation of the enrichTransactionResult interface
+      this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings, this);
+    } else {
+      this.api = HapiFactory.getAsyncInterface(this, this.context, handpointCredentials, settings);
+    }
 
     this.setEventsHandler();
     callbackContext.success("ok");
@@ -474,18 +496,26 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
       if (this.resumeTokenizedOperationCallback != null) {
         OperationDto operation = null;
-        switch (currentOperationState.type) {
-          case sale:
-            SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
-            operation = new OperationDto.Sale(amount, currency, saleOptions);
-            break;
-          case refund:
-            RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
-            operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
-                (RefundOptions) refundOptions);
-            break;
-          default:
-            throw new UnsupportedOperationException("Resume not supported for operation: ");
+        if (currentOperationState != null) {
+          switch (currentOperationState.type) {
+            case sale:
+              SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
+              operation = new OperationDto.Sale(amount, currency, saleOptions);
+              break;
+            case refund:
+              RefundOptions refundOptions = this.getOptions(params, RefundOptions.class);
+              operation = new OperationDto.Refund(amount, currency, currentOperationState.originalTransactionId,
+                  (RefundOptions) refundOptions);
+              break;
+            default:
+              throw new UnsupportedOperationException("Resume not supported for operation: ");
+          }
+        } else {
+          // For cloud operations we only receive the cardTokenized with sale operations
+          // currentOperationState is null because sale() or refund method() are not executed previously
+          this.logger.info("[resumeTokenizedOperation] cloud operation; params:" + params.toString());
+          SaleOptions saleOptions = this.getOptions(params, SaleOptions.class);
+          operation = new OperationDto.Sale(amount, currency, saleOptions);
         }
         if (operation != null) {
           this.resumeTokenizedOperationCallback.resume(operation);
@@ -496,8 +526,10 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't resume tokenized operation. Incorrect parameters");
+    } finally {
+      this.currentOperationState = null;
+      this.resumeTokenizedOperationCallback = null;
     }
-    this.resumeTokenizedOperationCallback = null;
   }
 
   public void cancelTokenizedOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -507,6 +539,18 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     } else {
       callbackContext.error("Can't cancel tokenized operation. No operation to cancel");
     }
+    this.currentOperationState = null;
+    this.resumeTokenizedOperationCallback = null;
+  }
+
+  public void finishTokenizedWithoutCardOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.resumeTokenizedOperationCallback != null) {
+      this.resumeTokenizedOperationCallback.finishWithoutCardOperation();
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't finish tokenized operation. No operation to cancel");
+    }
+    this.currentOperationState = null;
     this.resumeTokenizedOperationCallback = null;
   }
 
@@ -774,6 +818,94 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       this.callbackContext.sendPluginResult(result);
     }
     this.logger.info("***[APP] -> [perf-event] Card Tokenization Serialization end");
+  }
+
+  @Override
+  public void dependantRefundReceived(BigInteger amount, Currency currency, String originalTransactionId, ResumeDependantOperation resumeDependantOperation) {
+    this.resumeDependantOperationCallback = resumeDependantOperation;
+    this.logger.info("***[APP] -> Dependant Refund Serialization start");
+    SDKEvent event = new SDKEvent("dependantRefundReceived");
+    event.put("amount", amount.toString());
+    event.put("currency", currency);
+    event.put("originalTransactionId", originalTransactionId);
+    event.put("resumeDependantOperation", resumeDependantOperation);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+    this.logger.info("***[APP] -> Dependant Refund Serialization end");
+  }
+
+  @Override
+  public void dependantReversalReceived(String originalTransactionId, ResumeDependantOperation resumeDependantOperation) {
+    this.resumeDependantOperationCallback = resumeDependantOperation;
+    this.logger.info("***[APP] -> Dependant Reversal Serialization start");
+    SDKEvent event = new SDKEvent("dependantReversalReceived");
+    event.put("originalTransactionId", originalTransactionId);
+    event.put("resumeDependantOperation", resumeDependantOperation);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+    this.logger.info("***[APP] -> Dependant Reversal Serialization end");
+  }
+
+  public void executeDependantOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      BigInteger amount = new BigInteger(params.getString("amount"));
+      Currency currency = Currency.parse(params.getInt("currency"));
+      String originalTransactionId = params.getString("originalTransactionId");
+      String operation = params.getString("operation");
+
+      if (this.resumeDependantOperationCallback != null) {
+        if (operation != null) {
+          switch (operation) {
+            case "refund":
+              DependantOperationDTO.Refund operationRefund = new DependantOperationDTO.Refund(new DependantOperationAmount(amount), currency, originalTransactionId);
+              this.resumeDependantOperationCallback.executeDependantOperation(operationRefund);
+              callbackContext.success("ok");
+              break;
+            case "saleReversal":
+            case "refundReversal":
+              DependantOperationDTO.Reversal operationReversal = new DependantOperationDTO.Reversal(new DependantOperationAmount(amount), currency, originalTransactionId);
+              this.resumeDependantOperationCallback.executeDependantOperation(operationReversal);
+              callbackContext.success("ok");
+              break;
+            default:
+              throw new UnsupportedOperationException("Execute not supported for operation: ");
+          }
+        }
+      } else {
+        callbackContext.error("Can't execute dependant operation. No dependant operation to resume");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute dependant operation. Incorrect parameters");
+    } finally {
+      this.currentOperationState = null;
+      this.resumeDependantOperationCallback = null;
+    }
+  }
+
+  public void finishDependantOperationWithoutCardOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.resumeDependantOperationCallback != null) {
+      this.resumeDependantOperationCallback.finishWithoutCardOperation();
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't finish without card. No operation to finish");
+    }
+    this.resumeDependantOperationCallback = null;
+  }
+
+  public void cancelDependantOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    if (this.resumeDependantOperationCallback != null) {
+      this.resumeDependantOperationCallback.cancel();
+      callbackContext.success("ok");
+    } else {
+      callbackContext.error("Can't cancel dependant operation. No operation to cancel");
+    }
+    this.resumeDependantOperationCallback = null;
   }
 
   /**
@@ -1251,6 +1383,50 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       callbackContext.success("ok");
     } catch (Exception ex) {
       callbackContext.error("Can't execute turnOnScreenSaver. Error: " + ex.getMessage());
+    }
+  }
+
+  /**
+   * Resumes a previously interrupted enrich operation by providing the required custom data.
+   * 
+   * @param callbackContext - The context for sending results or errors back to the caller.
+   * @param params - A JSON object containing the necessary parameters for resuming the operation, 
+   *                 including "loyaltyData" used to create the custom data object.
+   * 
+   * @throws Throwable - May throw exceptions during the execution of the enrichment process.
+   */
+  public void resumeEnrichOperation(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      if (this.resumeEnrichOperationCallback != null) {
+        String loyaltyData = params.getString("loyaltyData");
+        CustomData customData = CustomData.create(loyaltyData);
+        this.resumeEnrichOperationCallback.resume(customData);
+      } else {
+        callbackContext.error("Can't resume enrich operation. No enrich operation to resume");
+      }
+    } catch (JSONException ex) {
+      callbackContext.error("Can't resume enrich operation. Incorrect parameters");
+    }
+    this.resumeEnrichOperationCallback = null;
+  }
+
+  /**
+   * Handles the enrichment of a transaction result by processing the provided transaction data
+   * and preparing it for custom enrichment via a callback.
+   * 
+   * @param transactionResult  - The transaction result data to be enriched.
+   * @param customDataCallback - Callback to handle the enrichment process, allowing customization of the data.
+   */
+  @Override
+  public void enrich(TransactionResult transactionResult, CustomDataCallback customDataCallback) {
+    this.resumeEnrichOperationCallback = customDataCallback; // save the callback to resume the enrich operation (in "resumeEnrichOperation" method)
+    this.logger.info("***[APP] -> Received enrich transaction result event");
+    SDKEvent event = new SDKEvent("enrich");
+    event.put("transactionResult", transactionResult);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
     }
   }
 

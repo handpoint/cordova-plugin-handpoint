@@ -29,4 +29,16 @@ public class OperationState {
     this.originalTransactionId = originalTransactionId;
   }
 
+  public OperationState(Operations type, BigInteger amount, Currency currency, String originalTransactionId) {
+    this.type = type;
+    this.amount = amount;
+    this.currency = currency;
+    this.originalTransactionId = originalTransactionId;
+  }
+
+  public OperationState(Operations type, String originalTransactionId) {
+    this.type = type;
+    this.originalTransactionId = originalTransactionId;
+  }
+
 }

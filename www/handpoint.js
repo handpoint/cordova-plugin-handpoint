@@ -1047,6 +1047,58 @@ Handpoint.prototype.cancelTokenizedOperation = function (successCallback, errorC
   this.exec('cancelTokenizedOperation', {}, successCallback, errorCallback);
 }
 
+/**
+ * Finish the tokenized operation. In case of a tokenized operation, the user could finish
+ * the operation without a card. This is useful in case the user wants to stop the operation
+ * but not cancel it.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.finishTokenizedWithoutCardOperation = function (successCallback, errorCallback) {
+  this.exec('finishTokenizedWithoutCardOperation', {}, successCallback, errorCallback);
+}
+
+/**
+ * Resumes an enrich transaction result operation.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.resumeEnrichOperation = function (config, successCallback, errorCallback) {
+  this.exec('resumeEnrichOperation', config, successCallback, errorCallback);
+}
+
+/**
+ * Executes (resume) a dependant operation.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.executeDependantOperation = function (config, successCallback, errorCallback) {
+  this.exec('executeDependantOperation', config, successCallback, errorCallback);
+}
+
+/**
+ * Finishes a dependant operation without a card.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.finishDependantOperationWithoutCardOperation = function (config, successCallback, errorCallback) {
+  this.exec('finishDependantOperationWithoutCardOperation', config, successCallback, errorCallback);
+}
+
+/**
+ * Cancels the current dependant operation.
+ * @param {*} config
+ * @param {*} successCallback
+ * @param {*} errorCallback
+ */
+Handpoint.prototype.cancelDependantOperation = function (config, successCallback, errorCallback) {
+  this.exec('cancelDependantOperation', config, successCallback, errorCallback);
+}
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
