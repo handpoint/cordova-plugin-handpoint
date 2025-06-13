@@ -18,9 +18,9 @@ repositories{
 dependencies {
    implementation 'com.google.code.gson:gson:2.8.5'
    implementation 'org.slf4j:slf4j-android:1.7.25'
-   implementation ('com.handpoint.api:sdk:7.1010.2-RC.1') { changing = true }
-   implementation ('com.handpoint.api:privateops:7.1010.2-RC.1') { changing = true }
-   implementation ('com.handpoint.api:applicationprovider:7.1010.2-RC.1') { changing = true }
+   implementation ('com.handpoint.api:sdk:7.1010.2-RC.2') { changing = true }
+   implementation ('com.handpoint.api:privateops:7.1010.2-RC.2') { changing = true }
+   implementation ('com.handpoint.api:applicationprovider:7.1010.2-RC.2') { changing = true }
 }
 
 android {
