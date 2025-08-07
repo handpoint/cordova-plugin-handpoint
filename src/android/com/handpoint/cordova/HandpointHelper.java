@@ -189,7 +189,15 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   public void saleReversal(CallbackContext callbackContext, JSONObject params) throws Throwable {
     try {
       OperationStartResult result;
-      SaleReversalOptions options = new SaleReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
+      SaleReversalOptions options;
+
+      boolean cardPresent = params.optString("cardPresent", "false").equalsIgnoreCase("true");
+      if (cardPresent) {
+        options = new SaleReversalOptions(cardPresent, this.getOptions(params, MerchantAuthOptions.class));
+      } else {
+        options = new SaleReversalOptions(this.getOptions(params, MerchantAuthOptions.class));
+      }
+      
       if (options != null) {
         result = this.api.saleReversal(new BigInteger(params.getString("amount")),
             Currency.parse(params.getInt("currency")), params.getString("originalTransactionID"), options);
