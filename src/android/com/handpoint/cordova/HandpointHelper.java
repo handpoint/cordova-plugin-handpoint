@@ -867,6 +867,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       Currency currency = Currency.parse(params.getInt("currency"));
       String originalTransactionId = params.getString("originalTransactionId");
       String operation = params.getString("operation");
+      boolean cardPresent = params.optString("cardPresent", "false").equalsIgnoreCase("true");
 
       if (this.resumeDependantOperationCallback != null) {
         if (operation != null) {
