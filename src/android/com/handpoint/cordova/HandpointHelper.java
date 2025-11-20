@@ -846,12 +846,13 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
-  public void dependantReversalReceived(String originalTransactionId, ResumeDependantOperation resumeDependantOperation) {
+  public void dependantReversalReceived(String originalTransactionId, ResumeDependantOperation resumeDependantOperation, boolean cardPresent) {
     this.resumeDependantOperationCallback = resumeDependantOperation;
     this.logger.info("***[APP] -> Dependant Reversal Serialization start");
     SDKEvent event = new SDKEvent("dependantReversalReceived");
     event.put("originalTransactionId", originalTransactionId);
     event.put("resumeDependantOperation", resumeDependantOperation);
+    event.put("cardPresent", cardPresent);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
@@ -877,7 +878,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
               break;
             case "saleReversal":
             case "refundReversal":
-              DependantOperationDTO.Reversal operationReversal = new DependantOperationDTO.Reversal(new DependantOperationAmount(amount), currency, originalTransactionId);
+              DependantOperationDTO.Reversal operationReversal = new DependantOperationDTO.Reversal(new DependantOperationAmount(amount), currency, originalTransactionId, cardPresent);
               this.resumeDependantOperationCallback.executeDependantOperation(operationReversal);
               callbackContext.success("ok");
               break;
