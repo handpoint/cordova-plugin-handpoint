@@ -8,7 +8,7 @@ import com.handpoint.api.HapiFactory;
 import com.handpoint.api.HapiManager;
 import com.handpoint.api.Settings;
 import com.handpoint.api.shared.AuthenticationResponse;
-import com.handpoint.api.shared.CardBrand;
+import com.handpoint.api.shared.CardBrands;
 import com.handpoint.api.shared.CardTokenizationData;
 import com.handpoint.api.shared.ConnectionMethod;
 import com.handpoint.api.shared.ConnectionStatus;
@@ -1183,9 +1183,9 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
-  public void supportedCardBrands(List<? extends CardBrand> cardBrandList) {
+  public void supportedCardBrands(List<? extends CardBrands> cardBrandsList) {
     SDKEvent event = new SDKEvent("supportedCardBrands");
-    event.put("cardBrandList", ConverterUtil.convertToJSON(cardBrandList));
+    event.put("cardBrandsList", ConverterUtil.convertToJSON(cardBrandsList));
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
@@ -1193,7 +1193,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
-  public void readCard(CardBrand usedCard) {
+  public void readCard(CardBrands usedCard) {
     SDKEvent event = new SDKEvent("readCard");
     event.put("usedCard", usedCard);
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
