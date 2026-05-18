@@ -5,6 +5,7 @@ repositories{
       password getCredentialsMavenPassword()
     }
     url = "http://nexus.handpoint.ninja:8081/repository/maven-public/"
+    allowInsecureProtocol = true
   }
   maven {
     credentials {
@@ -12,15 +13,17 @@ repositories{
       password getCredentialsMavenPassword()
     }
     url = "http://nexus.handpoint.ninja:8081/repository/maven-releases/"
+    allowInsecureProtocol = true
   }
 }
 
 dependencies {
    implementation 'com.google.code.gson:gson:2.8.5'
    implementation 'org.slf4j:slf4j-android:1.7.25'
-   implementation ('com.handpoint.api:sdk:7.1012.0-RC.0-SNAPSHOT') { changing = true }
-   implementation ('com.handpoint.api:privateops:7.1012.0-RC.0-SNAPSHOT') { changing = true }
-   implementation ('com.handpoint.api:applicationprovider:7.1012.0-RC.0-SNAPSHOT') { changing = true }
+   implementation ('com.handpoint.api:sdk:7.1013.0-RC.27-SNAPSHOT') { changing = true }
+   implementation ('com.handpoint.api:paymentsdk:7.1013.0-RC.27-SNAPSHOT') { changing = true }
+   implementation ('com.handpoint.api:privateops:7.1013.0-RC.27-SNAPSHOT') { changing = true }
+   implementation ('com.handpoint.api:applicationprovider:7.1013.0-RC.27-SNAPSHOT') { changing = true }
 }
 
 android {
