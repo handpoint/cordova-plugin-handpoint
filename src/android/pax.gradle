@@ -5,6 +5,7 @@ repositories{
       password getCredentialsMavenPassword()
     }
     url = "http://nexus.handpoint.ninja:8081/repository/maven-public/"
+    allowInsecureProtocol = true
   }
   maven {
     credentials {
@@ -12,6 +13,7 @@ repositories{
       password getCredentialsMavenPassword()
     }
     url = "http://nexus.handpoint.ninja:8081/repository/maven-releases/"
+    allowInsecureProtocol = true
   }
 }
 
