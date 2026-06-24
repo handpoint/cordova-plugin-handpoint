@@ -65,7 +65,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
     Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent,
-    Events.ScreenBrightnessEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent {
+    Events.ScreenBrightnessEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent,
+    Events.QrCodeEvents {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
   private final String SET_KIOSK_MODE_COMMAND = "setKioskMode";
@@ -1472,6 +1473,51 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     } catch (Exception e) {
       callbackContext.error("setNavigationBarStatus Error -> Method not implemented " + e.getMessage());
       callbackContext.error("setNavigationBarStatus Error -> " + e.getCause());
+    }
+  }
+
+  // ── QR Code Scanner ──────────────────────────────────────────────────────
+
+  public void scanQrCode(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    boolean started = this.api.scanQrCode();
+    if (started) {
+      PluginResult result = new PluginResult(PluginResult.Status.OK, true);
+      callbackContext.sendPluginResult(result);
+    } else {
+      callbackContext.error("scanQrCode could not start: not a PAX device or scan already running");
+    }
+  }
+
+  @Override
+  public void onQrCodeScanSuccess(String content, String format) {
+    SDKEvent event = new SDKEvent("onQrCodeScanSuccess");
+    event.put("content", content);
+    event.put("format", format);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
+  public void onQrCodeScanFailure(String errorMessage) {
+    SDKEvent event = new SDKEvent("onQrCodeScanFailure");
+    event.put("errorMessage", errorMessage);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
+  public void onQrCodeScanCancelled() {
+    SDKEvent event = new SDKEvent("onQrCodeScanCancelled");
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
     }
   }
 

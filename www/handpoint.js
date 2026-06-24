@@ -1099,6 +1099,10 @@ Handpoint.prototype.cancelDependantOperation = function (config, successCallback
   this.exec('cancelDependantOperation', config, successCallback, errorCallback);
 }
 
+Handpoint.prototype.scanQrCode = function (successCallback, errorCallback) {
+  this.exec('scanQrCode', {}, successCallback, errorCallback);
+};
+
 Handpoint.prototype.exec = function (method, config, successCallback, errorCallback) {
 
   if (typeof (config) === 'object') {
