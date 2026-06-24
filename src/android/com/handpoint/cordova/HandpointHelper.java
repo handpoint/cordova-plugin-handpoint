@@ -768,6 +768,15 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  public void setAccessibilityMode(CallbackContext callbackContext, JSONObject params) throws Throwable {
+    try {
+      this.api.setAccessibilityMode(params.getBoolean("enabled"));
+      callbackContext.success("ok");
+    } catch (JSONException ex) {
+      callbackContext.error("Can't execute setAccessibilityMode. Incorrect parameters");
+    }
+  }
+
   @Override
   public void endOfTransaction(TransactionResult transactionResult, Device device) {
     this.logger.info("***[APP] -> [perf-event] EndOfTransaction Serialization start");

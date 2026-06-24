@@ -209,6 +209,19 @@ Handpoint.prototype.setLocale = function (config, successCallback, errorCallback
 };
 
 /**
+ * Enables or disables accessibility mode for visually impaired users.
+ * When enabled, the terminal uses a voice-guided payment flow (Android TextToSpeech +
+ * PAX VI PIN Entry keyboard). The PIN is never audible.
+ * @param {Object} config
+ * @param {boolean} config.enabled - true to enable accessibility mode, false to disable
+ * @param {Function} successCallback
+ * @param {Function} errorCallback
+ */
+Handpoint.prototype.setAccessibilityMode = function (config, successCallback, errorCallback) {
+  this.exec('setAccessibilityMode', config, successCallback, errorCallback);
+};
+
+/**
  * Returns the tokenized version of the card used if successful (not available for all acquirers,
  * please check with Handpoint to know if tokenization is supported for your acquirer of choice)
  * @param {Object} config parameters for tokenizeCard transaction
