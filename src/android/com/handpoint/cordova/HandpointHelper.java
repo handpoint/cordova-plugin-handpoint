@@ -12,7 +12,6 @@ import com.handpoint.api.shared.CardBrands;
 import com.handpoint.api.shared.CardTokenizationData;
 import com.handpoint.api.shared.ConnectionMethod;
 import com.handpoint.api.shared.ConnectionStatus;
-import com.handpoint.api.shared.ConverterUtil;
 import com.handpoint.api.shared.Currency;
 import com.handpoint.api.shared.Device;
 import com.handpoint.api.shared.DeviceStatus;
@@ -28,7 +27,6 @@ import com.handpoint.api.shared.StatusInfo;
 import com.handpoint.api.shared.TransactionResult;
 import com.handpoint.api.shared.TransactionType;
 import com.handpoint.api.shared.TypeOfResult;
-import com.handpoint.api.shared.auth.HapiMPosAuthResponse;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.operations.OperationDto;
 import com.handpoint.api.shared.operations.Operations;
@@ -47,6 +45,8 @@ import com.handpoint.api.shared.dependantoperations.ResumeDependantOperation;
 import com.handpoint.api.shared.dependantoperations.DependantOperationDTO;
 import com.handpoint.api.shared.dependantoperations.DependantOperationAmount;
 
+
+import com.google.gson.Gson;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -68,6 +68,11 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     Events.ScreenBrightnessEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
+  // JSON<->object conversions for options/report-config model classes and CardBrands lists.
+  // paymentsdk dropped its Java-callable ConverterUtil.getModelObjectFromJSON/convertToJSON in
+  // favor of Kotlin reified fromJson/toJson (not callable from Java); Gson is already a plugin
+  // dependency (see SDKEvent/Gson*Adapter) so it replaces them here without a new dependency.
+  private static final Gson GSON = new Gson();
   private final String SET_KIOSK_MODE_COMMAND = "setKioskMode";
   private final String SET_LOCALE_COMMAND = "setLocale";
   private final String SET_PASSWORD_PROTECTION_COMMAND = "setPasswordProtection";
@@ -714,23 +719,16 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
+  // paymentsdk removed HapiMposAuthentication/HapiMPosAuthResponse (privateops MPOS auth flow) as
+  // of 7.1015.0-RC.10 -- the classes this reflection call targeted no longer exist, so there is
+  // nothing left to invoke. It's still wired from JS (Handpoint.prototype.mposAuth), so this is
+  // kept as a stub (rather than dropped) to fail with a clear, specific message instead of
+  // falling through to the generic dispatcher's "method not defined" error.
+  // TODO: HapiMposAuthentication/HapiMPosAuthResponse are being restored on the SDK side -- once
+  // that lands, restore the Class.forName("com.handpoint.api.privateops.HapiMposAuthentication")
+  // reflection call this replaced (see git history) and bump pax.gradle's sdk_version.
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    try {
-      Class auth = Class.forName("com.handpoint.api.privateops.HapiMposAuthentication");
-      Method authMethod = auth.getDeclaredMethod("authenticateMPos", HapiMPosAuthResponse.class, Context.class);
-
-      HapiMPosAuthResponse authenticationResponseHandler = new HapiMPosAuthResponse() {
-        @Override
-        public void setAuthenticationResult(AuthenticationResponse oneThing) {
-          callbackContext.success("ok");
-          authStatus(oneThing);
-        }
-      };
-      authMethod.invoke(auth, authenticationResponseHandler, this.context);
-    } catch (Exception e) {
-      callbackContext.error("Auth Error -> Method not implemented " + e.getMessage());
-      callbackContext.error("Auth Error -> " + e.getCause());
-    }
+    callbackContext.error("Auth Error -> mposAuth is temporarily unavailable: removed from paymentsdk in 7.1015.0-RC.10, pending restoration");
   }
 
   public void updateWebView(CallbackContext callbackContext, JSONObject params) throws Throwable {
@@ -1087,7 +1085,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     } else {
       object = new JSONObject();
     }
-    return ConverterUtil.getModelObjectFromJSON(object.toString(), tClass);
+    return GSON.fromJson(object.toString(), tClass);
   }
 
   protected static Map<String, String> jsonToMap(JSONObject json) throws JSONException {
@@ -1185,7 +1183,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
 
   public void supportedCardBrands(List<? extends CardBrands> cardBrandsList) {
     SDKEvent event = new SDKEvent("supportedCardBrands");
-    event.put("cardBrandsList", ConverterUtil.convertToJSON(cardBrandsList));
+    event.put("cardBrandsList", GSON.toJson(cardBrandsList));
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
