@@ -27,6 +27,7 @@ import com.handpoint.api.shared.StatusInfo;
 import com.handpoint.api.shared.TransactionResult;
 import com.handpoint.api.shared.TransactionType;
 import com.handpoint.api.shared.TypeOfResult;
+import com.handpoint.api.shared.auth.HapiMPosAuthResponse;
 import com.handpoint.api.shared.i18n.SupportedLocales;
 import com.handpoint.api.shared.operations.OperationDto;
 import com.handpoint.api.shared.operations.Operations;
@@ -719,16 +720,23 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     }
   }
 
-  // paymentsdk removed HapiMposAuthentication/HapiMPosAuthResponse (privateops MPOS auth flow) as
-  // of 7.1015.0-RC.10 -- the classes this reflection call targeted no longer exist, so there is
-  // nothing left to invoke. It's still wired from JS (Handpoint.prototype.mposAuth), so this is
-  // kept as a stub (rather than dropped) to fail with a clear, specific message instead of
-  // falling through to the generic dispatcher's "method not defined" error.
-  // TODO: HapiMposAuthentication/HapiMPosAuthResponse are being restored on the SDK side -- once
-  // that lands, restore the Class.forName("com.handpoint.api.privateops.HapiMposAuthentication")
-  // reflection call this replaced (see git history) and bump pax.gradle's sdk_version.
   public void mposAuth(CallbackContext callbackContext, JSONObject params) throws Throwable {
-    callbackContext.error("Auth Error -> mposAuth is temporarily unavailable: removed from paymentsdk in 7.1015.0-RC.10, pending restoration");
+    try {
+      Class auth = Class.forName("com.handpoint.api.privateops.HapiMposAuthentication");
+      Method authMethod = auth.getDeclaredMethod("authenticateMPos", HapiMPosAuthResponse.class, Context.class);
+
+      HapiMPosAuthResponse authenticationResponseHandler = new HapiMPosAuthResponse() {
+        @Override
+        public void setAuthenticationResult(AuthenticationResponse oneThing) {
+          callbackContext.success("ok");
+          authStatus(oneThing);
+        }
+      };
+      authMethod.invoke(auth, authenticationResponseHandler, this.context);
+    } catch (Exception e) {
+      callbackContext.error("Auth Error -> Method not implemented " + e.getMessage());
+      callbackContext.error("Auth Error -> " + e.getCause());
+    }
   }
 
   public void updateWebView(CallbackContext callbackContext, JSONObject params) throws Throwable {
