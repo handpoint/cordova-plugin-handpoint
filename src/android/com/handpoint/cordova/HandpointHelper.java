@@ -23,6 +23,7 @@ import com.handpoint.api.shared.LogLevel;
 import com.handpoint.api.shared.NetworkStatus;
 import com.handpoint.api.shared.PrintError;
 import com.handpoint.api.shared.ReportConfiguration;
+import com.handpoint.api.shared.SecurityPolicyUpdatePayload;
 import com.handpoint.api.shared.SignatureRequest;
 import com.handpoint.api.shared.StatusInfo;
 import com.handpoint.api.shared.TransactionResult;
@@ -65,13 +66,14 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
     Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent,
-    Events.ScreenBrightnessEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent {
+    Events.ScreenBrightnessEvent, Events.SecurityPolicyEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
   private final String SET_KIOSK_MODE_COMMAND = "setKioskMode";
   private final String SET_LOCALE_COMMAND = "setLocale";
   private final String SET_PASSWORD_PROTECTION_COMMAND = "setPasswordProtection";
   private final String SET_SCREEN_BRIGHTNESS_COMMAND = "setScreenBrightness";
+  private final String SET_SECURITY_POLICY_COMMAND = "setSecurityPolicy";
 
   Hapi api;
   Device device;
@@ -1161,6 +1163,20 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   @Override
   public void screenBrightnessChanged(int maximum, int minimum) {
     this.sendControlCommand(this.SET_SCREEN_BRIGHTNESS_COMMAND, maximum + "," + minimum);
+  }
+
+  @Override
+  public void securityPolicyUpdate(SecurityPolicyUpdatePayload policy) {
+    try {
+      org.json.JSONObject json = new org.json.JSONObject();
+      if (policy.getHideTabBar() != null) json.put("hideTabBar", policy.getHideTabBar());
+      if (policy.getBlockSystemUI() != null) json.put("blockSystemUI", policy.getBlockSystemUI());
+      if (policy.getBrightness() != null) json.put("brightness", policy.getBrightness());
+      if (policy.getPasswordToExit() != null) json.put("passwordToExit", policy.getPasswordToExit());
+      this.sendControlCommand(this.SET_SECURITY_POLICY_COMMAND, json.toString());
+    } catch (org.json.JSONException e) {
+      Logger.getLogger("App-Detailed-Logger").warning("***[APP] -> securityPolicyUpdate JSON error: " + e.getMessage());
+    }
   }
 
   public void cardLanguage(SupportedLocales locale) {
