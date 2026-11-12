@@ -244,7 +244,7 @@ public class HandpointApiCordova extends CordovaPlugin {
   }
 
   public boolean isOverlayPermissionGranted() {
-    if (Build.VERSION.SDK_INT >= 29) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       return Settings.canDrawOverlays(this.cordova.getActivity());
     } else {
       return true;
