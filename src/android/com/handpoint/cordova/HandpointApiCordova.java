@@ -38,6 +38,7 @@ public class HandpointApiCordova extends CordovaPlugin {
 
   public static final int ENABLE_LOCATION_CODE = 2000;
   public static final int ENABLE_OVERLAY_PERMISSION_CODE = 2100;
+  public static final String PAX_START_ACTIVITIES_FROM_BACKGROUND = "com.pax.permission.PAX_START_ACTIVITIES_FROM_BACKGROUND";
   public static final String ENABLE_LOCATION_ACTION = "enableLocation";
   public static final String DISABLE_BATTERY_OPTIMIZATIONS_ACTION = "disableBatteryOptimizations";
   public static final String IS_BATTERY_OPTIMIZATION_ON_ACTION = "isBatteryOptimizationOn";
@@ -243,12 +244,21 @@ public class HandpointApiCordova extends CordovaPlugin {
     return (PowerManager) cordova.getActivity().getApplicationContext().getSystemService(Context.POWER_SERVICE);
   }
 
-  public boolean isOverlayPermissionGranted() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      return Settings.canDrawOverlays(this.cordova.getActivity());
-    } else {
+  /**
+   * Whether the app is allowed to start an activity from the background:
+   * - Below Android 10 it is always allowed.
+   * - Android >= 10: on PAX devices via the PAX permission, otherwise via the
+   *   ACTION_MANAGE_OVERLAY_PERMISSION setting.
+   */
+  public boolean canStartFromBackground() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
       return true;
     }
+    if (this.cordova.hasPermission(PAX_START_ACTIVITIES_FROM_BACKGROUND)) {
+      this.logger.info("PAX_START_ACTIVITIES_FROM_BACKGROUND granted");
+      return true;
+    }
+    return Settings.canDrawOverlays(this.cordova.getActivity());
   }
 
 }
