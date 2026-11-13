@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.Settings;
 
 import com.handpoint.cordova.HandpointApiCordova;
@@ -22,18 +21,20 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
   @Override
   public void execute() throws JSONException {
     try {
-      // If ACTION_MANAGE_OVERLAY_PERMISSION is disabled and Android >= 10
-      // then request the user to enable it in settings
-      JSONObject params = args.getJSONObject(0);
-      if (Build.VERSION.SDK_INT >= 29 && !((HandpointApiCordova) this.cordovaPlugin).isOverlayPermissionGranted()) {
-        String title = params.getString(EnableAutostartOperation.TITLE_PARAM) == null
-            ? EnableAutostartOperation.TITLE_DEFAULT
-            : params.getString(EnableAutostartOperation.TITLE_PARAM);
-        String message = params.getString(EnableAutostartOperation.MESSAGE_PARAM) == null
-            ? EnableAutostartOperation.MESSAGE_DEFAULT
-            : params.getString(EnableAutostartOperation.MESSAGE_PARAM);
+      // If the app cannot start from background, request the user to enable ACTION_MANAGE_OVERLAY_PERMISSION in settings
+      if (!((HandpointApiCordova) this.cordovaPlugin).canStartFromBackground()) {
+        this.logger.info("Cannot start from background, requesting ACTION_MANAGE_OVERLAY_PERMISSION");
+        // Config is optional: exec sends [] when enableAutoStart() is called without it
+        JSONObject params = args.optJSONObject(0);
+        if (params == null) {
+          params = new JSONObject();
+        }
+        String title = params.optString(EnableAutostartOperation.TITLE_PARAM, EnableAutostartOperation.TITLE_DEFAULT);
+        String message = params.optString(EnableAutostartOperation.MESSAGE_PARAM, EnableAutostartOperation.MESSAGE_DEFAULT);
         this.showInformationDialog(title, message);
       }
+      // The dialog above is non-blocking, so autostart is enabled right away regardless of whether
+      // the user ends up granting ACTION_MANAGE_OVERLAY_PERMISSION. This is intentional.
       this.setAutoStart(cordova.getActivity().getLocalClassName(), true);
     } catch (Exception e) {
       this.logger.severe("Failed to enable autostart: " + e.getMessage());
@@ -45,7 +46,7 @@ public class EnableAutostartOperation extends AutostartOperation implements Acti
     if (requestCode == ((HandpointApiCordova) this.cordovaPlugin).ENABLE_OVERLAY_PERMISSION_CODE) {
       ((HandpointApiCordova) this.cordovaPlugin).removeActivityResultObserver(this);
       // Check again if permission has been granted
-      if (!((HandpointApiCordova) this.cordovaPlugin).isOverlayPermissionGranted()) {
+      if (((HandpointApiCordova) this.cordovaPlugin).canStartFromBackground()) {
         this.logger.info("ACTION_MANAGE_OVERLAY_PERMISSION allowed");
       } else {
         this.logger.warning("ACTION_MANAGE_OVERLAY_PERMISSION not allowed");
