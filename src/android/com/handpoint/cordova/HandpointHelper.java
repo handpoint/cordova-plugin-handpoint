@@ -38,6 +38,7 @@ import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
 import com.handpoint.api.shared.OperationStartResult;
+import com.handpoint.api.shared.TransactionNotStartedData;
 import com.handpoint.api.shared.options.RefundReversalOptions;
 import com.handpoint.api.shared.options.SaleReversalOptions;
 import com.handpoint.api.shared.resumeoperation.ResumeCallback;
@@ -67,7 +68,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
     Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent,
-    Events.ScreenBrightnessEvent, Events.SecurityPolicyEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent {
+    Events.ScreenBrightnessEvent, Events.SecurityPolicyEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent,
+    Events.TransactionNotStarted {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
   // JSON<->object conversions for options/report-config model classes and CardBrands lists.
@@ -1035,6 +1037,19 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     event.put("amount", amount.toString());
     event.put("currency", currency.getAlpha());
     event.put("transactionReference", transactionReference);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
+  public void transactionNotStarted(TransactionNotStartedData data) {
+    SDKEvent event = new SDKEvent("transactionNotStarted");
+    event.put("transactionReference", data.getTransactionReference());
+    event.put("errorCode", data.getErrorCode());
+    event.put("errorDetail", data.getErrorDetail());
     PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
     result.setKeepCallback(true);
     if (this.callbackContext != null) {
