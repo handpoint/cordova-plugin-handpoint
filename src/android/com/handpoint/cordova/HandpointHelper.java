@@ -38,6 +38,7 @@ import com.handpoint.api.shared.options.Options;
 import com.handpoint.api.shared.options.RefundOptions;
 import com.handpoint.api.shared.options.SaleOptions;
 import com.handpoint.api.shared.OperationStartResult;
+import com.handpoint.api.shared.TransactionNotStartedData;
 import com.handpoint.api.shared.options.RefundReversalOptions;
 import com.handpoint.api.shared.options.SaleReversalOptions;
 import com.handpoint.api.shared.resumeoperation.ResumeCallback;
@@ -67,7 +68,8 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
     Events.AuthStatus, Events.MessageHandling, Events.PrinterEvents, Events.ReportResult, Events.CardLanguage,
     Events.PhysicalKeyboardEvent, Events.CardBrandDisplay, Events.Misc, Events.CardTokenization, Events.ReceiptEvent,
     Events.ReceiptUploadingEvent, Events.UnattendedModeEvent, Events.PasswordProtectionEvent, Events.LocaleEvent,
-    Events.ScreenBrightnessEvent, Events.SecurityPolicyEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent {
+    Events.ScreenBrightnessEvent, Events.SecurityPolicyEvent, Events.TransactionResultEnricher, Events.DependantOperationEvent,
+    Events.TransactionNotStarted {
 
   private static final String TAG = HandpointHelper.class.getSimpleName();
   // JSON<->object conversions for options/report-config model classes and CardBrands lists.
@@ -187,7 +189,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success(result.getTransactionReference());
       } else {
-        callbackContext.error("Can't send sale operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send sale operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send sale operation to device. Incorrect parameters");
@@ -217,7 +219,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send saleReversal operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send saleReversal operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send saleReversal operation to device. Incorrect parameters");
@@ -250,7 +252,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success(result.getTransactionReference());
       } else {
-        callbackContext.error("Can't send refund operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send refund operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send refund operation to device. Incorrect parameters");
@@ -273,7 +275,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success(result.getTransactionReference());
       } else {
-        callbackContext.error("Can't send refund operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send refund operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send refund operation to device. Incorrect parameters");
@@ -295,7 +297,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send refundReversal operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send refundReversal operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send refundReversal operation to device. Incorrect parameters");
@@ -315,7 +317,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send tokenizeCard operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send tokenizeCard operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send tokenizeCard operation to device. Incorrect parameters");
@@ -339,7 +341,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send motoSale operation to the api");
+        callbackContext.error(startErrorDetail(result, "Can't send motoSale operation to the api"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send motoSale operation to the api. Incorrect parameters");
@@ -364,7 +366,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send motoRefund operation to the api");
+        callbackContext.error(startErrorDetail(result, "Can't send motoRefund operation to the api"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send motoRefund operation to the api. Incorrect parameters");
@@ -378,7 +380,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send motoReversal operation to the api");
+        callbackContext.error(startErrorDetail(result, "Can't send motoReversal operation to the api"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send motoReversal operation to the api. Incorrect parameters");
@@ -402,7 +404,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send manual entry preAuthorization operation to the api");
+        callbackContext.error(startErrorDetail(result, "Can't send manual entry preAuthorization operation to the api"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send manual entry preAuthorization operation to the api. Incorrect parameters");
@@ -426,7 +428,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success(result.getTransactionReference());
       } else {
-        callbackContext.error("Can't send sale operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send preAuthorization operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send preAuthorization operation to the api. Incorrect parameters");
@@ -448,7 +450,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send preAuthorizationReversal operation to device");
+        callbackContext.error(startErrorDetail(result, "Can't send preAuthorizationReversal operation to device"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send preAuthorizationReversal operation to device. Incorrect parameters");
@@ -473,7 +475,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send preAuthorizationIncrease operation to the api");
+        callbackContext.error(startErrorDetail(result, "Can't send preAuthorizationIncrease operation to the api"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send preAuthorizationIncrease operation to the api. Incorrect parameters");
@@ -498,7 +500,7 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       if (result.getOperationStarted()) {
         callbackContext.success("ok");
       } else {
-        callbackContext.error("Can't send preAuthorizationCapture operation to the api");
+        callbackContext.error(startErrorDetail(result, "Can't send preAuthorizationCapture operation to the api"));
       }
     } catch (JSONException ex) {
       callbackContext.error("Can't send preAuthorizationCapture operation to the api. Incorrect parameters");
@@ -1043,6 +1045,19 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
   }
 
   @Override
+  public void transactionNotStarted(TransactionNotStartedData data) {
+    SDKEvent event = new SDKEvent("transactionNotStarted");
+    event.put("transactionReference", data.getTransactionReference());
+    event.put("errorCode", data.getErrorCode());
+    event.put("errorDetail", data.getErrorDetail());
+    PluginResult result = new PluginResult(PluginResult.Status.OK, event.toJSONObject());
+    result.setKeepCallback(true);
+    if (this.callbackContext != null) {
+      this.callbackContext.sendPluginResult(result);
+    }
+  }
+
+  @Override
   public void authStatus(AuthenticationResponse authStatus) {
     SDKEvent event = new SDKEvent("authStatus");
     event.put("info", authStatus);
@@ -1495,6 +1510,12 @@ public class HandpointHelper implements Events.PosRequired, Events.Status, Event
       callbackContext.error("setNavigationBarStatus Error -> Method not implemented " + e.getMessage());
       callbackContext.error("setNavigationBarStatus Error -> " + e.getCause());
     }
+  }
+
+  // The SDK explains why an operation did not start; the default text covers SDK versions that give no error detail.
+  private static String startErrorDetail(OperationStartResult result, String defaultText) {
+    String errorDetail = result.getErrorMessage();
+    return errorDetail.trim().isEmpty() ? defaultText : errorDetail;
   }
 
 }
